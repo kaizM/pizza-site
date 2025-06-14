@@ -13,11 +13,17 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
   const [selectedPizza, setSelectedPizza] = useState("Cheese");
   const [selectedCrust, setSelectedCrust] = useState("Original");
   const [selectedToppings, setSelectedToppings] = useState<string[]>([]);
+  const [extraToppings, setExtraToppings] = useState<string[]>([]);
   const [doubleCheeseSelected, setDoubleCheeseSelected] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
-  // Hunt Brothers specific pricing - one standard size
-  const basePrice = 15.99;
+  // Hunt Brothers specific pricing
+  const basePrice = 11.99;
+  const secondPizzaPrice = 10.99;
+  const doubleCheesePrice = 2.19;
+  const extraMeatPrice = 1.50;
+  const extraVeggiePrice = 1.00;
+  const taxRate = 0.0825;
 
   const meatToppings = [
     "Pepperoni", "Italian Sausage", "Beef", "Bacon"
@@ -28,31 +34,60 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
   ];
 
   const calculatePrice = () => {
+    let pizzaPrice = basePrice;
     let toppingsPrice = 0;
 
-    // Add topping prices ($1.50 per topping)
-    toppingsPrice += selectedToppings.length * 1.50;
+    // Calculate extra toppings cost
+    extraToppings.forEach(topping => {
+      if (meatToppings.includes(topping)) {
+        toppingsPrice += extraMeatPrice;
+      } else if (veggieToppings.includes(topping)) {
+        toppingsPrice += extraVeggiePrice;
+      }
+    });
     
     // Add double cheese if selected
     if (doubleCheeseSelected) {
-      toppingsPrice += 2.19;
+      toppingsPrice += doubleCheesePrice;
     }
 
-    const subtotal = (basePrice + toppingsPrice) * quantity;
-    const tax = subtotal * 0.0825;
+    const subtotal = (pizzaPrice + toppingsPrice) * quantity;
+    const tax = subtotal * taxRate;
     const total = subtotal + tax;
 
     return {
-      basePrice,
+      basePrice: pizzaPrice,
       toppingsPrice,
       subtotal,
       tax,
-      total
+      total,
+      freeToppings: selectedToppings.length,
+      extraToppingsCount: extraToppings.length
     };
   };
 
   const toggleTopping = (topping: string) => {
-    setSelectedToppings(prev => 
+    setSelectedToppings(prev => {
+      const newToppings = prev.includes(topping) 
+        ? prev.filter(t => t !== topping)
+        : prev.length < 10 
+          ? [...prev, topping]
+          : prev;
+      
+      // If removing a regular topping, also remove its extra
+      if (!newToppings.includes(topping)) {
+        setExtraToppings(prevExtras => prevExtras.filter(t => t !== topping));
+      }
+      
+      return newToppings;
+    });
+  };
+
+  const toggleExtraTopping = (topping: string) => {
+    // Can only add extra if the base topping is selected
+    if (!selectedToppings.includes(topping)) return;
+    
+    setExtraToppings(prev => 
       prev.includes(topping) 
         ? prev.filter(t => t !== topping)
         : [...prev, topping]
@@ -62,6 +97,12 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
   const addToCart = () => {
     const pricing = calculatePrice();
     const allToppings = [...selectedToppings];
+    
+    // Add extra toppings with "Extra" prefix
+    extraToppings.forEach(topping => {
+      allToppings.push(`Extra ${topping}`);
+    });
+    
     if (doubleCheeseSelected) allToppings.push("Double Cheese");
 
     const cartItem: CartItem = {
@@ -86,7 +127,7 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
         {/* Header */}
         <div className="text-center py-4">
           <h1 className="text-4xl font-bold text-red-700 mb-2">Build Your Pizza</h1>
-          <p className="text-lg text-gray-600">Create your perfect Hunt Brothers pizza</p>
+          <p className="text-lg text-gray-600">Create your perfect Hunt Brothers pizza • Pickup Only</p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
@@ -103,13 +144,16 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
               
               {/* Selected Toppings Display */}
               <div className="space-y-2">
-                <h3 className="font-semibold text-red-700">Your Toppings:</h3>
+                <h3 className="font-semibold text-red-700">Your Toppings ({pricing.freeToppings}/10 free):</h3>
                 <div className="flex flex-wrap gap-2">
                   {doubleCheeseSelected && (
                     <Badge className="bg-yellow-500 text-black">Double Cheese</Badge>
                   )}
                   {selectedToppings.map((topping) => (
                     <Badge key={topping} className="bg-red-600 text-white">{topping}</Badge>
+                  ))}
+                  {extraToppings.map((topping) => (
+                    <Badge key={`extra-${topping}`} className="bg-orange-600 text-white">Extra {topping}</Badge>
                   ))}
                   {selectedToppings.length === 0 && !doubleCheeseSelected && (
                     <span className="text-gray-500">Just cheese</span>
@@ -129,6 +173,16 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
 
           {/* Pizza Builder */}
           <div className="space-y-6">
+            {/* Pickup Only Notice */}
+            <Card className="border-2 border-blue-200 bg-blue-50">
+              <CardContent className="p-4">
+                <div className="text-center">
+                  <h3 className="font-bold text-blue-800 text-lg">🏪 Pickup Only</h3>
+                  <p className="text-blue-700">We do not offer delivery. Ready in 15-20 minutes.</p>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Crust Selection */}
             <Card className="border-2 border-red-200">
               <CardHeader className="bg-red-700 text-white">
@@ -175,48 +229,80 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
             {/* Meat Toppings */}
             <Card className="border-2 border-red-200">
               <CardHeader className="bg-red-700 text-white">
-                <CardTitle className="text-xl">Meat</CardTitle>
+                <CardTitle className="text-xl">Meat Toppings</CardTitle>
               </CardHeader>
               <CardContent className="p-6">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-3">
                   {meatToppings.map((topping) => (
-                    <button
-                      key={topping}
-                      onClick={() => toggleTopping(topping)}
-                      className={`p-4 text-sm border-2 rounded-lg font-semibold transition-all ${
-                        selectedToppings.includes(topping)
-                          ? "border-red-600 bg-red-50 text-red-700"
-                          : "border-gray-200 hover:border-red-300"
-                      }`}
-                    >
-                      {topping}
-                      <div className="text-xs text-gray-500 mt-1">+$1.50</div>
-                    </button>
+                    <div key={topping} className="space-y-2">
+                      <button
+                        onClick={() => toggleTopping(topping)}
+                        disabled={!selectedToppings.includes(topping) && selectedToppings.length >= 10}
+                        className={`w-full p-3 text-left border-2 rounded-lg font-semibold transition-all ${
+                          selectedToppings.includes(topping)
+                            ? "border-red-600 bg-red-50 text-red-700"
+                            : selectedToppings.length >= 10
+                              ? "border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed"
+                              : "border-gray-200 hover:border-red-300"
+                        }`}
+                      >
+                        ✓ {topping} {selectedToppings.includes(topping) ? "(Selected)" : "(Free)"}
+                      </button>
+                      <button
+                        onClick={() => toggleExtraTopping(topping)}
+                        disabled={!selectedToppings.includes(topping)}
+                        className={`w-full p-2 text-left text-sm border rounded-lg transition-all ml-4 ${
+                          extraToppings.includes(topping)
+                            ? "border-orange-500 bg-orange-50 text-orange-700"
+                            : selectedToppings.includes(topping)
+                              ? "border-gray-200 hover:border-orange-300"
+                              : "border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed"
+                        }`}
+                      >
+                        ⬜ Extra {topping} (+$1.50)
+                      </button>
+                    </div>
                   ))}
                 </div>
               </CardContent>
             </Card>
 
-            {/* Fresh Toppings */}
+            {/* Veggie Toppings */}
             <Card className="border-2 border-red-200">
               <CardHeader className="bg-red-700 text-white">
                 <CardTitle className="text-xl">Fresh Toppings</CardTitle>
               </CardHeader>
               <CardContent className="p-6">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-3">
                   {veggieToppings.map((topping) => (
-                    <button
-                      key={topping}
-                      onClick={() => toggleTopping(topping)}
-                      className={`p-4 text-sm border-2 rounded-lg font-semibold transition-all ${
-                        selectedToppings.includes(topping)
-                          ? "border-green-600 bg-green-50 text-green-700"
-                          : "border-gray-200 hover:border-green-300"
-                      }`}
-                    >
-                      {topping}
-                      <div className="text-xs text-gray-500 mt-1">+$1.50</div>
-                    </button>
+                    <div key={topping} className="space-y-2">
+                      <button
+                        onClick={() => toggleTopping(topping)}
+                        disabled={!selectedToppings.includes(topping) && selectedToppings.length >= 10}
+                        className={`w-full p-3 text-left border-2 rounded-lg font-semibold transition-all ${
+                          selectedToppings.includes(topping)
+                            ? "border-green-600 bg-green-50 text-green-700"
+                            : selectedToppings.length >= 10
+                              ? "border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed"
+                              : "border-gray-200 hover:border-green-300"
+                        }`}
+                      >
+                        ✓ {topping} {selectedToppings.includes(topping) ? "(Selected)" : "(Free)"}
+                      </button>
+                      <button
+                        onClick={() => toggleExtraTopping(topping)}
+                        disabled={!selectedToppings.includes(topping)}
+                        className={`w-full p-2 text-left text-sm border rounded-lg transition-all ml-4 ${
+                          extraToppings.includes(topping)
+                            ? "border-orange-500 bg-orange-50 text-orange-700"
+                            : selectedToppings.includes(topping)
+                              ? "border-gray-200 hover:border-orange-300"
+                              : "border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed"
+                        }`}
+                      >
+                        ⬜ Extra {topping} (+$1.00)
+                      </button>
+                    </div>
                   ))}
                 </div>
               </CardContent>
@@ -254,19 +340,27 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
                 {/* Pricing Breakdown */}
                 <div className="bg-yellow-50 p-4 rounded-lg border-2 border-yellow-300">
                   <div className="flex justify-between text-sm">
-                    <span>Base Price (Standard):</span>
+                    <span>Base Pizza:</span>
                     <span>${pricing.basePrice.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span>Toppings:</span>
-                    <span>${pricing.toppingsPrice.toFixed(2)}</span>
-                  </div>
+                  {pricing.extraToppingsCount > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span>Extra Toppings ({pricing.extraToppingsCount}):</span>
+                      <span>${pricing.toppingsPrice.toFixed(2)}</span>
+                    </div>
+                  )}
+                  {doubleCheeseSelected && (
+                    <div className="flex justify-between text-sm">
+                      <span>Double Cheese:</span>
+                      <span>${doubleCheesePrice.toFixed(2)}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between text-sm">
                     <span>Subtotal:</span>
                     <span>${pricing.subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span>Tax:</span>
+                    <span>Tax (8.25%):</span>
                     <span>${pricing.tax.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between font-bold text-lg text-red-700 border-t-2 border-red-300 pt-2 mt-2">
