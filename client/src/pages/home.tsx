@@ -1,11 +1,34 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Phone, MapPin, Clock } from "lucide-react";
+import { CartItem } from "@shared/schema";
+import { generateOrderId } from "@/lib/utils";
 
 export default function Home() {
   const [hoveredPizza, setHoveredPizza] = useState<string | null>(null);
+  const [, setLocation] = useLocation();
+
+  const orderPremadePizza = (pizza: typeof pizzas[0]) => {
+    // Create cart item from premade pizza
+    const cartItem: CartItem = {
+      id: generateOrderId(),
+      name: pizza.name,
+      size: pizza.size,
+      crust: pizza.crust,
+      toppings: pizza.toppings,
+      price: pizza.price,
+      quantity: 1,
+      imageUrl: pizza.image,
+    };
+
+    // Store in localStorage for checkout page
+    localStorage.setItem('premadeCartItems', JSON.stringify([cartItem]));
+    
+    // Navigate to checkout
+    setLocation('/checkout');
+  };
 
   const pizzas = [
     {
@@ -14,6 +37,9 @@ export default function Home() {
       description: "Loaded with pepperoni, sausage, bacon, and beef — for the ultimate meat lover.",
       price: 11.99,
       image: "/lotsa-meat-pizza.png",
+      toppings: ["Pepperoni", "Italian Sausage", "Bacon", "Beef"],
+      size: "Large",
+      crust: "Original",
     },
     {
       id: "veggie-delight", 
@@ -21,6 +47,9 @@ export default function Home() {
       description: "Bell peppers, onions, mushrooms, black olives, banana peppers, jalapeños. No meat.",
       price: 11.99,
       image: "/veggie-delight-pizza.jpeg",
+      toppings: ["Bell Peppers", "Onions", "Mushrooms", "Black Olives", "Banana Peppers", "Jalapeños"],
+      size: "Large",
+      crust: "Original",
     },
     {
       id: "loaded",
@@ -28,6 +57,9 @@ export default function Home() {
       description: "Combo of meats & veggies: pepperoni, sausage, mushrooms, bell peppers, onions.",
       price: 11.99,
       image: "/loaded-pizza.jpeg",
+      toppings: ["Pepperoni", "Italian Sausage", "Mushrooms", "Bell Peppers", "Onions"],
+      size: "Large",
+      crust: "Original",
     },
   ];
 
