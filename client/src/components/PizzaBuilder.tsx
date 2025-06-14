@@ -18,8 +18,8 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
   const [quantity, setQuantity] = useState(1);
 
   // Hunt Brothers specific pricing
-  const basePrice = 13.99;
-  const secondPizzaPrice = 10.99;
+  const firstPizzaPrice = 11.99;
+  const additionalPizzaPrice = 10.99;
   const doubleCheesePrice = 2.19;
   const extraMeatPrice = 1.50;
   const extraVeggiePrice = 1.00;
@@ -34,10 +34,17 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
   ];
 
   const calculatePrice = () => {
-    let pizzaPrice = basePrice;
+    let totalPizzasPrice = 0;
     let toppingsPrice = 0;
 
-    // Calculate extra toppings cost
+    // Calculate pizza pricing: first pizza $11.99, additional pizzas $10.99
+    if (quantity === 1) {
+      totalPizzasPrice = firstPizzaPrice;
+    } else {
+      totalPizzasPrice = firstPizzaPrice + (additionalPizzaPrice * (quantity - 1));
+    }
+
+    // Calculate extra toppings cost (per pizza)
     extraToppings.forEach(topping => {
       if (meatToppings.includes(topping)) {
         toppingsPrice += extraMeatPrice;
@@ -46,18 +53,20 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
       }
     });
     
-    // Add double cheese if selected
+    // Add double cheese if selected (per pizza)
     if (doubleCheeseSelected) {
       toppingsPrice += doubleCheesePrice;
     }
 
-    const subtotal = (pizzaPrice + toppingsPrice) * quantity;
+    // Multiply toppings price by quantity
+    const totalToppingsPrice = toppingsPrice * quantity;
+    const subtotal = totalPizzasPrice + totalToppingsPrice;
     const tax = subtotal * taxRate;
     const total = subtotal + tax;
 
     return {
-      basePrice: pizzaPrice,
-      toppingsPrice,
+      pizzasPrice: totalPizzasPrice,
+      toppingsPrice: totalToppingsPrice,
       subtotal,
       tax,
       total,
@@ -340,8 +349,8 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
                 {/* Pricing Breakdown */}
                 <div className="bg-yellow-50 p-4 rounded-lg border-2 border-yellow-300">
                   <div className="flex justify-between text-sm">
-                    <span>Base Pizza:</span>
-                    <span>$13.99</span>
+                    <span>Pizzas ({quantity}):</span>
+                    <span>${pricing.pizzasPrice.toFixed(2)}</span>
                   </div>
                   {pricing.extraToppingsCount > 0 && (
                     <div className="flex justify-between text-sm">
