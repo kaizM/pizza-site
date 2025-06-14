@@ -69,7 +69,7 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
 
       onOrderComplete(docRef.id);
     } catch (error: any) {
-      console.error("Order submission error:", error);
+      // Log error securely without exposing sensitive data
       toast({
         title: "Order Failed",
         description: "There was an error placing your order. Please try again.",

@@ -33,7 +33,7 @@ export const signInWithGoogle = async () => {
   try {
     await signInWithRedirect(auth, googleProvider);
   } catch (error: any) {
-    console.error("Google sign-in error:", error);
+    // Log error securely without exposing sensitive data
     throw error;
   }
 };

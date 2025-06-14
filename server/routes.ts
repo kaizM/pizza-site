@@ -1,9 +1,27 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import rateLimit from "express-rate-limit";
 import { storage } from "./storage";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // API routes for pizza ordering system
+  // Rate limiting
+  const generalLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    message: { message: "Too many requests, please try again later." },
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+
+  const orderLimiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    max: 5, // limit each IP to 5 order attempts per minute
+    message: { message: "Too many order attempts, please try again later." },
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+
+  app.use('/api', generalLimiter);
   
   // Health check endpoint
   app.get("/api/health", (req, res) => {
@@ -60,7 +78,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/orders", async (req, res) => {
+  app.post("/api/orders", orderLimiter, async (req, res) => {
     try {
       // Input validation
       if (!req.body.customerInfo || !req.body.items || !req.body.total) {

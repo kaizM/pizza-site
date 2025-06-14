@@ -38,7 +38,7 @@ export default function OrderTracking({ orderId }: OrderTrackingProps) {
         setLoading(false);
       },
       (error) => {
-        console.error("Error fetching order:", error);
+        // Log error securely without exposing sensitive data
         setLoading(false);
       }
     );

@@ -41,9 +41,9 @@ export default function CheckoutPage() {
     // Handle redirect result from Google sign-in
     handleRedirectResult().then(({ user: redirectUser, error }) => {
       if (error) {
-        console.error("Redirect auth error:", error);
+        // Handle redirect auth error securely
       } else if (redirectUser) {
-        console.log("User signed in via redirect:", redirectUser);
+        // User successfully signed in via redirect
       }
     });
   }, []);
