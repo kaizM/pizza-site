@@ -27,7 +27,7 @@ export default function Home() {
       name: "Loaded", 
       description: "Combo of meats & veggies: pepperoni, sausage, mushrooms, bell peppers, onions.",
       price: 11.99,
-      image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+      image: "/attached_assets/image_1749943451486.jpeg",
     },
   ];
 
@@ -79,7 +79,7 @@ export default function Home() {
                   <img
                     src={pizza.image}
                     alt={pizza.name}
-                    className="w-full h-48 object-cover transition-transform duration-300 hover:scale-110"
+                    className="w-full h-48 object-cover object-center transition-transform duration-300 hover:scale-110"
                   />
                   <div className="absolute top-4 right-4 bg-yellow-400 text-red-800 px-3 py-1 rounded-full font-bold border-2 border-red-700">
                     ${pizza.price}
