@@ -11,23 +11,23 @@ export default function Home() {
     {
       id: "lotsa-meat",
       name: "Lotsa Meat",
-      description: "Loaded with pepperoni, sausage, bacon, and ham for the ultimate meat lovers experience",
-      price: 16.99,
-      image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+      description: "Loaded with pepperoni, sausage, bacon, and beef — for the ultimate meat lover.",
+      price: 13.99,
+      image: "https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
     },
     {
-      id: "veggie-delight",
+      id: "veggie-delight", 
       name: "Veggie Delight",
-      description: "Fresh bell peppers, mushrooms, olives, onions, and tomatoes on our signature sauce",
+      description: "Bell peppers, onions, mushrooms, black olives, banana peppers. No meat.",
       price: 13.99,
-      image: "https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+      image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
     },
     {
       id: "loaded",
-      name: "Loaded",
-      description: "The works! Pepperoni, sausage, mushrooms, bell peppers, and onions",
-      price: 18.99,
-      image: "https://images.unsplash.com/photo-1594007654729-407eedc4be65?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+      name: "Loaded", 
+      description: "Combo of meats & veggies: pepperoni, sausage, mushrooms, bell peppers, onions.",
+      price: 13.99,
+      image: "https://images.unsplash.com/photo-1565299507177-b0ac66763828?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
     },
   ];
 

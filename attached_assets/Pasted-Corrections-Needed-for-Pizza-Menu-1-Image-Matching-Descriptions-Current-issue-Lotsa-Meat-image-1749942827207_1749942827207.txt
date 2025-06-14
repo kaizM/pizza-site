@@ -1,0 +1,48 @@
+Corrections Needed for Pizza Menu
+1. Image Matching & Descriptions
+
+Current issue:
+
+Lotsa Meat image is missing.
+Veggie Delight shows a pizza with meat (wrong).
+Loaded pizza shows a random pizza with cubed toppings that don’t align with the description.
+Fix required:
+
+Pizza Name	Correct Description	Correct Image Style
+Lotsa Meat	Loaded with pepperoni, sausage, bacon, and beef — for the ultimate meat lover.	Show a full pizza with visible meats only, no veggies.
+Veggie Delight	Bell peppers, onions, mushrooms, black olives, banana peppers. No meat.	Show a colorful vegetarian pizza, clearly no meat.
+Loaded	Combo of meats & veggies: pepperoni, sausage, mushrooms, bell peppers, onions.	Show a combination pizza with both meat & veggies.
+🍕 Hunt Brothers Pizza Requirements Recap
+✅ Confirmed Business Rules
+
+✅ Only one size pizza
+✅ Two crust options: Thin Crust or Original
+✅ Customer gets up to 10 free toppings
+✅ Each extra topping (beyond the 10 or marked as "extra"):
+Meat: $1.50
+Veggie: $1.00
+✅ Option for Double Cheese: $2.19
+✅ Pickup Only, no delivery
+✅ Image & Description Accuracy must reflect real Hunt Brothers Pizza
+🧩 What Needs to Be Done Next
+🔄 Frontend Updates
+
+Replace the images with matching, high-quality photos for each pizza type (I’ll help generate or source them if needed).
+Update all pizza descriptions to clearly state ingredients (based on Hunt Brothers standards).
+Clean up any visual mismatch between image, price, and ingredients.
+Ensure only authorized user roles can access employee or admin pages.
+Customer should see only order UI.
+Employee/Admin logins must stay completely separate.
+💡 Example Fix for Veggie Delight:
+{
+  id: "veggie-delight",
+  name: "Veggie Delight",
+  description: "Fresh bell peppers, mushrooms, onions, black olives, and banana peppers.",
+  price: "$13.99",
+  image: "correct-image-url-showing-veggies-only"
+}
+✅ Next Step for the Developer:
+Fix or replace the 3 pizza cards (image + description).
+Use royalty-free images that reflect the actual pizza.
+Stick to one pizza size in layout — no size selectors.
+Ensure any topping UI follows the Domino’s-style inline extra topping toggle, not a whole separate “extra” section.

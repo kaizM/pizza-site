@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Plus, Minus } from "lucide-react";
-import { CartItem } from "../../shared/schema";
+import { CartItem } from "@/shared/schema";
 
 interface PizzaBuilderProps {
   onAddToCart: (item: CartItem) => void;
@@ -18,7 +18,7 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
   const [quantity, setQuantity] = useState(1);
 
   // Hunt Brothers specific pricing
-  const basePrice = 11.99;
+  const basePrice = 13.99;
   const secondPizzaPrice = 10.99;
   const doubleCheesePrice = 2.19;
   const extraMeatPrice = 1.50;
@@ -341,7 +341,7 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
                 <div className="bg-yellow-50 p-4 rounded-lg border-2 border-yellow-300">
                   <div className="flex justify-between text-sm">
                     <span>Base Pizza:</span>
-                    <span>${pricing.basePrice.toFixed(2)}</span>
+                    <span>$13.99</span>
                   </div>
                   {pricing.extraToppingsCount > 0 && (
                     <div className="flex justify-between text-sm">
