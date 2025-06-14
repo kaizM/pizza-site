@@ -106,7 +106,10 @@ export class MemStorage implements IStorage {
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentUserId++;
     const user: User = { 
-      ...insertUser, 
+      ...insertUser,
+      firstName: insertUser.firstName || null,
+      lastName: insertUser.lastName || null,
+      phone: insertUser.phone || null,
       id,
       createdAt: new Date(),
     };
@@ -134,8 +137,19 @@ export class MemStorage implements IStorage {
   async createOrder(insertOrder: InsertOrder): Promise<Order> {
     const id = this.currentOrderId++;
     const order: Order = {
-      ...insertOrder,
       id,
+      firebaseOrderId: insertOrder.firebaseOrderId,
+      userId: insertOrder.userId || null,
+      customerInfo: insertOrder.customerInfo,
+      items: insertOrder.items,
+      subtotal: insertOrder.subtotal,
+      tax: insertOrder.tax,
+      deliveryFee: insertOrder.deliveryFee || '0.00',
+      total: insertOrder.total,
+      orderType: insertOrder.orderType,
+      status: insertOrder.status || 'confirmed',
+      specialInstructions: insertOrder.specialInstructions || null,
+      estimatedTime: insertOrder.estimatedTime || null,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -173,7 +187,14 @@ export class MemStorage implements IStorage {
 
   async createPizza(insertPizza: InsertPizzaItem): Promise<PizzaItem> {
     const id = this.currentPizzaId++;
-    const pizza: PizzaItem = { ...insertPizza, id };
+    const pizza: PizzaItem = { 
+      ...insertPizza,
+      description: insertPizza.description || null,
+      imageUrl: insertPizza.imageUrl || null,
+      category: insertPizza.category || null,
+      isActive: insertPizza.isActive ?? null,
+      id 
+    };
     this.pizzas.set(id, pizza);
     return pizza;
   }
