@@ -252,7 +252,7 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
 
         <Button
           type="submit"
-          className="w-full bg-red-600 hover:bg-red-700 py-4 text-lg font-semibold"
+          className="w-full bg-red-600 hover:bg-red-700 text-white py-4 text-lg font-semibold"
           disabled={loading}
         >
           {loading ? "Processing..." : `Place Order - $${total.toFixed(2)}`}

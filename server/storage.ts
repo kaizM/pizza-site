@@ -248,4 +248,9 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+import { FirebaseStorage } from "./firebaseStorage";
+
+// Use Firebase storage in production, MemStorage for fallback
+export const storage = process.env.NODE_ENV === 'production' || process.env.VITE_FIREBASE_PROJECT_ID 
+  ? new FirebaseStorage() 
+  : new MemStorage();
