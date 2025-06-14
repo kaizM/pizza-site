@@ -120,11 +120,12 @@ export default function Home() {
                 <CardContent className="p-6">
                   <h3 className="text-xl font-bold text-neutral-text mb-2">{pizza.name}</h3>
                   <p className="text-neutral-secondary mb-4 leading-relaxed">{pizza.description}</p>
-                  <Link href="/build-pizza">
-                    <Button className="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-3 shadow-md">
-                      Order This Pizza
-                    </Button>
-                  </Link>
+                  <Button 
+                    onClick={() => orderPremadePizza(pizza)}
+                    className="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-3 shadow-md"
+                  >
+                    Order This Pizza
+                  </Button>
                 </CardContent>
               </Card>
             ))}

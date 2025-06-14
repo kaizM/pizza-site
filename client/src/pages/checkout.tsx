@@ -8,36 +8,29 @@ import OrderSummary from "@/components/OrderSummary";
 import OrderTracking from "@/components/OrderTracking";
 import { CartItem } from "@shared/schema";
 import { ShoppingCart, User } from "lucide-react";
+import { Link } from "wouter";
 
 export default function CheckoutPage() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [completedOrderId, setCompletedOrderId] = useState<string | null>(null);
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: "1",
-      name: "Lotsa Meat Pizza",
-      size: "Large",
-      crust: "Original Crust",
-      toppings: ["Pepperoni", "Sausage", "Bacon", "Extra Cheese"],
-      price: 16.99,
-      quantity: 1,
-      imageUrl: "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&h=80",
-    },
-    {
-      id: "2",
-      name: "Veggie Delight",
-      size: "Medium",
-      crust: "Thin Crust",
-      toppings: ["Bell Peppers", "Mushrooms", "Olives", "Onions"],
-      price: 13.99,
-      quantity: 2,
-      imageUrl: "https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&h=80",
-    },
-  ]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const { user, loading } = useAuth();
 
   useEffect(() => {
+    // Load premade cart items from localStorage if available
+    const storedCartItems = localStorage.getItem('premadeCartItems');
+    if (storedCartItems) {
+      try {
+        const parsedItems = JSON.parse(storedCartItems);
+        setCartItems(parsedItems);
+        // Clear the stored items after loading
+        localStorage.removeItem('premadeCartItems');
+      } catch (error) {
+        console.error('Error parsing stored cart items:', error);
+      }
+    }
+
     // Handle redirect result from Google sign-in
     handleRedirectResult().then(({ user: redirectUser, error }) => {
       if (error) {
@@ -79,15 +72,16 @@ export default function CheckoutPage() {
       <div className="min-h-screen bg-neutral-bg py-8">
         <OrderTracking orderId={completedOrderId} />
         <div className="text-center mt-8">
-          <Button
-            onClick={() => {
-              setCompletedOrderId(null);
-              // In real app, redirect to menu or home
-            }}
-            variant="outline"
-          >
-            Order More
-          </Button>
+          <Link href="/">
+            <Button
+              onClick={() => {
+                setCompletedOrderId(null);
+              }}
+              variant="outline"
+            >
+              Order More
+            </Button>
+          </Link>
         </div>
       </div>
     );
@@ -105,8 +99,8 @@ export default function CheckoutPage() {
                 <div className="flex items-center">
                   <div className="text-2xl mr-2">🍕</div>
                   <div>
-                    <h1 className="font-cursive text-2xl text-red-600">Lemur Express 11</h1>
-                    <p className="text-xs text-neutral-secondary -mt-1">Palacios, TX</p>
+                    <h1 className="font-cursive text-2xl text-red-600">Hunt Brothers Pizza</h1>
+                    <p className="text-xs text-neutral-secondary -mt-1">Checkout</p>
                   </div>
                 </div>
               </div>
@@ -144,9 +138,11 @@ export default function CheckoutPage() {
           <div className="text-6xl mb-4">🛒</div>
           <h2 className="text-2xl font-bold text-neutral-text mb-4">Your cart is empty</h2>
           <p className="text-neutral-secondary mb-8">Add some delicious pizzas to get started!</p>
-          <Button className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 text-lg">
-            Browse Menu
-          </Button>
+          <Link href="/">
+            <Button className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 text-lg">
+              Browse Menu
+            </Button>
+          </Link>
         </div>
 
         <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
@@ -164,8 +160,8 @@ export default function CheckoutPage() {
               <div className="flex items-center">
                 <div className="text-2xl mr-2">🍕</div>
                 <div>
-                  <h1 className="font-cursive text-2xl text-red-600">Lemur Express 11</h1>
-                  <p className="text-xs text-neutral-secondary -mt-1">Palacios, TX</p>
+                  <h1 className="font-cursive text-2xl text-red-600">Hunt Brothers Pizza</h1>
+                  <p className="text-xs text-neutral-secondary -mt-1">Checkout</p>
                 </div>
               </div>
             </div>
