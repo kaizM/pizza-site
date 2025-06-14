@@ -13,7 +13,7 @@ export default function Home() {
       name: "Lotsa Meat",
       description: "Loaded with pepperoni, sausage, bacon, and beef — for the ultimate meat lover.",
       price: 11.99,
-      image: "https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+      image: "https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
     },
     {
       id: "veggie-delight", 
