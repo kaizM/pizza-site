@@ -1,0 +1,62 @@
+🍕 PizzaFlow – Full Project Summary & Roadmap
+
+✅ What We’ve Built So Far
+1. Homepage (Landing Page)
+
+Modern, mobile-friendly React app built with Tailwind CSS.
+Features three signature pizzas with images, prices, and descriptions:
+Lotsa Meat
+Veggie Delight
+Loaded
+“Order Now” button links to the custom pizza builder.
+Includes:
+📞 Call-to-action section: Need help placing an order? Call (361) 403-0083
+📍 Footer with contact info, address (2100 1st Street, Palacios, TX), and hours (9AM–12AM)
+2. Pizza Builder Page
+
+Interactive pizza customization:
+Choose crust: Original or Thin
+Add up to 10 toppings (split by meat & veggie)
+Toggle half-and-half pizza
+Add double cheese for $2.19
+Add extra toppings:
+$1.50 per extra meat topping
+$1.00 per extra veggie topping
+Live price calculation (includes 8.25% tax)
+"Add to Cart" system for building multiple pizzas
+Cart summary with remove functionality
+3. Firebase Integration (WIP)
+
+Firebase initialized (Auth, Firestore config added)
+GitHub connected
+🔐 Sign-in not working yet due to domain not authorized — fix pending
+🚫 No Delivery – Pickup Only
+This store is pickup only — there will be no delivery option in the app or website.
+Orders must be picked up in person at Lemur Express 11.
+🧭 Roadmap – What’s Coming Next
+
+🧑‍🍳 Employee Order Portal
+For staff to manage incoming orders
+
+🔔 Live list of new orders
+✅ Update status: In Progress, Ready
+🕒 Set “Ready in 10 mins” & notify customer
+📋 See full pizza details per order
+🧑‍💼 Admin Dashboard
+For the store owner only (you)
+
+💰 Edit pricing for pizzas, toppings, and extras
+📊 View sales reports and revenue breakdown
+🧾 Export order history (CSV format)
+➕ Add or remove toppings, crust types
+🔐 Manage employee accounts & permissions
+🔐 Role-Based Access
+Admin account (you) controls everything
+Employee login sees only active orders
+Firebase Auth + Firestore-based role system
+🛠️ Tech Stack
+React + TypeScript frontend
+Tailwind CSS for UI
+Firebase (Auth, Firestore, optional Hosting)
+Vite for fast dev environment
+GitHub connected (for source control)
