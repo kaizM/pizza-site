@@ -18,7 +18,7 @@ export default function Home() {
     {
       id: "veggie-delight", 
       name: "Veggie Delight",
-      description: "Bell peppers, onions, mushrooms, black olives, banana peppers. No meat.",
+      description: "Bell peppers, onions, mushrooms, black olives, banana peppers, jalapeños. No meat.",
       price: 11.99,
       image: "/veggie-delight-pizza.jpeg",
     },
