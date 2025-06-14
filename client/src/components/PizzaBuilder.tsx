@@ -160,7 +160,7 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
       toppings: allToppings,
       price: pricing.total,
       quantity: quantity,
-      imageUrl: "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300"
+      imageUrl: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300"
     };
 
     onAddToCart(cartItem);
@@ -489,7 +489,7 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
 
           <Button
             onClick={addToCart}
-            className="w-full bg-red-600 hover:bg-red-700 text-white py-4 text-lg font-semibold"
+            className="w-full bg-red-700 hover:bg-red-800 text-white py-4 text-lg font-bold shadow-lg"
           >
             <ShoppingCart className="mr-2 h-5 w-5" />
             Add to Cart - ${pricing.total.toFixed(2)}

@@ -78,10 +78,10 @@ export default function BuildPizzaPage() {
                 </span>
               </Button>
               <Link href="/checkout">
-                <Button className="bg-red-600 hover:bg-red-700 text-white">
+                <Button className="bg-red-700 hover:bg-red-800 text-white font-bold shadow-md">
                   <ShoppingCart className="mr-2 h-4 w-4" />
                   Cart
-                  <span className="ml-2 bg-yellow-400 text-neutral-text text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                  <span className="ml-2 bg-yellow-400 text-red-800 text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold border border-red-700">
                     {cartItems.reduce((sum, item) => sum + item.quantity, 0)}
                   </span>
                 </Button>

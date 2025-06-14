@@ -44,12 +44,12 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/build-pizza">
-              <Button size="lg" className="bg-white text-red-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold">
+              <Button size="lg" className="bg-yellow-400 text-red-800 hover:bg-yellow-300 px-8 py-4 text-lg font-bold shadow-lg">
                 Build Your Pizza
               </Button>
             </Link>
             <Link href="/build-pizza">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-red-600 px-8 py-4 text-lg font-semibold bg-transparent">
+              <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-red-700 px-8 py-4 text-lg font-bold bg-transparent shadow-lg">
                 Order Now
               </Button>
             </Link>
@@ -81,7 +81,7 @@ export default function Home() {
                     alt={pizza.name}
                     className="w-full h-48 object-cover transition-transform duration-300 hover:scale-110"
                   />
-                  <div className="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full font-bold">
+                  <div className="absolute top-4 right-4 bg-yellow-400 text-red-800 px-3 py-1 rounded-full font-bold border-2 border-red-700">
                     ${pizza.price}
                   </div>
                 </div>
@@ -89,7 +89,7 @@ export default function Home() {
                   <h3 className="text-xl font-bold text-neutral-text mb-2">{pizza.name}</h3>
                   <p className="text-neutral-secondary mb-4 leading-relaxed">{pizza.description}</p>
                   <Link href="/build-pizza">
-                    <Button className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3">
+                    <Button className="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-3 shadow-md">
                       Order This Pizza
                     </Button>
                   </Link>
@@ -109,7 +109,7 @@ export default function Home() {
           <p className="text-xl text-neutral-secondary mb-8">
             Our friendly staff is ready to help you create the perfect pizza
           </p>
-          <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 text-lg font-semibold">
+          <Button size="lg" className="bg-red-700 hover:bg-red-800 text-white px-8 py-4 text-lg font-bold shadow-lg">
             <Phone className="mr-2 h-5 w-5" />
             Call (361) 403-0083
           </Button>
