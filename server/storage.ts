@@ -248,5 +248,9 @@ export class MemStorage implements IStorage {
   }
 }
 
-// Use in-memory storage for now, Firebase can be enabled when credentials are provided
-export const storage = new MemStorage();
+import { FirebaseStorage } from "./firebaseStorage";
+
+// Use Firebase storage when credentials are available, MemStorage for fallback
+export const storage = process.env.VITE_FIREBASE_PROJECT_ID && process.env.VITE_FIREBASE_PROJECT_ID !== 'demo-project'
+  ? new FirebaseStorage() 
+  : new MemStorage();
