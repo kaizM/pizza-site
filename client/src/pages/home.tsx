@@ -27,7 +27,7 @@ export default function Home() {
       name: "Loaded", 
       description: "Combo of meats & veggies: pepperoni, sausage, mushrooms, bell peppers, onions.",
       price: 11.99,
-      image: "https://images.unsplash.com/photo-1565299507177-b0ac66763828?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+      image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
     },
   ];
 
