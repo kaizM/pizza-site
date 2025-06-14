@@ -49,7 +49,7 @@ export default function Home() {
               </Button>
             </Link>
             <Link href="/checkout">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-red-600 px-8 py-4 text-lg font-semibold">
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-red-600 px-8 py-4 text-lg font-semibold bg-transparent">
                 Order Now
               </Button>
             </Link>
