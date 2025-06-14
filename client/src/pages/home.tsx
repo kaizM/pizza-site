@@ -43,14 +43,16 @@ export default function Home() {
             Hand-tossed dough, premium ingredients, and recipes passed down through generations
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/checkout">
+            <Link href="/build-pizza">
               <Button size="lg" className="bg-white text-red-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold">
+                Build Your Pizza
+              </Button>
+            </Link>
+            <Link href="/checkout">
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-red-600 px-8 py-4 text-lg font-semibold">
                 Order Now
               </Button>
             </Link>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-red-600 px-8 py-4 text-lg font-semibold">
-              View Menu
-            </Button>
           </div>
         </div>
       </section>
@@ -86,9 +88,11 @@ export default function Home() {
                 <CardContent className="p-6">
                   <h3 className="text-xl font-bold text-neutral-text mb-2">{pizza.name}</h3>
                   <p className="text-neutral-secondary mb-4 leading-relaxed">{pizza.description}</p>
-                  <Button className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3">
-                    Order This Pizza
-                  </Button>
+                  <Link href="/build-pizza">
+                    <Button className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3">
+                      Order This Pizza
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             ))}

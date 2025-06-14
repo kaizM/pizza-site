@@ -103,9 +103,10 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
   };
 
   const handleAddToCart = () => {
-    const toppings = halfAndHalf 
-      ? [...new Set([...leftToppings, ...rightToppings])]
+    const allToppings = halfAndHalf 
+      ? [...leftToppings, ...rightToppings]
       : selectedToppings;
+    const uniqueToppings = allToppings.filter((topping, index) => allToppings.indexOf(topping) === index);
 
     const cartItem: CartItem = {
       id: `pizza-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
@@ -114,7 +115,7 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
       crust: selectedCrust,
       toppings: halfAndHalf 
         ? [`Left: ${leftToppings.join(', ') || 'None'}`, `Right: ${rightToppings.join(', ') || 'None'}`]
-        : toppings,
+        : uniqueToppings,
       price: calculatePrice().total,
       quantity,
       imageUrl: "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&h=80",
