@@ -41,12 +41,11 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
   const taxRate = 0.0825;
 
   const meatToppings = [
-    "Pepperoni", "Italian Sausage", "Bacon", "Ham", "Ground Beef", "Chicken"
+    "Pepperoni", "Italian Sausage", "Beef", "Bacon"
   ];
 
   const veggieToppings = [
-    "Bell Peppers", "Mushrooms", "Red Onions", "Black Olives", "Green Olives", 
-    "Tomatoes", "Jalapeños", "Pineapple", "Spinach", "Banana Peppers"
+    "Bell Peppers", "Onions", "Mushrooms", "Black Olives", "Banana Peppers", "Jalapeños"
   ];
 
   const calculatePrice = () => {
@@ -235,7 +234,7 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
               
               {/* Meat Toppings */}
               <div className="mb-4">
-                <h4 className="font-medium mb-2 text-neutral-text">Meat Toppings</h4>
+                <h4 className="font-medium mb-2 text-neutral-text">Meat</h4>
                 <div className="grid grid-cols-2 gap-2">
                   {meatToppings.map((topping) => (
                     <div key={topping} className="space-y-1">
@@ -266,7 +265,7 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
 
               {/* Veggie Toppings */}
               <div>
-                <h4 className="font-medium mb-2 text-neutral-text">Veggie Toppings</h4>
+                <h4 className="font-medium mb-2 text-neutral-text">Fresh Toppings</h4>
                 <div className="grid grid-cols-2 gap-2">
                   {veggieToppings.map((topping) => (
                     <div key={topping} className="space-y-1">
