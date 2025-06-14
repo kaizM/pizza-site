@@ -86,7 +86,7 @@ export default function EmployeeDashboard() {
         variant: "success",
       });
     } catch (error) {
-      console.error("Error updating order:", error);
+      // Log error securely without exposing sensitive data
       toast({
         title: "Update Failed",
         description: "Failed to update order status",

@@ -62,7 +62,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/orders", async (req, res) => {
     try {
-      const order = await storage.createOrder(req.body);
+      // Input validation
+      if (!req.body.customerInfo || !req.body.items || !req.body.total) {
+        return res.status(400).json({ message: "Missing required order fields" });
+      }
+      
+      // Sanitize customer info
+      const sanitizedOrder = {
+        ...req.body,
+        customerInfo: {
+          firstName: req.body.customerInfo.firstName?.toString().trim().slice(0, 50) || '',
+          lastName: req.body.customerInfo.lastName?.toString().trim().slice(0, 50) || '',
+          phone: req.body.customerInfo.phone?.toString().replace(/[^\d\-\(\)\+\s]/g, '').slice(0, 20) || '',
+          email: req.body.customerInfo.email?.toString().trim().slice(0, 100) || ''
+        },
+        specialInstructions: req.body.specialInstructions?.toString().trim().slice(0, 500) || ''
+      };
+      
+      const order = await storage.createOrder(sanitizedOrder);
       res.status(201).json(order);
     } catch (error) {
       res.status(500).json({ message: "Failed to create order" });

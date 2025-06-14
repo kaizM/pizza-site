@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Plus, Minus } from "lucide-react";
-import { CartItem } from "@/shared/schema";
+import { CartItem } from "@shared/schema";
 
 interface PizzaBuilderProps {
   onAddToCart: (item: CartItem) => void;
