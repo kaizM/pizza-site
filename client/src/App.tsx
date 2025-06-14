@@ -7,6 +7,7 @@ import Home from "@/pages/home";
 import BuildPizzaPage from "@/pages/build-pizza";
 import CheckoutPage from "@/pages/checkout";
 import TrackOrderPage from "@/pages/track-order";
+import EmployeePage from "@/pages/employee";
 import AdminPage from "@/pages/admin";
 import NotFound from "@/pages/not-found";
 
@@ -17,6 +18,7 @@ function Router() {
       <Route path="/build-pizza" component={BuildPizzaPage} />
       <Route path="/checkout" component={CheckoutPage} />
       <Route path="/track-order" component={TrackOrderPage} />
+      <Route path="/employee" component={EmployeePage} />
       <Route path="/admin" component={AdminPage} />
       <Route component={NotFound} />
     </Switch>

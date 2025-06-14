@@ -58,6 +58,9 @@ export default function BuildPizzaPage() {
               <Link href="/track-order" className="text-neutral-text hover:text-red-600 transition-colors font-medium">
                 Track Order
               </Link>
+              <Link href="/employee" className="text-neutral-text hover:text-red-600 transition-colors font-medium">
+                Kitchen
+              </Link>
               <Link href="/admin" className="text-neutral-text hover:text-red-600 transition-colors font-medium">
                 Admin
               </Link>
