@@ -85,16 +85,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Missing required order fields" });
       }
       
-      // Sanitize customer info
+      // Sanitize customer info - remove HTML/script tags and dangerous characters
+      const sanitizeText = (text: string) => {
+        return text
+          .replace(/<[^>]*>/g, '') // Remove HTML tags
+          .replace(/[<>'"&]/g, '') // Remove dangerous characters
+          .trim();
+      };
+
       const sanitizedOrder = {
         ...req.body,
         customerInfo: {
-          firstName: req.body.customerInfo.firstName?.toString().trim().slice(0, 50) || '',
-          lastName: req.body.customerInfo.lastName?.toString().trim().slice(0, 50) || '',
+          firstName: sanitizeText(req.body.customerInfo.firstName?.toString() || '').slice(0, 50),
+          lastName: sanitizeText(req.body.customerInfo.lastName?.toString() || '').slice(0, 50),
           phone: req.body.customerInfo.phone?.toString().replace(/[^\d\-\(\)\+\s]/g, '').slice(0, 20) || '',
           email: req.body.customerInfo.email?.toString().trim().slice(0, 100) || ''
         },
-        specialInstructions: req.body.specialInstructions?.toString().trim().slice(0, 500) || ''
+        specialInstructions: sanitizeText(req.body.specialInstructions?.toString() || '').slice(0, 500)
       };
       
       const order = await storage.createOrder(sanitizedOrder);
