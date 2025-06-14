@@ -10,7 +10,7 @@ import {
   orderBy, 
   Timestamp 
 } from "firebase/firestore";
-import { db } from "../client/src/lib/firebase";
+import { db } from "./firebase";
 import { IStorage } from "./storage";
 import { User, InsertUser, Order, InsertOrder, PizzaItem, InsertPizzaItem } from "@shared/schema";
 
@@ -31,7 +31,7 @@ export class FirebaseStorage implements IStorage {
           {
             name: "Margherita",
             description: "Classic tomato sauce, fresh mozzarella, and basil",
-            basePrice: 12.99,
+            basePrice: "12.99",
             imageUrl: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
             category: "classic",
             isActive: true,
@@ -39,7 +39,7 @@ export class FirebaseStorage implements IStorage {
           {
             name: "Pepperoni",
             description: "Traditional pepperoni with mozzarella cheese",
-            basePrice: 14.99,
+            basePrice: "14.99",
             imageUrl: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
             category: "classic",
             isActive: true,
@@ -47,7 +47,7 @@ export class FirebaseStorage implements IStorage {
           {
             name: "Supreme",
             description: "Pepperoni, sausage, mushrooms, bell peppers, and onions",
-            basePrice: 18.99,
+            basePrice: "18.99",
             imageUrl: "https://images.unsplash.com/photo-1534308983667-ec4c5a701f88?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
             category: "specialty",
             isActive: true,
@@ -67,7 +67,16 @@ export class FirebaseStorage implements IStorage {
     try {
       const userDoc = await getDoc(doc(db, "users", id.toString()));
       if (userDoc.exists()) {
-        return { id, ...userDoc.data() } as User;
+        const data = userDoc.data();
+        return { 
+          id, 
+          email: data.email,
+          firebaseUid: data.firebaseUid,
+          firstName: data.firstName || null,
+          lastName: data.lastName || null,
+          phone: data.phone || null,
+          createdAt: data.createdAt?.toDate() || null
+        } as User;
       }
     } catch (error) {
       console.error("Error getting user:", error);
@@ -77,11 +86,20 @@ export class FirebaseStorage implements IStorage {
 
   async getUserByUsername(username: string): Promise<User | undefined> {
     try {
-      const q = query(this.usersCollection, where("username", "==", username));
+      const q = query(this.usersCollection, where("email", "==", username));
       const querySnapshot = await getDocs(q);
       if (!querySnapshot.empty) {
         const doc = querySnapshot.docs[0];
-        return { id: parseInt(doc.id), ...doc.data() } as User;
+        const data = doc.data();
+        return { 
+          id: parseInt(doc.id), 
+          email: data.email,
+          firebaseUid: data.firebaseUid,
+          firstName: data.firstName || null,
+          lastName: data.lastName || null,
+          phone: data.phone || null,
+          createdAt: data.createdAt?.toDate() || null
+        } as User;
       }
     } catch (error) {
       console.error("Error getting user by username:", error);
@@ -95,7 +113,16 @@ export class FirebaseStorage implements IStorage {
       const querySnapshot = await getDocs(q);
       if (!querySnapshot.empty) {
         const doc = querySnapshot.docs[0];
-        return { id: parseInt(doc.id), ...doc.data() } as User;
+        const data = doc.data();
+        return { 
+          id: parseInt(doc.id), 
+          email: data.email,
+          firebaseUid: data.firebaseUid,
+          firstName: data.firstName || null,
+          lastName: data.lastName || null,
+          phone: data.phone || null,
+          createdAt: data.createdAt?.toDate() || null
+        } as User;
       }
     } catch (error) {
       console.error("Error getting user by Firebase UID:", error);
@@ -166,13 +193,26 @@ export class FirebaseStorage implements IStorage {
     try {
       const orderData = {
         ...insertOrder,
-        createdAt: Timestamp.now()
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now()
       };
       const docRef = await addDoc(this.ordersCollection, orderData);
       const order: Order = {
         id: parseInt(docRef.id),
-        ...orderData,
-        createdAt: orderData.createdAt.toDate()
+        status: insertOrder.status || "confirmed",
+        firebaseOrderId: insertOrder.firebaseOrderId,
+        userId: insertOrder.userId || null,
+        customerInfo: insertOrder.customerInfo,
+        items: insertOrder.items,
+        subtotal: insertOrder.subtotal,
+        tax: insertOrder.tax,
+        deliveryFee: insertOrder.deliveryFee || null,
+        total: insertOrder.total,
+        orderType: insertOrder.orderType,
+        specialInstructions: insertOrder.specialInstructions || null,
+        estimatedTime: insertOrder.estimatedTime || null,
+        createdAt: orderData.createdAt.toDate(),
+        updatedAt: orderData.updatedAt.toDate()
       };
       return order;
     } catch (error) {
@@ -237,7 +277,12 @@ export class FirebaseStorage implements IStorage {
       const docRef = await addDoc(this.pizzasCollection, insertPizza);
       const pizza: PizzaItem = { 
         id: parseInt(docRef.id), 
-        ...insertPizza 
+        name: insertPizza.name,
+        description: insertPizza.description || null,
+        basePrice: insertPizza.basePrice,
+        imageUrl: insertPizza.imageUrl || null,
+        category: insertPizza.category || null,
+        isActive: insertPizza.isActive ?? null
       };
       return pizza;
     } catch (error) {
@@ -293,7 +338,7 @@ export class FirebaseStorage implements IStorage {
         ...doc.data()
       })) as Order[];
       
-      const todayRevenue = todayOrders.reduce((sum, order) => sum + order.total, 0);
+      const todayRevenue = todayOrders.reduce((sum, order) => sum + parseFloat(order.total), 0);
       const activeOrders = activeSnapshot.size;
       const recentOrders = recentSnapshot.docs.slice(0, 10).map(doc => ({
         id: parseInt(doc.id),
