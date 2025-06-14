@@ -24,14 +24,14 @@
   --ring: hsl(20, 14.3%, 4.1%);
   --radius: 0.5rem;
 
-  /* Custom Pizza Theme Colors */
-  --pizza-red: hsl(0, 73%, 57%);
-  --pizza-orange: hsl(16, 100%, 60%);
-  --pizza-green: hsl(142, 53%, 32%);
-  --pizza-yellow: hsl(35, 82%, 59%);
+  /* Hunt Brothers Pizza Theme Colors */
+  --hunt-red: hsl(355, 85%, 45%);
+  --hunt-yellow: hsl(45, 100%, 51%);
+  --hunt-orange: hsl(25, 100%, 55%);
+  --hunt-dark-red: hsl(355, 85%, 35%);
   --neutral-bg: hsl(0, 0%, 98%);
-  --neutral-text: hsl(0, 0%, 20%);
-  --neutral-secondary: hsl(0, 0%, 40%);
+  --neutral-text: hsl(0, 0%, 15%);
+  --neutral-secondary: hsl(0, 0%, 45%);
 }
 
 .dark {
@@ -73,37 +73,37 @@
   }
 }
 
-/* Custom utility classes for pizza theme */
-.text-pizza-red {
-  color: var(--pizza-red);
+/* Hunt Brothers Pizza utility classes */
+.text-hunt-red {
+  color: var(--hunt-red);
 }
 
-.bg-pizza-red {
-  background-color: var(--pizza-red);
+.bg-hunt-red {
+  background-color: var(--hunt-red);
 }
 
-.text-pizza-orange {
-  color: var(--pizza-orange);
+.text-hunt-yellow {
+  color: var(--hunt-yellow);
 }
 
-.bg-pizza-orange {
-  background-color: var(--pizza-orange);
+.bg-hunt-yellow {
+  background-color: var(--hunt-yellow);
 }
 
-.text-pizza-green {
-  color: var(--pizza-green);
+.text-hunt-orange {
+  color: var(--hunt-orange);
 }
 
-.bg-pizza-green {
-  background-color: var(--pizza-green);
+.bg-hunt-orange {
+  background-color: var(--hunt-orange);
 }
 
-.text-pizza-yellow {
-  color: var(--pizza-yellow);
+.text-hunt-dark-red {
+  color: var(--hunt-dark-red);
 }
 
-.bg-pizza-yellow {
-  background-color: var(--pizza-yellow);
+.bg-hunt-dark-red {
+  background-color: var(--hunt-dark-red);
 }
 
 .text-neutral-text {

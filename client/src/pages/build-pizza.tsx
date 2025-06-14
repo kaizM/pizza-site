@@ -45,7 +45,7 @@ export default function BuildPizzaPage() {
               <div className="flex items-center">
                 <div className="text-2xl mr-2">🍕</div>
                 <div>
-                  <h1 className="font-cursive text-2xl text-red-600">Lemur Express 11</h1>
+                  <h1 className="font-cursive text-2xl text-red-600">Hunt Brothers Pizza</h1>
                   <p className="text-xs text-neutral-secondary -mt-1">Pizza Builder</p>
                 </div>
               </div>

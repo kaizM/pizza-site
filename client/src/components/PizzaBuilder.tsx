@@ -179,7 +179,7 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl text-neutral-text">Build Your Pizza</CardTitle>
+          <CardTitle className="text-2xl text-neutral-text">Build Your Hunt Brothers Pizza</CardTitle>
           <p className="text-neutral-secondary">Create your perfect medium pizza with up to 10 free toppings</p>
         </CardHeader>
         <CardContent className="space-y-6">

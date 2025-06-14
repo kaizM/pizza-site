@@ -13,34 +13,34 @@ export default function Home() {
       name: "Lotsa Meat",
       description: "Loaded with pepperoni, sausage, bacon, and ham for the ultimate meat lovers experience",
       price: 16.99,
-      image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+      image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
     },
     {
       id: "veggie-delight",
       name: "Veggie Delight",
       description: "Fresh bell peppers, mushrooms, olives, onions, and tomatoes on our signature sauce",
       price: 13.99,
-      image: "https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+      image: "https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
     },
     {
       id: "loaded",
       name: "Loaded",
       description: "The works! Pepperoni, sausage, mushrooms, bell peppers, and onions",
       price: 18.99,
-      image: "https://images.unsplash.com/photo-1534308983667-ec4c5a701f88?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
+      image: "https://images.unsplash.com/photo-1594007654729-407eedc4be65?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
     },
   ];
 
   return (
     <div className="min-h-screen bg-neutral-bg">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-red-600 to-red-500 text-white py-20">
+      <section className="bg-gradient-to-r from-red-700 to-yellow-500 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl font-bold mb-4">
-            Authentic Pizza Made Fresh Daily
+            Hunt Brothers Pizza - Made Fresh Daily
           </h1>
           <p className="text-xl mb-8 opacity-90">
-            Hand-tossed dough, premium ingredients, and recipes passed down through generations
+            Bold flavors, quality ingredients, and the pizza you crave - made fresh to order
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/build-pizza">
@@ -61,8 +61,8 @@ export default function Home() {
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-neutral-text mb-4">Our Signature Pizzas</h2>
-            <p className="text-xl text-neutral-secondary">Crafted with love, served with pride</p>
+            <h2 className="text-3xl font-bold text-neutral-text mb-4">Hunt Brothers Signature Pizzas</h2>
+            <p className="text-xl text-neutral-secondary">Bold flavors, loaded with your favorites</p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
@@ -121,10 +121,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-8">
             <div>
-              <h3 className="text-2xl font-cursive text-red-400 mb-4">Lemur Express 11</h3>
+              <h3 className="text-2xl font-cursive text-red-400 mb-4">Hunt Brothers Pizza</h3>
               <p className="text-gray-300 leading-relaxed">
-                Serving Palacios, TX with authentic, hand-crafted pizzas since day one. 
-                Every pizza is made fresh to order with premium ingredients.
+                Serving Palacios, TX with bold, American-style pizzas since day one. 
+                Every pizza is made fresh to order with quality ingredients.
               </p>
             </div>
             
@@ -155,7 +155,7 @@ export default function Home() {
           </div>
           
           <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Lemur Express 11. All rights reserved.</p>
+            <p>&copy; 2024 Hunt Brothers Pizza. All rights reserved.</p>
           </div>
         </div>
       </footer>
