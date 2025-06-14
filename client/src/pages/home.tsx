@@ -172,7 +172,7 @@ export default function Home() {
                 </div>
                 <div className="bg-yellow-400/20 p-4 rounded-lg border border-yellow-400/30">
                   <p className="text-yellow-300 font-semibold text-center">🍕 Pickup Only</p>
-                  <p className="text-red-100 text-sm text-center mt-1">Ready in 15-20 minutes</p>
+                  <p className="text-red-100 text-sm text-center mt-1">Ready in 7-10 minutes</p>
                 </div>
               </div>
             </div>

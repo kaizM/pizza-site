@@ -187,7 +187,7 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
               <CardContent className="p-4">
                 <div className="text-center">
                   <h3 className="font-bold text-blue-800 text-lg">🏪 Pickup Only</h3>
-                  <p className="text-blue-700">We do not offer delivery. Ready in 15-20 minutes.</p>
+                  <p className="text-blue-700">We do not offer delivery. Ready in 7-10 minutes.</p>
                 </div>
               </CardContent>
             </Card>
