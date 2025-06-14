@@ -117,45 +117,72 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-neutral-text text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="text-2xl font-cursive text-red-400 mb-4">Hunt Brothers Pizza</h3>
-              <p className="text-gray-300 leading-relaxed">
+      <footer className="bg-gradient-to-br from-red-900 via-red-800 to-red-900 text-white py-16 relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-32 h-32 bg-yellow-400 rounded-full -translate-x-16 -translate-y-16"></div>
+          <div className="absolute bottom-0 right-0 w-48 h-48 bg-yellow-400 rounded-full translate-x-24 translate-y-24"></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="grid md:grid-cols-3 gap-12">
+            <div className="text-center md:text-left">
+              <h3 className="text-3xl font-bold text-yellow-400 mb-6">Hunt Brothers Pizza</h3>
+              <p className="text-red-100 leading-relaxed text-lg">
                 Serving Palacios, TX with bold, American-style pizzas since day one. 
                 Every pizza is made fresh to order with quality ingredients.
               </p>
             </div>
             
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Location</h4>
-              <div className="space-y-2 text-gray-300">
-                <div className="flex items-center">
-                  <MapPin className="mr-2 h-4 w-4 text-red-400" />
-                  <span>2100 1st Street, Palacios, TX 77465</span>
+            <div className="text-center md:text-left">
+              <h4 className="text-xl font-bold mb-6 text-yellow-400">Visit Us</h4>
+              <div className="space-y-4">
+                <div className="flex items-center justify-center md:justify-start group">
+                  <div className="bg-yellow-400 p-2 rounded-full mr-4 group-hover:scale-110 transition-transform">
+                    <MapPin className="h-5 w-5 text-red-800" />
+                  </div>
+                  <div>
+                    <p className="text-white font-semibold">2100 1st Street</p>
+                    <p className="text-red-200">Palacios, TX 77465</p>
+                  </div>
                 </div>
-                <div className="flex items-center">
-                  <Phone className="mr-2 h-4 w-4 text-red-400" />
-                  <span>(361) 403-0083</span>
+                <div className="flex items-center justify-center md:justify-start group">
+                  <div className="bg-yellow-400 p-2 rounded-full mr-4 group-hover:scale-110 transition-transform">
+                    <Phone className="h-5 w-5 text-red-800" />
+                  </div>
+                  <div>
+                    <p className="text-white font-semibold">(361) 403-0083</p>
+                    <p className="text-red-200">Call to order</p>
+                  </div>
                 </div>
               </div>
             </div>
             
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Hours</h4>
-              <div className="space-y-2 text-gray-300">
-                <div className="flex items-center">
-                  <Clock className="mr-2 h-4 w-4 text-red-400" />
-                  <span>9:00 AM – 12:00 AM</span>
+            <div className="text-center md:text-left">
+              <h4 className="text-xl font-bold mb-6 text-yellow-400">Hours</h4>
+              <div className="space-y-4">
+                <div className="flex items-center justify-center md:justify-start group">
+                  <div className="bg-yellow-400 p-2 rounded-full mr-4 group-hover:scale-110 transition-transform">
+                    <Clock className="h-5 w-5 text-red-800" />
+                  </div>
+                  <div>
+                    <p className="text-white font-semibold">9:00 AM – 12:00 AM</p>
+                    <p className="text-red-200">Open 7 days a week</p>
+                  </div>
                 </div>
-                <p className="text-sm">Open 7 days a week</p>
+                <div className="bg-yellow-400/20 p-4 rounded-lg border border-yellow-400/30">
+                  <p className="text-yellow-300 font-semibold text-center">🍕 Pickup Only</p>
+                  <p className="text-red-100 text-sm text-center mt-1">Ready in 15-20 minutes</p>
+                </div>
               </div>
             </div>
           </div>
           
-          <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Hunt Brothers Pizza. All rights reserved.</p>
+          <div className="border-t border-red-600/50 mt-12 pt-8">
+            <div className="text-center">
+              <p className="text-red-200 text-lg mb-2">&copy; 2024 Hunt Brothers Pizza. All rights reserved.</p>
+              <p className="text-red-300 text-sm">Fresh • Bold • American</p>
+            </div>
           </div>
         </div>
       </footer>
