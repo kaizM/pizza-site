@@ -27,7 +27,7 @@ export default function Home() {
       name: "Loaded", 
       description: "Combo of meats & veggies: pepperoni, sausage, mushrooms, bell peppers, onions.",
       price: 11.99,
-      image: "/attached_assets/image_1749943451486.jpeg",
+      image: "/loaded-pizza.jpeg",
     },
   ];
 
