@@ -10,6 +10,7 @@ import TrackOrderPage from "@/pages/track-order";
 import EmployeePage from "@/pages/employee";
 import AdminPage from "@/pages/admin";
 import NotFound from "@/pages/not-found";
+import OrderTrackingPage from "@/pages/order-tracking";
 
 function Router() {
   return (
@@ -18,6 +19,7 @@ function Router() {
       <Route path="/build-pizza" component={BuildPizzaPage} />
       <Route path="/checkout" component={CheckoutPage} />
       <Route path="/track-order" component={TrackOrderPage} />
+      <Route path="/order-tracking/:orderId" component={OrderTrackingPage} />
       <Route path="/kitchen-display-system" component={EmployeePage} />
       <Route path="/management-portal" component={AdminPage} />
       <Route component={NotFound} />
