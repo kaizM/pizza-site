@@ -33,6 +33,9 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
   const [phoneVerificationCode, setPhoneVerificationCode] = useState("");
   const [verificationSent, setVerificationSent] = useState(false);
   const [phoneVerified, setPhoneVerified] = useState(false);
+  const [cashEligible, setCashEligible] = useState(false);
+  const [trustScore, setTrustScore] = useState(0);
+  const [checkingEligibility, setCheckingEligibility] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -64,6 +67,24 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
     setCustomTip(value);
     const customAmount = parseFloat(value) || 0;
     setTip(customAmount);
+  };
+
+  const checkCashEligibility = async (phone: string) => {
+    if (!phone || phone.length < 10) return;
+    
+    setCheckingEligibility(true);
+    try {
+      const response = await apiRequest("POST", "/api/check-cash-eligibility", { phone });
+      const data = await response.json();
+      setCashEligible(data.eligible);
+      setTrustScore(data.trustScore);
+    } catch (error) {
+      console.error("Error checking cash eligibility:", error);
+      setCashEligible(false);
+      setTrustScore(0);
+    } finally {
+      setCheckingEligibility(false);
+    }
   };
 
   const validateName = (name: string) => {

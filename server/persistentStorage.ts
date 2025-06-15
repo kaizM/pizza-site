@@ -1,6 +1,6 @@
 import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
-import { users, orders, pizzaItems, orderCancellations, customerNotifications, type User, type InsertUser, type Order, type InsertOrder, type PizzaItem, type InsertPizzaItem, type OrderCancellation, type InsertOrderCancellation, type CustomerNotification, type InsertCustomerNotification } from "@shared/schema";
+import { users, orders, pizzaItems, orderCancellations, customerNotifications, customerProfiles, type User, type InsertUser, type Order, type InsertOrder, type PizzaItem, type InsertPizzaItem, type OrderCancellation, type InsertOrderCancellation, type CustomerNotification, type InsertCustomerNotification, type CustomerProfile, type InsertCustomerProfile } from "@shared/schema";
 import { IStorage } from "./storage";
 
 interface StorageData {
@@ -47,7 +47,8 @@ export class PersistentStorage implements IStorage {
           pizzas: [],
           cancellations: [],
           notifications: [],
-          counters: { userId: 1, orderId: 1, pizzaId: 1, cancellationId: 1, notificationId: 1 }
+          customerProfiles: [],
+          counters: { userId: 1, orderId: 1, pizzaId: 1, cancellationId: 1, notificationId: 1, customerProfileId: 1 }
         };
       }
     } catch (error) {
@@ -58,7 +59,8 @@ export class PersistentStorage implements IStorage {
         pizzas: [],
         cancellations: [],
         notifications: [],
-        counters: { userId: 1, orderId: 1, pizzaId: 1, cancellationId: 1, notificationId: 1 }
+        customerProfiles: [],
+        counters: { userId: 1, orderId: 1, pizzaId: 1, cancellationId: 1, notificationId: 1, customerProfileId: 1 }
       };
     }
   }
@@ -334,5 +336,129 @@ export class PersistentStorage implements IStorage {
       return notification;
     }
     return undefined;
+  }
+
+  // Customer Profile Management
+  async getCustomerProfile(phone: string): Promise<CustomerProfile | undefined> {
+    // Ensure customerProfiles array exists
+    if (!this.data.customerProfiles) {
+      this.data.customerProfiles = [];
+    }
+    return this.data.customerProfiles.find(profile => profile.phone === phone);
+  }
+
+  async createCustomerProfile(insertProfile: InsertCustomerProfile): Promise<CustomerProfile> {
+    // Ensure customerProfiles array exists
+    if (!this.data.customerProfiles) {
+      this.data.customerProfiles = [];
+    }
+
+    const profile: CustomerProfile = {
+      id: this.data.counters.customerProfileId++,
+      ...insertProfile,
+      totalOrders: insertProfile.totalOrders || 0,
+      completedOrders: insertProfile.completedOrders || 0,
+      cancelledOrders: insertProfile.cancelledOrders || 0,
+      noShowOrders: insertProfile.noShowOrders || 0,
+      trustScore: insertProfile.trustScore || 0,
+      cashPaymentAllowed: insertProfile.cashPaymentAllowed || false,
+      lastOrderDate: insertProfile.lastOrderDate || null,
+      notes: insertProfile.notes || null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    this.data.customerProfiles.push(profile);
+    this.saveData();
+    return profile;
+  }
+
+  async updateCustomerProfile(phone: string, updates: Partial<CustomerProfile>): Promise<CustomerProfile | undefined> {
+    // Ensure customerProfiles array exists
+    if (!this.data.customerProfiles) {
+      this.data.customerProfiles = [];
+      return undefined;
+    }
+
+    const profileIndex = this.data.customerProfiles.findIndex(profile => profile.phone === phone);
+    if (profileIndex === -1) return undefined;
+
+    const updatedProfile: CustomerProfile = {
+      ...this.data.customerProfiles[profileIndex],
+      ...updates,
+      updatedAt: new Date(),
+    };
+
+    this.data.customerProfiles[profileIndex] = updatedProfile;
+    this.saveData();
+    return updatedProfile;
+  }
+
+  async calculateTrustScore(phone: string): Promise<number> {
+    const profile = await this.getCustomerProfile(phone);
+    if (!profile) return 0;
+
+    // Trust score calculation (0-100 scale)
+    let score = 50; // Base score
+
+    // Positive factors
+    if (profile.completedOrders > 0) {
+      const completionRate = profile.completedOrders / profile.totalOrders;
+      score += completionRate * 30; // Up to 30 points for high completion rate
+    }
+
+    // Loyalty bonus for frequent customers
+    if (profile.totalOrders >= 5) score += 10;
+    if (profile.totalOrders >= 10) score += 10;
+
+    // Recent activity bonus
+    if (profile.lastOrderDate && profile.lastOrderDate > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)) {
+      score += 5; // Recent order within 30 days
+    }
+
+    // Negative factors
+    if (profile.noShowOrders > 0) {
+      const noShowRate = profile.noShowOrders / profile.totalOrders;
+      score -= noShowRate * 40; // Heavy penalty for no-shows
+    }
+
+    if (profile.cancelledOrders > 0) {
+      const cancelRate = profile.cancelledOrders / profile.totalOrders;
+      score -= cancelRate * 20; // Moderate penalty for cancellations
+    }
+
+    // Ensure score stays within bounds
+    score = Math.max(0, Math.min(100, score));
+
+    // Update the profile with calculated score
+    await this.updateCustomerProfile(phone, { trustScore: Math.round(score) });
+
+    return Math.round(score);
+  }
+
+  async checkCashPaymentEligibility(phone: string): Promise<boolean> {
+    const profile = await this.getCustomerProfile(phone);
+    if (!profile) return false;
+
+    // Cash payment eligibility criteria
+    const trustScore = await this.calculateTrustScore(phone);
+    
+    // Requirements for cash payment:
+    // 1. Trust score >= 70
+    // 2. At least 3 completed orders
+    // 3. No more than 1 no-show order
+    // 4. No-show rate < 20%
+    
+    const hasMinimumOrders = profile.completedOrders >= 3;
+    const hasAcceptableTrustScore = trustScore >= 70;
+    const hasLowNoShowRate = profile.totalOrders > 0 ? (profile.noShowOrders / profile.totalOrders) < 0.2 : true;
+    const hasMinimalNoShows = profile.noShowOrders <= 1;
+
+    const eligible = hasMinimumOrders && hasAcceptableTrustScore && hasLowNoShowRate && hasMinimalNoShows;
+
+    // Update the profile with eligibility status
+    await this.updateCustomerProfile(phone, { cashPaymentAllowed: eligible });
+
+    return eligible;
   }
 }
