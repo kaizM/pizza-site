@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Plus, Minus } from "lucide-react";
 import { CartItem } from "@shared/schema";
-import PizzaVisualizer from "@/components/PizzaVisualizer";
+import RealisticPizzaVisualizer from "@/components/RealisticPizzaVisualizer";
 
 interface PizzaBuilderProps {
   onAddToCart: (item: CartItem) => void;
@@ -144,7 +144,7 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
           {/* Pizza Visual */}
           <Card className="border-2 border-red-200 lg:sticky lg:top-4 h-fit">
             <CardContent className="p-6">
-              <PizzaVisualizer
+              <RealisticPizzaVisualizer
                 size="Standard"
                 crust={selectedCrust}
                 selectedToppings={selectedToppings}
