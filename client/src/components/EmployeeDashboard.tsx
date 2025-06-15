@@ -46,7 +46,7 @@ interface Order {
   }>;
   total: number;
   tip?: number;
-  status: "confirmed" | "preparing" | "ready" | "completed";
+  status: "confirmed" | "preparing" | "ready" | "completed" | "cancelled";
   orderType: "pickup" | "delivery";
   specialInstructions?: string;
   estimatedTime?: number;
@@ -69,6 +69,7 @@ export default function EmployeeDashboard() {
   const [cancelReason, setCancelReason] = useState("");
   const [substitutionReason, setSubstitutionReason] = useState("");
   const [substitutionSuggestion, setSubstitutionSuggestion] = useState("");
+  const [activeTab, setActiveTab] = useState<"all" | "confirmed" | "preparing" | "ready" | "completed" | "cancelled">("all");
   const { toast } = useToast();
 
   // Auto-refresh current time every second
@@ -398,7 +399,7 @@ export default function EmployeeDashboard() {
         </div>
         
         {/* Status Summary */}
-        <div className="grid grid-cols-4 gap-4 mt-6">
+        <div className="grid grid-cols-5 gap-4 mt-6">
           <div className="bg-blue-50 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-blue-600">
               {orders.filter(o => o.status === "confirmed").length}
@@ -417,9 +418,15 @@ export default function EmployeeDashboard() {
             </div>
             <div className="text-sm text-green-600">Ready</div>
           </div>
+          <div className="bg-red-50 rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold text-red-600">
+              {orders.filter(o => o.status === "cancelled").length}
+            </div>
+            <div className="text-sm text-red-600">Cancelled</div>
+          </div>
           <div className="bg-purple-50 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-purple-600">
-              {orders.length}
+              {orders.filter(o => o.status !== "cancelled").length}
             </div>
             <div className="text-sm text-purple-600">Total Active</div>
           </div>
@@ -447,6 +454,39 @@ export default function EmployeeDashboard() {
         </div>
       )}
 
+      {/* Order Tabs */}
+      <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+        <div className="flex space-x-1 bg-gray-100 rounded-lg p-1">
+          {[
+            { key: "all", label: "All Orders", count: orders.length },
+            { key: "confirmed", label: "New", count: orders.filter(o => o.status === "confirmed").length },
+            { key: "preparing", label: "Preparing", count: orders.filter(o => o.status === "preparing").length },
+            { key: "ready", label: "Ready", count: orders.filter(o => o.status === "ready").length },
+            { key: "completed", label: "Completed", count: orders.filter(o => o.status === "completed").length },
+            { key: "cancelled", label: "Cancelled", count: orders.filter(o => o.status === "cancelled").length }
+          ].map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key as any)}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                activeTab === tab.key
+                  ? "bg-white text-red-600 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              {tab.label}
+              {tab.count > 0 && (
+                <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
+                  activeTab === tab.key ? "bg-red-100 text-red-600" : "bg-gray-200 text-gray-600"
+                }`}>
+                  {tab.count}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Orders Grid */}
       {loading ? (
         <div className="flex items-center justify-center h-64">
@@ -455,15 +495,9 @@ export default function EmployeeDashboard() {
             <p className="text-gray-600">Loading orders...</p>
           </div>
         </div>
-      ) : orders.length === 0 ? (
-        <div className="text-center py-16">
-          <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-600 mb-2">No Active Orders</h3>
-          <p className="text-gray-500">All orders are completed or no new orders yet.</p>
-        </div>
       ) : (
         <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-6">
-          {orders.map((order) => {
+          {(activeTab === "all" ? orders : orders.filter(o => o.status === activeTab)).map((order) => {
             const timeElapsed = getTimeElapsed(order.createdAt);
             const isUrgent = timeElapsed > 10; // Red alert after 10 minutes
             
@@ -951,6 +985,7 @@ export default function EmployeeDashboard() {
           </div>
         </DialogContent>
       </Dialog>
+      )}
     </div>
   );
 }
