@@ -70,6 +70,7 @@ export default function EmployeeDashboard() {
   const [substitutionReason, setSubstitutionReason] = useState("");
   const [substitutionSuggestion, setSubstitutionSuggestion] = useState("");
   const [activeTab, setActiveTab] = useState<"all" | "confirmed" | "preparing" | "ready" | "completed" | "cancelled" | "history">("all");
+  const [orderNotifications, setOrderNotifications] = useState<Record<number, any[]>>({});
   const { toast } = useToast();
 
   // Auto-refresh current time every second
@@ -79,6 +80,18 @@ export default function EmployeeDashboard() {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  // Fetch notifications for a specific order
+  const fetchOrderNotifications = async (orderId: number) => {
+    try {
+      const response = await apiRequest("GET", `/api/notifications/order/${orderId}`);
+      const notifications = await response.json();
+      return notifications;
+    } catch (error) {
+      console.error(`Error fetching notifications for order ${orderId}:`, error);
+      return [];
+    }
+  };
 
   // Fetch orders from backend
   const fetchOrders = async () => {
@@ -94,6 +107,16 @@ export default function EmployeeDashboard() {
         // Sort by created date, newest first
         return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       });
+
+      // Fetch notifications for orders with substitution requests
+      const notificationsMap: Record<number, any[]> = {};
+      for (const order of activeOrders) {
+        if (order.specialInstructions?.includes("SUBSTITUTION REQUEST")) {
+          const notifications = await fetchOrderNotifications(order.id);
+          notificationsMap[order.id] = notifications;
+        }
+      }
+      setOrderNotifications(notificationsMap);
       
       // Check for new orders
       const previousOrderIds = orders.map(o => o.id);
@@ -706,12 +729,44 @@ Please click the link below to approve or decline this substitution:`;
                             <div className="flex items-center gap-2 mb-2">
                               <Clock className="h-4 w-4 text-orange-600" />
                               <span className="text-sm text-orange-800 font-medium">
-                                Waiting for Customer Response
+                                Substitution Request
                               </span>
                             </div>
-                            <p className="text-xs text-orange-700">
-                              Substitution request sent. You can still manage this order while waiting.
-                            </p>
+                            
+                            {/* Display customer responses */}
+                            {orderNotifications[order.id] && orderNotifications[order.id].length > 0 ? (
+                              <div className="space-y-2">
+                                {orderNotifications[order.id].map((notification: any) => (
+                                  <div key={notification.id} className="bg-white rounded border p-2">
+                                    <div className="text-xs text-gray-600 mb-1">
+                                      {notification.type === 'substitution_request' ? 'Substitution Request' : 'Notification'}
+                                    </div>
+                                    
+                                    {notification.customerResponse ? (
+                                      <div className="space-y-1">
+                                        <div className="text-sm font-medium text-green-700">
+                                          Customer Response: {notification.responseStatus === 'approved' ? '✓ Approved' : '✗ Declined'}
+                                        </div>
+                                        <div className="text-sm text-gray-700 bg-gray-50 p-2 rounded">
+                                          "{notification.customerResponse}"
+                                        </div>
+                                        <div className="text-xs text-gray-500">
+                                          Responded: {new Date(notification.respondedAt).toLocaleString()}
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      <div className="text-sm text-orange-700">
+                                        Waiting for customer response...
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <p className="text-xs text-orange-700">
+                                Substitution request sent. You can still manage this order while waiting.
+                              </p>
+                            )}
                           </div>
                         )}
 

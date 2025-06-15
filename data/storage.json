@@ -123,10 +123,10 @@
       "orderType": "pickup",
       "specialInstructions": "Extra crispy crust please",
       "paymentId": "pay_cart_test_123",
-      "paymentStatus": "authorized",
+      "paymentStatus": "charged",
       "status": "cancelled",
       "createdAt": "2025-06-15T04:46:11.467Z",
-      "updatedAt": "2025-06-15T04:59:04.238Z",
+      "updatedAt": "2025-06-15T05:33:49.820Z",
       "substitutionReason": "italian_sausage",
       "substitutionSuggestion": "dont have it",
       "substitutionRequestedBy": "employee",
@@ -134,7 +134,7 @@
       "estimatedTime": 10,
       "cancellationReason": "out_of_ingredients",
       "cancelledBy": "employee",
-      "cancelledAt": "2025-06-15T04:59:04.161Z"
+      "cancelledAt": "2025-06-15T05:33:49.755Z"
     },
     {
       "id": 4,
@@ -166,11 +166,11 @@
       "specialInstructions": "",
       "paymentStatus": "charged",
       "userId": null,
-      "status": "cancelled",
+      "status": "preparing",
       "paymentId": "test_pay_1749964063528_jp3o7ve90",
       "estimatedTime": 10,
       "createdAt": "2025-06-15T05:07:43.932Z",
-      "updatedAt": "2025-06-15T05:09:33.828Z",
+      "updatedAt": "2025-06-15T05:33:33.186Z",
       "substitutionReason": "bacon",
       "substitutionSuggestion": "out",
       "substitutionRequestedBy": "employee",
@@ -207,11 +207,49 @@
       "specialInstructions": "",
       "paymentStatus": "charged",
       "userId": null,
-      "status": "ready",
+      "status": "completed",
       "paymentId": "test_pay_1749965146477_n1embg17x",
       "estimatedTime": 10,
       "createdAt": "2025-06-15T05:25:46.802Z",
-      "updatedAt": "2025-06-15T05:27:31.252Z"
+      "updatedAt": "2025-06-15T05:33:22.263Z"
+    },
+    {
+      "id": 6,
+      "customerInfo": {
+        "firstName": "kaiz",
+        "lastName": "maredia",
+        "phone": "8325429818",
+        "email": "kaizmaredia98@gmail.com"
+      },
+      "items": [
+        {
+          "id": "pizza-1749965643106",
+          "name": "Cheese",
+          "size": "Standard",
+          "crust": "Original",
+          "toppings": [
+            "Beef",
+            "Italian Sausage",
+            "Double Cheese"
+          ],
+          "price": 14.18,
+          "quantity": 1,
+          "imageUrl": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300"
+        }
+      ],
+      "subtotal": 14.18,
+      "tax": 1.17,
+      "tip": 2.3,
+      "total": 17.65,
+      "orderType": "pickup",
+      "specialInstructions": "SUBSTITUTION REQUEST: italian_sausage. Suggested: Out.",
+      "paymentStatus": "authorized",
+      "userId": null,
+      "status": "confirmed",
+      "paymentId": "test_pay_1749965694913_kx6f91xpf",
+      "estimatedTime": 10,
+      "createdAt": "2025-06-15T05:34:55.227Z",
+      "updatedAt": "2025-06-15T05:35:16.421Z"
     }
   ],
   "pizzas": [
@@ -263,8 +301,32 @@
   ],
   "counters": {
     "userId": 1,
-    "orderId": 6,
+    "orderId": 7,
     "pizzaId": 6,
-    "notificationId": null
-  }
+    "notificationId": 3
+  },
+  "notifications": [
+    {
+      "id": 1,
+      "orderId": 3,
+      "type": "order_cancelled",
+      "message": "Hello Sarah,\n\nWe regret to inform you that your order #3 has been cancelled.\n\nReason: out_of_ingredients\n\nYour payment will be refunded within 3-5 business days. If you have any questions, please contact us directly.\n\nWe apologize for the inconvenience.",
+      "customerEmail": "sarah.johnson@email.com",
+      "status": "sent",
+      "createdAt": "2025-06-15T05:33:49.764Z",
+      "respondedAt": null
+    },
+    {
+      "id": 2,
+      "orderId": 6,
+      "type": "substitution_request",
+      "message": "Hello kaiz,\n\nWe need to make a substitution for your order #6.\n\nReason: italian_sausage\nSuggested alternative: Out\n\nPlease click the link below to approve or decline this substitution:",
+      "customerEmail": "kaizmaredia98@gmail.com",
+      "status": "approved",
+      "createdAt": "2025-06-15T05:35:16.363Z",
+      "respondedAt": "2025-06-15T05:35:53.625Z",
+      "customerResponse": "add extra bacon",
+      "responseStatus": "approved"
+    }
+  ]
 }
