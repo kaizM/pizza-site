@@ -89,7 +89,9 @@ export interface OrderData {
   items: CartItem[];
   subtotal: number;
   tax: number;
+  tip: number;
   total: number;
   orderType: 'pickup'; // pickup only
   specialInstructions?: string;
+  paymentStatus?: 'authorized' | 'charged' | 'failed';
 }

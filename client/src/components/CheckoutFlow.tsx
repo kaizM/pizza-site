@@ -24,6 +24,8 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
     email: "",
   });
   const [specialInstructions, setSpecialInstructions] = useState("");
+  const [tip, setTip] = useState(0);
+  const [customTip, setCustomTip] = useState("");
   const [currentStep, setCurrentStep] = useState(1);
   const [paymentId, setPaymentId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -33,7 +35,32 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
   const orderType = "pickup";
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const tax = subtotal * 0.0825;
-  const total = subtotal + tax;
+  const totalWithoutTip = subtotal + tax;
+  const finalTotal = totalWithoutTip + tip;
+  
+  // Preset tip options
+  const tipOptions = [
+    { label: "No Tip", value: 0 },
+    { label: "15%", value: Math.round(totalWithoutTip * 0.15 * 100) / 100 },
+    { label: "18%", value: Math.round(totalWithoutTip * 0.18 * 100) / 100 },
+    { label: "20%", value: Math.round(totalWithoutTip * 0.20 * 100) / 100 },
+    { label: "Custom", value: -1 }
+  ];
+
+  const handleTipSelection = (selectedTip: number) => {
+    if (selectedTip === -1) {
+      setTip(0);
+    } else {
+      setTip(selectedTip);
+      setCustomTip("");
+    }
+  };
+
+  const handleCustomTipChange = (value: string) => {
+    setCustomTip(value);
+    const customAmount = parseFloat(value) || 0;
+    setTip(customAmount);
+  };
 
   const handleCustomerInfoSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,9 +98,11 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
         items: cartItems,
         subtotal: parseFloat(subtotal.toFixed(2)),
         tax: parseFloat(tax.toFixed(2)),
-        total: parseFloat(total.toFixed(2)),
+        tip: parseFloat(tip.toFixed(2)),
+        total: parseFloat(finalTotal.toFixed(2)),
         orderType,
         specialInstructions,
+        paymentStatus: "authorized", // Payment held until order confirmed
       };
 
       // Log complete order details for testing

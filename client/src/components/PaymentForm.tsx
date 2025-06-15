@@ -93,8 +93,8 @@ export default function PaymentForm({ total, onPaymentSuccess, onPaymentError }:
       console.log("========================");
       
       toast({
-        title: "Payment Successful",
-        description: `Test payment of $${total.toFixed(2)} processed successfully`,
+        title: "Payment Authorized",
+        description: `Payment of $${total.toFixed(2)} authorized - will be charged when order is confirmed`,
         variant: "success",
       });
 
