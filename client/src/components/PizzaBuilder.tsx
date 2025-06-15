@@ -158,13 +158,103 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
           {/* Pizza Visual */}
           <Card className="border-2 border-red-200 lg:sticky lg:top-4 h-fit">
             <CardContent className="p-6">
-              <WorkingPizzaVisualizer
-                size="Standard"
-                crust={selectedCrust}
-                selectedToppings={selectedToppings}
-                extraToppings={extraToppings}
-                doubleCheeseSelected={doubleCheeseSelected}
-              />
+              {/* Order Summary & Nutritional Info */}
+              <div className="space-y-4">
+                {/* Current Selection */}
+                <div className="bg-red-50 p-4 rounded-lg border-2 border-red-200">
+                  <h3 className="text-lg font-bold text-red-700 mb-3">Your Pizza</h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium">Size:</span>
+                      <span className="text-sm">Standard (12")</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium">Crust:</span>
+                      <span className="text-sm">{selectedCrust}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium">Base:</span>
+                      <span className="text-sm">Cheese Pizza</span>
+                    </div>
+                  </div>
+                  
+                  {/* Toppings List */}
+                  {(selectedToppings.length > 0 || extraToppings.length > 0 || doubleCheeseSelected) && (
+                    <div className="mt-3 pt-3 border-t border-red-200">
+                      <h4 className="text-sm font-medium text-red-700 mb-2">Toppings:</h4>
+                      <div className="space-y-1">
+                        {doubleCheeseSelected && (
+                          <div className="flex justify-between text-sm">
+                            <span>Double Cheese</span>
+                            <span className="text-green-600">+$2.19</span>
+                          </div>
+                        )}
+                        {selectedToppings.map((topping) => (
+                          <div key={topping} className="flex justify-between text-sm">
+                            <span>{topping}</span>
+                            <span className="text-gray-500">Free</span>
+                          </div>
+                        ))}
+                        {extraToppings.map((topping) => (
+                          <div key={`extra-${topping}`} className="flex justify-between text-sm">
+                            <span>Extra {topping}</span>
+                            <span className="text-green-600">
+                              +${meatToppings.includes(topping) ? extraMeatPrice.toFixed(2) : extraVeggiePrice.toFixed(2)}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Estimated Preparation Time */}
+                <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-semibold text-yellow-800">Ready for Pickup</h4>
+                      <p className="text-sm text-yellow-700">Estimated time: 7-10 minutes</p>
+                    </div>
+                    <div className="text-2xl">🕐</div>
+                  </div>
+                </div>
+
+                {/* Nutritional Information */}
+                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                  <h4 className="font-semibold text-blue-800 mb-2">Nutrition Info (Per Slice)</h4>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="flex justify-between">
+                      <span>Calories:</span>
+                      <span className="font-medium">280-320</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Protein:</span>
+                      <span className="font-medium">12-15g</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Carbs:</span>
+                      <span className="font-medium">28-32g</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Fat:</span>
+                      <span className="font-medium">10-14g</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-blue-600 mt-2">
+                    * Values vary based on toppings selected
+                  </p>
+                </div>
+
+                {/* Special Offers */}
+                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                  <h4 className="font-semibold text-green-800 mb-2">💡 Money-Saving Tips</h4>
+                  <ul className="text-sm text-green-700 space-y-1">
+                    <li>• Order 2+ pizzas and save $1.00 on each additional pizza</li>
+                    <li>• Free toppings: Choose up to 10 regular toppings at no extra cost</li>
+                    <li>• Mix & match: Try different topping combinations</li>
+                  </ul>
+                </div>
+              </div>
 
               {/* Pricing Preview */}
               <div className="mt-4 bg-yellow-50 p-3 rounded-lg border-2 border-yellow-300">
