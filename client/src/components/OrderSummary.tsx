@@ -12,8 +12,7 @@ interface OrderSummaryProps {
 export default function OrderSummary({ cartItems, onUpdateQuantity, onRemoveItem }: OrderSummaryProps) {
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const tax = subtotal * 0.0825; // 8.25% tax
-  const deliveryFee = 0; // Will be updated based on order type
-  const total = subtotal + tax + deliveryFee;
+  const total = subtotal + tax; // No delivery fee - pickup only
 
   return (
     <Card className="sticky top-24">

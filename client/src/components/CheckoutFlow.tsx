@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
 import { useToast } from "@/hooks/use-toast";
-import { Clock, Store, Truck } from "lucide-react";
+import { Clock, Store } from "lucide-react";
 import { CustomerInfo, OrderData, CartItem } from "@shared/schema";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -24,16 +24,16 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
     phone: "",
     email: "",
   });
-  const [orderType, setOrderType] = useState<"pickup" | "delivery">("pickup");
   const [specialInstructions, setSpecialInstructions] = useState("");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
 
+  const orderType = "pickup"; // Always pickup only
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const tax = subtotal * 0.0825; // 8.25% tax
-  const deliveryFee = orderType === "delivery" ? 3.99 : 0;
-  const total = subtotal + tax + deliveryFee;
+  const deliveryFee = 0; // No delivery service
+  const total = subtotal + tax;
 
   const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +45,7 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
         items: cartItems,
         subtotal: parseFloat(subtotal.toFixed(2)),
         tax: parseFloat(tax.toFixed(2)),
-        deliveryFee: parseFloat(deliveryFee.toFixed(2)),
+        deliveryFee: 0,
         total: parseFloat(total.toFixed(2)),
         orderType,
         specialInstructions,
@@ -56,7 +56,7 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
         ...orderData,
         userId: user?.uid || null,
         status: "confirmed",
-        estimatedTime: orderType === "pickup" ? 25 : 35,
+        estimatedTime: 10, // 7-10 minutes for pickup
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
@@ -89,7 +89,7 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
             <CardTitle className="text-xl">Checkout</CardTitle>
             <div className="flex items-center space-x-2 text-sm text-neutral-secondary">
               <Clock className="h-4 w-4" />
-              <span>Est. {orderType === "pickup" ? "25-35" : "35-45"} mins</span>
+              <span>Est. 7-10 mins</span>
             </div>
           </div>
         </CardHeader>
@@ -172,63 +172,27 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
           </CardContent>
         </Card>
 
-        {/* Order Type Selection */}
+        {/* Pickup Information */}
         <Card>
           <CardHeader>
-            <CardTitle>Order Type</CardTitle>
+            <CardTitle>Pickup Information</CardTitle>
           </CardHeader>
           <CardContent>
-            <RadioGroup value={orderType} onValueChange={(value: "pickup" | "delivery") => setOrderType(value)}>
-              <div className="grid sm:grid-cols-2 gap-4">
-                <Label
-                  htmlFor="pickup"
-                  className={`border-2 rounded-xl p-4 cursor-pointer transition-all hover:bg-opacity-10 ${
-                    orderType === "pickup" ? "border-red-600 bg-red-50" : "border-gray-200"
-                  }`}
-                >
-                  <RadioGroupItem value="pickup" id="pickup" className="sr-only" />
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-semibold flex items-center">
-                        <Store className="mr-2 h-5 w-5 text-red-600" />
-                        Pickup
-                      </h4>
-                      <p className="text-sm text-neutral-secondary mt-1">Ready in 25-30 mins</p>
-                      <p className="text-xs text-neutral-secondary mt-1">2100 1st Street, Palacios, TX</p>
-                    </div>
-                    <div className={`w-5 h-5 border-2 rounded-full flex items-center justify-center ${
-                      orderType === "pickup" ? "border-red-600" : "border-gray-300"
-                    }`}>
-                      {orderType === "pickup" && <div className="w-3 h-3 bg-red-600 rounded-full"></div>}
-                    </div>
-                  </div>
-                </Label>
-
-                <Label
-                  htmlFor="delivery"
-                  className={`border-2 rounded-xl p-4 cursor-pointer transition-all hover:bg-opacity-10 ${
-                    orderType === "delivery" ? "border-red-600 bg-red-50" : "border-gray-200"
-                  }`}
-                >
-                  <RadioGroupItem value="delivery" id="delivery" className="sr-only" />
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-semibold flex items-center">
-                        <Truck className="mr-2 h-5 w-5 text-neutral-secondary" />
-                        Delivery
-                      </h4>
-                      <p className="text-sm text-neutral-secondary mt-1">Ready in 35-45 mins</p>
-                      <p className="text-xs text-neutral-secondary mt-1">+ $3.99 delivery fee</p>
-                    </div>
-                    <div className={`w-5 h-5 border-2 rounded-full flex items-center justify-center ${
-                      orderType === "delivery" ? "border-red-600" : "border-gray-300"
-                    }`}>
-                      {orderType === "delivery" && <div className="w-3 h-3 bg-red-600 rounded-full"></div>}
-                    </div>
-                  </div>
-                </Label>
+            <div className="border-2 border-red-600 bg-red-50 rounded-xl p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-semibold flex items-center">
+                    <Store className="mr-2 h-5 w-5 text-red-600" />
+                    Pickup Only
+                  </h4>
+                  <p className="text-sm text-neutral-secondary mt-1">Ready in 7-10 minutes</p>
+                  <p className="text-xs text-neutral-secondary mt-1">2100 1st Street, Palacios, TX 77465</p>
+                </div>
+                <div className="w-5 h-5 border-2 border-red-600 rounded-full flex items-center justify-center">
+                  <div className="w-3 h-3 bg-red-600 rounded-full"></div>
+                </div>
               </div>
-            </RadioGroup>
+            </div>
           </CardContent>
         </Card>
 
