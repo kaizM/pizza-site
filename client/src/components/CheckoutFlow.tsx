@@ -31,10 +31,9 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
   const { toast } = useToast();
   const { user } = useAuth();
 
-  const orderType = "pickup"; // Always pickup only
+  const orderType = "pickup";
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const tax = subtotal * 0.0825; // 8.25% tax
-  const deliveryFee = 0; // No delivery service
+  const tax = subtotal * 0.0825;
   const total = subtotal + tax;
 
   const handleCustomerInfoSubmit = (e: React.FormEvent) => {
@@ -78,13 +77,12 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
         specialInstructions,
       };
 
-      // Submit to Firestore with payment info
       const docRef = await addDoc(collection(db, "orders"), {
         ...orderData,
         userId: user?.uid || null,
         status: "confirmed",
         paymentId: paymentTransactionId,
-        estimatedTime: 10, // 7-10 minutes for pickup
+        estimatedTime: 10,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
@@ -123,132 +121,184 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
         <CardContent>
           <div className="flex items-center space-x-4">
             <div className="flex items-center">
-              <div className="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                1
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                currentStep >= 1 ? "bg-red-600 text-white" : "bg-gray-300 text-gray-600"
+              }`}>
+                {currentStep > 1 ? <CheckCircle className="h-4 w-4" /> : "1"}
               </div>
-              <span className="ml-2 text-sm font-medium">Details</span>
+              <span className={`ml-2 text-sm font-medium ${currentStep >= 1 ? "text-neutral-text" : "text-gray-600"}`}>
+                Customer Info
+              </span>
             </div>
-            <div className="flex-1 h-px bg-gray-200"></div>
+            <div className={`flex-1 h-px ${currentStep > 1 ? "bg-red-600" : "bg-gray-300"}`}></div>
             <div className="flex items-center">
-              <div className="w-8 h-8 bg-gray-200 text-neutral-secondary rounded-full flex items-center justify-center text-sm font-bold">
-                2
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                currentStep >= 2 ? "bg-red-600 text-white" : "bg-gray-300 text-gray-600"
+              }`}>
+                {currentStep > 2 ? <CheckCircle className="h-4 w-4" /> : <CreditCard className="h-4 w-4" />}
               </div>
-              <span className="ml-2 text-sm font-medium text-neutral-secondary">Payment</span>
+              <span className={`ml-2 text-sm font-medium ${currentStep >= 2 ? "text-neutral-text" : "text-gray-600"}`}>
+                Payment
+              </span>
             </div>
-            <div className="flex-1 h-px bg-gray-200"></div>
+            <div className={`flex-1 h-px ${currentStep > 2 ? "bg-green-600" : "bg-gray-300"}`}></div>
             <div className="flex items-center">
-              <div className="w-8 h-8 bg-gray-200 text-neutral-secondary rounded-full flex items-center justify-center text-sm font-bold">
-                3
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                currentStep >= 3 ? "bg-green-600 text-white" : "bg-gray-300 text-gray-600"
+              }`}>
+                {currentStep >= 3 ? <CheckCircle className="h-4 w-4" /> : "3"}
               </div>
-              <span className="ml-2 text-sm font-medium text-neutral-secondary">Confirm</span>
+              <span className={`ml-2 text-sm font-medium ${currentStep >= 3 ? "text-green-600" : "text-gray-600"}`}>
+                Confirmation
+              </span>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <form onSubmit={handleSubmitOrder} className="space-y-6">
-        {/* Customer Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Contact Information</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="firstName">First Name</Label>
+      {/* Step 1: Customer Information */}
+      {currentStep === 1 && (
+        <form onSubmit={handleCustomerInfoSubmit} className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Contact Information</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName">First Name *</Label>
+                  <Input
+                    id="firstName"
+                    type="text"
+                    placeholder="John"
+                    value={customerInfo.firstName}
+                    onChange={(e) => setCustomerInfo(prev => ({ ...prev, firstName: e.target.value }))}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="lastName">Last Name *</Label>
+                  <Input
+                    id="lastName"
+                    type="text"
+                    placeholder="Doe"
+                    value={customerInfo.lastName}
+                    onChange={(e) => setCustomerInfo(prev => ({ ...prev, lastName: e.target.value }))}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone Number *</Label>
                 <Input
-                  id="firstName"
-                  value={customerInfo.firstName}
-                  onChange={(e) => setCustomerInfo({ ...customerInfo, firstName: e.target.value })}
-                  placeholder="John"
+                  id="phone"
+                  type="tel"
+                  placeholder="(361) 555-0123"
+                  value={customerInfo.phone}
+                  onChange={(e) => setCustomerInfo(prev => ({ ...prev, phone: e.target.value }))}
                   required
                 />
               </div>
-              <div>
-                <Label htmlFor="lastName">Last Name</Label>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email (Optional)</Label>
                 <Input
-                  id="lastName"
-                  value={customerInfo.lastName}
-                  onChange={(e) => setCustomerInfo({ ...customerInfo, lastName: e.target.value })}
-                  placeholder="Doe"
-                  required
+                  id="email"
+                  type="email"
+                  placeholder="john@example.com"
+                  value={customerInfo.email}
+                  onChange={(e) => setCustomerInfo(prev => ({ ...prev, email: e.target.value }))}
                 />
               </div>
-            </div>
-            <div>
-              <Label htmlFor="phone">Phone Number</Label>
-              <Input
-                id="phone"
-                type="tel"
-                value={customerInfo.phone}
-                onChange={(e) => setCustomerInfo({ ...customerInfo, phone: e.target.value })}
-                placeholder="(361) 555-0123"
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="email">Email (Optional)</Label>
-              <Input
-                id="email"
-                type="email"
-                value={customerInfo.email}
-                onChange={(e) => setCustomerInfo({ ...customerInfo, email: e.target.value })}
-                placeholder="john@example.com"
-              />
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        {/* Pickup Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Pickup Information</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="border-2 border-red-600 bg-red-50 rounded-xl p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-semibold flex items-center">
-                    <Store className="mr-2 h-5 w-5 text-red-600" />
-                    Pickup Only
-                  </h4>
-                  <p className="text-sm text-neutral-secondary mt-1">Ready in 7-10 minutes</p>
-                  <p className="text-xs text-neutral-secondary mt-1">2100 1st Street, Palacios, TX 77465</p>
-                </div>
-                <div className="w-5 h-5 border-2 border-red-600 rounded-full flex items-center justify-center">
-                  <div className="w-3 h-3 bg-red-600 rounded-full"></div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Pickup Information</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="border-2 border-red-600 bg-red-50 rounded-xl p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-semibold flex items-center">
+                      <Store className="mr-2 h-5 w-5 text-red-600" />
+                      Pickup Only
+                    </h4>
+                    <p className="text-sm text-neutral-secondary mt-1">Ready in 7-10 minutes</p>
+                    <p className="text-xs text-neutral-secondary mt-1">2100 1st Street, Palacios, TX 77465</p>
+                  </div>
+                  <div className="w-5 h-5 border-2 border-red-600 rounded-full flex items-center justify-center">
+                    <div className="w-3 h-3 bg-red-600 rounded-full"></div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        {/* Special Instructions */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Special Instructions</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Textarea
+                placeholder="Any special requests for your order..."
+                value={specialInstructions}
+                onChange={(e) => setSpecialInstructions(e.target.value)}
+                rows={3}
+              />
+            </CardContent>
+          </Card>
+
+          <Button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3">
+            Continue to Payment
+          </Button>
+        </form>
+      )}
+
+      {/* Step 2: Payment */}
+      {currentStep === 2 && (
+        <div className="space-y-6">
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-semibold">Payment</h3>
+            <Button variant="outline" onClick={() => setCurrentStep(1)}>
+              Back to Info
+            </Button>
+          </div>
+          <PaymentForm
+            total={total}
+            onPaymentSuccess={handlePaymentSuccess}
+            onPaymentError={handlePaymentError}
+          />
+        </div>
+      )}
+
+      {/* Step 3: Confirmation */}
+      {currentStep === 3 && (
         <Card>
-          <CardHeader>
-            <CardTitle>Special Instructions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Textarea
-              value={specialInstructions}
-              onChange={(e) => setSpecialInstructions(e.target.value)}
-              rows={3}
-              placeholder="Any special requests or notes for your order..."
-            />
-            <p className="text-xs text-neutral-secondary mt-2">
-              Optional - Let us know if you have any specific preferences
-            </p>
+          <CardContent className="pt-6">
+            {loading ? (
+              <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+                <p className="text-lg font-semibold">Processing your order...</p>
+                <p className="text-neutral-secondary">Please wait while we confirm your payment</p>
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
+                <h3 className="text-2xl font-bold text-green-600 mb-2">Order Confirmed!</h3>
+                <p className="text-neutral-secondary mb-4">
+                  Your payment has been processed and your order is being prepared.
+                </p>
+                {paymentId && (
+                  <p className="text-xs text-neutral-secondary">
+                    Payment ID: {paymentId}
+                  </p>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
-
-        <Button
-          type="submit"
-          className="w-full bg-red-600 hover:bg-red-700 text-white py-4 text-lg font-semibold"
-          disabled={loading}
-        >
-          {loading ? "Processing..." : `Place Order - $${total.toFixed(2)}`}
-        </Button>
-      </form>
+      )}
     </div>
   );
 }
