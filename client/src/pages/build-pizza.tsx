@@ -1,79 +1,18 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { ShoppingCart, User, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import PizzaBuilder from "@/components/PizzaBuilder";
 import OrderSummary from "@/components/OrderSummary";
-import AuthModal from "@/components/AuthModal";
-import { useAuth } from "@/hooks/useAuth";
+import CustomerNavigation from "@/components/CustomerNavigation";
 import { useCart } from "@/hooks/useCart";
 
 export default function BuildPizzaPage() {
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const { user } = useAuth();
   const { cartItems, addToCart, updateQuantity, removeItem, getTotalItems } = useCart();
 
   return (
     <div className="min-h-screen bg-neutral-bg">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
-              <Link href="/">
-                <Button variant="ghost" size="sm">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back
-                </Button>
-              </Link>
-              <div className="flex items-center">
-                <div className="text-2xl mr-2">🍕</div>
-                <div>
-                  <h1 className="font-cursive text-2xl text-red-600">Hunt Brothers Pizza</h1>
-                  <p className="text-xs text-neutral-secondary -mt-1">Pizza Builder</p>
-                </div>
-              </div>
-            </div>
-            
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link href="/" className="text-neutral-text hover:text-red-600 transition-colors font-medium">
-                Menu
-              </Link>
-              <Link href="/track-order" className="text-neutral-text hover:text-red-600 transition-colors font-medium">
-                Track Order
-              </Link>
-              <Link href="/employee" className="text-neutral-text hover:text-red-600 transition-colors font-medium">
-                Kitchen
-              </Link>
-              <Link href="/admin" className="text-neutral-text hover:text-red-600 transition-colors font-medium">
-                Admin
-              </Link>
-            </nav>
-            
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="ghost"
-                onClick={() => setShowAuthModal(true)}
-                className="text-neutral-secondary hover:text-neutral-text"
-              >
-                <User className="h-4 w-4 mr-1" />
-                <span className="hidden sm:inline">
-                  {user ? user.email?.split('@')[0] : 'Sign In'}
-                </span>
-              </Button>
-              <Link href="/checkout">
-                <Button className="bg-red-700 hover:bg-red-800 text-white font-bold shadow-md">
-                  <ShoppingCart className="mr-2 h-4 w-4" />
-                  Cart
-                  <span className="ml-2 bg-yellow-400 text-red-800 text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold border border-red-700">
-                    {getTotalItems()}
-                  </span>
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+      <CustomerNavigation />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
