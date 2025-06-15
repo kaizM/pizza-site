@@ -99,36 +99,15 @@ export default function Home() {
             
             {/* Customer Contact Info */}
             <div className="flex items-center space-x-4">
-              <div 
-                className="bg-red-600 hover:bg-red-700 text-white flex items-center px-4 py-2 rounded-md cursor-pointer font-medium transition-colors"
-                onClick={() => {
-                  try {
-                    window.location.href = 'tel:+1-361-403-0083';
-                  } catch (error) {
-                    const link = document.createElement('a');
-                    link.href = 'tel:+1-361-403-0083';
-                    link.click();
-                  }
-                }}
+              <a 
+                href="tel:+1-361-403-0083"
+                className="bg-red-600 hover:bg-red-700 text-white flex items-center px-4 py-2 rounded-md font-medium transition-colors no-underline"
                 role="button"
                 aria-label="Call Hunt Brothers Pizza at 361-403-0083"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    try {
-                      window.location.href = 'tel:+1-361-403-0083';
-                    } catch (error) {
-                      const link = document.createElement('a');
-                      link.href = 'tel:+1-361-403-0083';
-                      link.click();
-                    }
-                  }
-                }}
               >
                 <Phone className="h-4 w-4 mr-1" />
                 (361) 403-0083
-              </div>
+              </a>
             </div>
           </div>
         </div>
