@@ -108,7 +108,10 @@ export default function CustomerNavigation({
           </nav>
           
           <div className="flex items-center space-x-4">
-            <Button className="bg-red-600 hover:bg-red-700 text-white flex items-center">
+            <Button 
+              className="bg-red-600 hover:bg-red-700 text-white flex items-center"
+              onClick={() => window.location.href = 'tel:+13614030083'}
+            >
               <Phone className="h-4 w-4 mr-1" />
               (361) 403-0083
             </Button>

@@ -29,6 +29,10 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
   const [currentStep, setCurrentStep] = useState(1);
   const [paymentId, setPaymentId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<"card" | "cash">("card");
+  const [phoneVerificationCode, setPhoneVerificationCode] = useState("");
+  const [verificationSent, setVerificationSent] = useState(false);
+  const [phoneVerified, setPhoneVerified] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -62,8 +66,16 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
     setTip(customAmount);
   };
 
+  const validateName = (name: string) => {
+    // Check if name contains only letters, spaces, hyphens, and apostrophes
+    const nameRegex = /^[a-zA-Z\s\-']+$/;
+    return nameRegex.test(name) && name.trim().length >= 2;
+  };
+
   const handleCustomerInfoSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate required fields
     if (!customerInfo.firstName || !customerInfo.lastName || !customerInfo.phone) {
       toast({
         title: "Required Information Missing",
@@ -72,7 +84,101 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
       });
       return;
     }
+
+    // Validate names
+    if (!validateName(customerInfo.firstName)) {
+      toast({
+        title: "Invalid First Name",
+        description: "Please enter a valid first name (letters only, minimum 2 characters).",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!validateName(customerInfo.lastName)) {
+      toast({
+        title: "Invalid Last Name",
+        description: "Please enter a valid last name (letters only, minimum 2 characters).",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate phone number format
+    const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+    const cleanPhone = customerInfo.phone.replace(/[\s\-\(\)]/g, '');
+    if (!phoneRegex.test(cleanPhone) || cleanPhone.length < 10) {
+      toast({
+        title: "Invalid Phone Number",
+        description: "Please enter a valid phone number (10+ digits).",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setCurrentStep(2);
+  };
+
+  const sendPhoneVerification = async () => {
+    if (!customerInfo.phone) return;
+    
+    setLoading(true);
+    try {
+      // Generate a simple 4-digit code (in production, use SMS service)
+      const code = Math.floor(1000 + Math.random() * 9000).toString();
+      
+      // Store verification code temporarily (in production, store server-side)
+      sessionStorage.setItem(`verification_${customerInfo.phone}`, code);
+      
+      toast({
+        title: "Verification Code Sent",
+        description: `Code: ${code} (This is a demo - in production this would be sent via SMS)`,
+        variant: "default",
+      });
+      
+      setVerificationSent(true);
+    } catch (error) {
+      toast({
+        title: "Verification Failed",
+        description: "Unable to send verification code. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const verifyPhone = () => {
+    const storedCode = sessionStorage.getItem(`verification_${customerInfo.phone}`);
+    if (phoneVerificationCode === storedCode) {
+      setPhoneVerified(true);
+      sessionStorage.removeItem(`verification_${customerInfo.phone}`);
+      toast({
+        title: "Phone Verified",
+        description: "Your phone number has been verified successfully.",
+        variant: "default",
+      });
+    } else {
+      toast({
+        title: "Invalid Code",
+        description: "Please enter the correct verification code.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleCashPayment = () => {
+    if (!phoneVerified) {
+      toast({
+        title: "Phone Verification Required",
+        description: "Please verify your phone number before placing a cash order.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setCurrentStep(3);
+    submitOrder("CASH_PAYMENT");
   };
 
   const handlePaymentSuccess = (paymentTransactionId: string) => {
@@ -309,6 +415,90 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
                 onChange={(e) => setSpecialInstructions(e.target.value)}
                 rows={3}
               />
+            </CardContent>
+          </Card>
+
+          {/* Payment Method Selection */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Payment Method</CardTitle>
+              <p className="text-sm text-gray-600">Choose how you'd like to pay</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <Button
+                  type="button"
+                  variant={paymentMethod === "card" ? "default" : "outline"}
+                  onClick={() => setPaymentMethod("card")}
+                  className={`h-16 ${paymentMethod === "card" ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
+                >
+                  <CreditCard className="mr-2 h-5 w-5" />
+                  Credit Card
+                </Button>
+                <Button
+                  type="button"
+                  variant={paymentMethod === "cash" ? "default" : "outline"}
+                  onClick={() => setPaymentMethod("cash")}
+                  className={`h-16 ${paymentMethod === "cash" ? 'bg-green-600 hover:bg-green-700' : ''}`}
+                >
+                  💵 Cash at Pickup
+                </Button>
+              </div>
+
+              {paymentMethod === "cash" && (
+                <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+                  <h4 className="font-medium text-yellow-800 mb-2">Cash Payment Requirements</h4>
+                  <ul className="text-sm text-yellow-700 space-y-1">
+                    <li>• Phone verification required to prevent spam orders</li>
+                    <li>• Payment due at pickup - exact change appreciated</li>
+                    <li>• Order will be cancelled if not picked up within 30 minutes</li>
+                  </ul>
+                  
+                  {!phoneVerified && (
+                    <div className="mt-4 space-y-3">
+                      {!verificationSent ? (
+                        <Button
+                          onClick={sendPhoneVerification}
+                          disabled={loading || !customerInfo.phone}
+                          className="w-full bg-blue-600 hover:bg-blue-700"
+                        >
+                          {loading ? "Sending..." : "Send Verification Code"}
+                        </Button>
+                      ) : (
+                        <div className="space-y-2">
+                          <Label htmlFor="verificationCode">Enter 4-digit code</Label>
+                          <div className="flex gap-2">
+                            <Input
+                              id="verificationCode"
+                              value={phoneVerificationCode}
+                              onChange={(e) => setPhoneVerificationCode(e.target.value)}
+                              placeholder="1234"
+                              maxLength={4}
+                              className="flex-1"
+                            />
+                            <Button
+                              onClick={verifyPhone}
+                              disabled={phoneVerificationCode.length !== 4}
+                              className="bg-green-600 hover:bg-green-700"
+                            >
+                              Verify
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {phoneVerified && (
+                    <div className="mt-4 p-3 bg-green-100 border border-green-200 rounded">
+                      <div className="flex items-center text-green-800">
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        Phone verified - ready for cash payment
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
 

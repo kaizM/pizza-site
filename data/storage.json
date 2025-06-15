@@ -166,11 +166,11 @@
       "specialInstructions": "",
       "paymentStatus": "charged",
       "userId": null,
-      "status": "preparing",
+      "status": "completed",
       "paymentId": "test_pay_1749964063528_jp3o7ve90",
       "estimatedTime": 10,
       "createdAt": "2025-06-15T05:07:43.932Z",
-      "updatedAt": "2025-06-15T05:33:33.186Z",
+      "updatedAt": "2025-06-15T05:41:25.701Z",
       "substitutionReason": "bacon",
       "substitutionSuggestion": "out",
       "substitutionRequestedBy": "employee",
@@ -243,13 +243,72 @@
       "total": 17.65,
       "orderType": "pickup",
       "specialInstructions": "SUBSTITUTION REQUEST: italian_sausage. Suggested: Out.",
-      "paymentStatus": "authorized",
+      "paymentStatus": "charged",
       "userId": null,
-      "status": "confirmed",
+      "status": "completed",
       "paymentId": "test_pay_1749965694913_kx6f91xpf",
       "estimatedTime": 10,
       "createdAt": "2025-06-15T05:34:55.227Z",
-      "updatedAt": "2025-06-15T05:35:16.421Z"
+      "updatedAt": "2025-06-15T05:41:15.088Z"
+    },
+    {
+      "id": 7,
+      "customerInfo": {
+        "firstName": "Hh",
+        "lastName": "Gg",
+        "phone": "258484848888454545",
+        "email": "andnbdjjjs@gmail.com"
+      },
+      "items": [
+        {
+          "id": "pizza-1749966197845",
+          "name": "Cheese",
+          "size": "Standard",
+          "crust": "Thin",
+          "toppings": [
+            "Pepperoni",
+            "Italian Sausage",
+            "Beef",
+            "Bacon",
+            "Bell Peppers",
+            "Onions",
+            "Mushrooms",
+            "Black Olives",
+            "Banana Peppers",
+            "Jalapeños",
+            "Extra Bacon",
+            "Extra Beef",
+            "Extra Italian Sausage",
+            "Extra Pepperoni",
+            "Extra Bell Peppers",
+            "Extra Onions",
+            "Extra Mushrooms",
+            "Extra Black Olives",
+            "Extra Banana Peppers",
+            "Extra Jalapeños",
+            "Double Cheese"
+          ],
+          "price": 26.18,
+          "quantity": 36,
+          "imageUrl": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300"
+        }
+      ],
+      "subtotal": 942.48,
+      "tax": 77.75,
+      "tip": 10000,
+      "total": 11020.23,
+      "orderType": "pickup",
+      "specialInstructions": "SUBSTITUTION REQUEST: italian_sausage. Suggested: Only chicken. Only crust",
+      "paymentStatus": "authorized",
+      "userId": null,
+      "status": "cancelled",
+      "paymentId": "test_pay_1749966322582_64bdqls11",
+      "estimatedTime": 20,
+      "createdAt": "2025-06-15T05:45:22.894Z",
+      "updatedAt": "2025-06-15T05:47:34.533Z",
+      "cancellationReason": "special_request",
+      "cancelledBy": "employee",
+      "cancelledAt": "2025-06-15T05:47:34.468Z"
     }
   ],
   "pizzas": [
@@ -301,9 +360,9 @@
   ],
   "counters": {
     "userId": 1,
-    "orderId": 7,
+    "orderId": 8,
     "pizzaId": 6,
-    "notificationId": 3
+    "notificationId": 5
   },
   "notifications": [
     {
@@ -327,6 +386,28 @@
       "respondedAt": "2025-06-15T05:35:53.625Z",
       "customerResponse": "add extra bacon",
       "responseStatus": "approved"
+    },
+    {
+      "id": 3,
+      "orderId": 7,
+      "type": "substitution_request",
+      "message": "Hello Hh,\n\nWe need to make a substitution for your order #7.\n\nReason: italian_sausage\nSuggested alternative: Only chicken\n\nPlease click the link below to approve or decline this substitution:",
+      "customerEmail": "andnbdjjjs@gmail.com",
+      "status": "approved",
+      "createdAt": "2025-06-15T05:45:44.416Z",
+      "respondedAt": "2025-06-15T05:46:45.342Z",
+      "customerResponse": "approved",
+      "responseStatus": "approved"
+    },
+    {
+      "id": 4,
+      "orderId": 7,
+      "type": "order_cancelled",
+      "message": "Hello Hh,\n\nWe regret to inform you that your order #7 has been cancelled.\n\nReason: special_request\n\nYour payment will be refunded within 3-5 business days. If you have any questions, please contact us directly.\n\nWe apologize for the inconvenience.",
+      "customerEmail": "andnbdjjjs@gmail.com",
+      "status": "sent",
+      "createdAt": "2025-06-15T05:47:34.476Z",
+      "respondedAt": null
     }
   ]
 }
