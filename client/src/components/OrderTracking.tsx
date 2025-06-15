@@ -2,49 +2,43 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Check, Clock, Flame, Package, Phone } from "lucide-react";
-import { doc, onSnapshot } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { useQuery } from "@tanstack/react-query";
 
 interface OrderTrackingProps {
   orderId: string;
 }
 
 interface OrderStatus {
-  id: string;
+  id: number;
   status: "confirmed" | "preparing" | "ready" | "completed";
-  estimatedTime: number;
+  estimatedTime: number | null;
   customerInfo: {
     firstName: string;
     lastName: string;
     phone: string;
   };
   total: number;
-  createdAt: any;
+  createdAt: string;
+  items: Array<{
+    name: string;
+    size: string;
+    quantity: number;
+  }>;
 }
 
 export default function OrderTracking({ orderId }: OrderTrackingProps) {
-  const [order, setOrder] = useState<OrderStatus | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!orderId) return;
-
-    const unsubscribe = onSnapshot(
-      doc(db, "orders", orderId),
-      (doc) => {
-        if (doc.exists()) {
-          setOrder({ id: doc.id, ...doc.data() } as OrderStatus);
-        }
-        setLoading(false);
-      },
-      (error) => {
-        // Log error securely without exposing sensitive data
-        setLoading(false);
+  const { data: order, isLoading: loading, error } = useQuery({
+    queryKey: ["/api/orders", orderId],
+    queryFn: async () => {
+      const response = await fetch(`/api/orders/${orderId}`);
+      if (!response.ok) {
+        throw new Error('Order not found');
       }
-    );
-
-    return () => unsubscribe();
-  }, [orderId]);
+      return response.json();
+    },
+    refetchInterval: 10000, // Refetch every 10 seconds for real-time updates
+    enabled: !!orderId
+  });
 
   if (loading) {
     return (
@@ -66,13 +60,19 @@ export default function OrderTracking({ orderId }: OrderTrackingProps) {
     );
   }
 
-  if (!order) {
+  if (error || !order) {
     return (
       <div className="max-w-4xl mx-auto p-6">
         <Card>
           <CardContent className="p-6 text-center">
-            <h2 className="text-xl font-semibold text-neutral-text mb-2">Order Not Found</h2>
-            <p className="text-neutral-secondary">We couldn't find an order with ID: {orderId}</p>
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">Order Not Found</h2>
+            <p className="text-gray-600 mb-6">We couldn't find an order with ID: {orderId}</p>
+            <Button 
+              onClick={() => window.location.href = '/'}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              Order More
+            </Button>
           </CardContent>
         </Card>
       </div>
