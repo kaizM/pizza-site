@@ -53,6 +53,42 @@
       "status": "confirmed",
       "createdAt": "2025-06-15T04:37:49.503Z",
       "updatedAt": "2025-06-15T04:37:49.503Z"
+    },
+    {
+      "id": 2,
+      "firebaseOrderId": "unified_test_order_001",
+      "customerInfo": {
+        "firstName": "Maria",
+        "lastName": "Rodriguez",
+        "phone": "555-123-9876",
+        "email": "maria.rodriguez@email.com"
+      },
+      "items": [
+        {
+          "id": "pizza-combo-special",
+          "name": "Family Combo Special",
+          "size": "Large",
+          "crust": "Original",
+          "toppings": [
+            "Pepperoni",
+            "Mushrooms",
+            "Green Peppers"
+          ],
+          "price": 19.99,
+          "quantity": 1
+        }
+      ],
+      "subtotal": 19.99,
+      "tax": 1.65,
+      "tip": 4,
+      "total": 25.64,
+      "orderType": "pickup",
+      "specialInstructions": "Cut into 8 slices please",
+      "paymentId": "pay_unified_789",
+      "paymentStatus": "authorized",
+      "status": "confirmed",
+      "createdAt": "2025-06-15T04:40:58.765Z",
+      "updatedAt": "2025-06-15T04:40:58.765Z"
     }
   ],
   "pizzas": [
@@ -104,7 +140,7 @@
   ],
   "counters": {
     "userId": 1,
-    "orderId": 2,
+    "orderId": 3,
     "pizzaId": 6
   }
 }

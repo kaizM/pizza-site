@@ -24,14 +24,24 @@
   --ring: hsl(20, 14.3%, 4.1%);
   --radius: 0.5rem;
 
-  /* Hunt Brothers Pizza Theme Colors */
-  --hunt-red: hsl(355, 85%, 45%);
-  --hunt-yellow: hsl(45, 100%, 51%);
-  --hunt-orange: hsl(25, 100%, 55%);
-  --hunt-dark-red: hsl(355, 85%, 35%);
-  --neutral-bg: hsl(0, 0%, 98%);
-  --neutral-text: hsl(0, 0%, 15%);
-  --neutral-secondary: hsl(0, 0%, 45%);
+  /* Unified Pizza System Theme */
+  --pizza-primary: hsl(355, 85%, 45%);
+  --pizza-secondary: hsl(25, 100%, 55%);
+  --pizza-accent: hsl(45, 100%, 51%);
+  --pizza-success: hsl(120, 61%, 45%);
+  --pizza-warning: hsl(38, 92%, 50%);
+  --pizza-surface: hsl(0, 0%, 98%);
+  --pizza-text: hsl(0, 0%, 15%);
+  --pizza-text-secondary: hsl(0, 0%, 45%);
+  --pizza-gradient: linear-gradient(135deg, var(--pizza-primary), var(--pizza-secondary));
+  
+  /* Legacy support */
+  --hunt-red: var(--pizza-primary);
+  --hunt-orange: var(--pizza-secondary);
+  --hunt-yellow: var(--pizza-accent);
+  --neutral-bg: var(--pizza-surface);
+  --neutral-text: var(--pizza-text);
+  --neutral-secondary: var(--pizza-text-secondary);
 }
 
 .dark {
