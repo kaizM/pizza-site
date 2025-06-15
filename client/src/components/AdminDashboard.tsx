@@ -620,7 +620,7 @@ export default function AdminDashboard() {
                     <CardContent>
                       <p className="text-sm text-gray-600 mb-2">{pizza.description}</p>
                       <div className="flex justify-between items-center">
-                        <span className="font-bold text-lg">${pizza.basePrice.toFixed(2)}</span>
+                        <span className="font-bold text-lg">${Number(pizza.basePrice).toFixed(2)}</span>
                         <div className="space-x-2">
                           <Button variant="outline" size="sm">
                             <Edit className="h-3 w-3" />
