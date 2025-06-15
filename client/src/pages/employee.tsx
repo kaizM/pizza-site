@@ -1,9 +1,10 @@
 import { useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useLocation } from "wouter";
 import EmployeeDashboard from "@/components/EmployeeDashboard";
+import { useSimpleAuth } from "@/components/SimpleAuth";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChefHat } from "lucide-react";
+import { ChefHat, AlertCircle } from "lucide-react";
 
 export default function EmployeePage() {
   const { user, loading } = useAuth();

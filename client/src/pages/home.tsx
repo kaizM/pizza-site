@@ -2,15 +2,20 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link, useLocation } from "wouter";
-import { Phone, MapPin, Clock } from "lucide-react";
+import { Phone, MapPin, Clock, User, LogOut, Settings, ChefHat } from "lucide-react";
 import { CartItem } from "@shared/schema";
 import { generateOrderId } from "@/lib/utils";
 import { useCart } from "@/hooks/useCart";
+import SimpleAuth, { useSimpleAuth } from "@/components/SimpleAuth";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Home() {
   const [hoveredPizza, setHoveredPizza] = useState<string | null>(null);
+  const [showAuth, setShowAuth] = useState(false);
   const [, setLocation] = useLocation();
   const { addToCart } = useCart();
+  const { user, login, logout, isAuthenticated, isAdmin, isEmployee } = useSimpleAuth();
+  const { toast } = useToast();
 
   const orderPremadePizza = (pizza: typeof pizzas[0]) => {
     // Create cart item from premade pizza
@@ -65,8 +70,88 @@ export default function Home() {
     },
   ];
 
+  const handleLogout = () => {
+    logout();
+    toast({
+      title: "Logged Out",
+      description: "You have been successfully logged out",
+      variant: "success",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-neutral-bg">
+      {/* Header Navigation */}
+      <header className="bg-white shadow-lg sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center">
+              <div className="text-2xl mr-2">🍕</div>
+              <div>
+                <h1 className="font-bold text-2xl text-red-600">Hunt Brothers Pizza</h1>
+                <p className="text-xs text-gray-500 -mt-1">Fresh • Bold • American</p>
+              </div>
+            </div>
+            
+            <nav className="hidden md:flex items-center space-x-6">
+              <Link href="/" className="text-gray-700 hover:text-red-600 transition-colors font-medium">
+                Menu
+              </Link>
+              <Link href="/build-pizza" className="text-gray-700 hover:text-red-600 transition-colors font-medium">
+                Build Pizza
+              </Link>
+              <Link href="/track-order" className="text-gray-700 hover:text-red-600 transition-colors font-medium">
+                Track Order
+              </Link>
+              
+              {/* Role-based Navigation */}
+              {isEmployee && (
+                <Link href="/employee" className="text-blue-600 hover:text-blue-700 transition-colors font-medium flex items-center">
+                  <ChefHat className="h-4 w-4 mr-1" />
+                  Kitchen
+                </Link>
+              )}
+              {isAdmin && (
+                <Link href="/admin" className="text-purple-600 hover:text-purple-700 transition-colors font-medium flex items-center">
+                  <Settings className="h-4 w-4 mr-1" />
+                  Admin
+                </Link>
+              )}
+            </nav>
+            
+            {/* Authentication Controls */}
+            <div className="flex items-center space-x-4">
+              {isAuthenticated ? (
+                <div className="flex items-center space-x-3">
+                  <div className="text-sm">
+                    <span className="text-gray-600">Welcome, </span>
+                    <span className="font-medium text-gray-800">{user?.name}</span>
+                    <div className="text-xs text-gray-500 capitalize">({user?.role})</div>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleLogout}
+                    className="flex items-center"
+                  >
+                    <LogOut className="h-4 w-4 mr-1" />
+                    Logout
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  onClick={() => setShowAuth(true)}
+                  className="bg-red-600 hover:bg-red-700 text-white flex items-center"
+                >
+                  <User className="h-4 w-4 mr-1" />
+                  Sign In
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-red-700 to-yellow-500 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -221,6 +306,13 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* Authentication Modal */}
+      <SimpleAuth
+        isOpen={showAuth}
+        onClose={() => setShowAuth(false)}
+        onLogin={login}
+      />
     </div>
   );
 }
