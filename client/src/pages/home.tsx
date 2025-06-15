@@ -73,17 +73,19 @@ export default function Home() {
     <div className="min-h-screen bg-neutral-bg">
       {/* Header Navigation */}
       <header className="bg-white shadow-lg sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center">
-              <div className="text-2xl mr-2">🍕</div>
-              <div>
-                <h1 className="font-bold text-2xl text-red-600">Hunt Brothers Pizza</h1>
-                <p className="text-xs text-gray-500 -mt-1">Fresh • Bold • American</p>
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+          <div className="flex items-center justify-between h-14 sm:h-16">
+            {/* Logo Section - Responsive */}
+            <div className="flex items-center min-w-0 flex-shrink-0">
+              <div className="text-xl sm:text-2xl mr-2">🍕</div>
+              <div className="min-w-0">
+                <h1 className="font-bold text-lg sm:text-xl lg:text-2xl text-red-600 truncate">Hunt Brothers Pizza</h1>
+                <p className="text-xs text-gray-500 -mt-1 hidden sm:block">Fresh • Bold • American</p>
               </div>
             </div>
             
-            <nav className="hidden md:flex items-center space-x-6">
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center space-x-6">
               <Link href="/" className="text-gray-700 hover:text-red-600 transition-colors font-medium">
                 Menu
               </Link>
@@ -93,20 +95,19 @@ export default function Home() {
               <Link href="/track-order" className="text-gray-700 hover:text-red-600 transition-colors font-medium">
                 Track Order
               </Link>
-              
-
             </nav>
             
-            {/* Customer Contact Info */}
-            <div className="flex items-center space-x-4">
+            {/* Phone Button - Always Visible */}
+            <div className="flex items-center">
               <a 
                 href="tel:+1-361-403-0083"
-                className="bg-red-600 hover:bg-red-700 text-white flex items-center px-4 py-2 rounded-md font-medium transition-colors no-underline"
+                className="bg-red-600 hover:bg-red-700 text-white flex items-center px-2 sm:px-4 py-2 rounded-md font-medium transition-colors no-underline text-sm sm:text-base"
                 role="button"
                 aria-label="Call Hunt Brothers Pizza at 361-403-0083"
               >
-                <Phone className="h-4 w-4 mr-1" />
-                (361) 403-0083
+                <Phone className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                <span className="hidden xs:inline">(361) 403-0083</span>
+                <span className="xs:hidden">Call</span>
               </a>
             </div>
           </div>
@@ -114,22 +115,22 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-red-700 to-yellow-500 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-5xl font-bold mb-4">
+      <section className="bg-gradient-to-r from-red-700 to-yellow-500 text-white py-12 sm:py-16 lg:py-20">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 text-center">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 leading-tight">
             Hunt Brothers Pizza - Made Fresh Daily
           </h1>
-          <p className="text-xl mb-8 opacity-90">
+          <p className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 opacity-90 max-w-3xl mx-auto px-4">
             Bold flavors, quality ingredients, and the pizza you crave - made fresh to order
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/build-pizza">
-              <Button size="lg" className="bg-yellow-400 text-red-800 hover:bg-yellow-300 px-8 py-4 text-lg font-bold shadow-lg">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center max-w-md sm:max-w-none mx-auto">
+            <Link href="/build-pizza" className="w-full sm:w-auto">
+              <Button size="lg" className="bg-yellow-400 text-red-800 hover:bg-yellow-300 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-bold shadow-lg w-full sm:w-auto">
                 Build Your Pizza
               </Button>
             </Link>
-            <Link href="/build-pizza">
-              <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-red-700 px-8 py-4 text-lg font-bold bg-transparent shadow-lg">
+            <Link href="/build-pizza" className="w-full sm:w-auto">
+              <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-red-700 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-bold bg-transparent shadow-lg w-full sm:w-auto">
                 Order Now
               </Button>
             </Link>
@@ -138,14 +139,14 @@ export default function Home() {
       </section>
 
       {/* Featured Pizzas */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-neutral-text mb-4">Hunt Brothers Signature Pizzas</h2>
-            <p className="text-xl text-neutral-secondary">Bold flavors, loaded with your favorites</p>
+      <section className="py-12 sm:py-16">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl font-bold text-neutral-text mb-3 sm:mb-4">Hunt Brothers Signature Pizzas</h2>
+            <p className="text-lg sm:text-xl text-neutral-secondary">Bold flavors, loaded with your favorites</p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {pizzas.map((pizza) => (
               <Card
                 key={pizza.id}
@@ -159,18 +160,18 @@ export default function Home() {
                   <img
                     src={pizza.image}
                     alt={pizza.name}
-                    className="w-full h-48 object-cover object-center transition-transform duration-300 hover:scale-110"
+                    className="w-full h-40 sm:h-48 object-cover object-center transition-transform duration-300 hover:scale-110"
                   />
-                  <div className="absolute top-4 right-4 bg-yellow-400 text-red-800 px-3 py-1 rounded-full font-bold border-2 border-red-700">
+                  <div className="absolute top-3 sm:top-4 right-3 sm:right-4 bg-yellow-400 text-red-800 px-2 sm:px-3 py-1 rounded-full font-bold border-2 border-red-700 text-sm sm:text-base">
                     ${pizza.price}
                   </div>
                 </div>
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-bold text-neutral-text mb-2">{pizza.name}</h3>
-                  <p className="text-neutral-secondary mb-4 leading-relaxed">{pizza.description}</p>
+                <CardContent className="p-4 sm:p-6">
+                  <h3 className="text-lg sm:text-xl font-bold text-neutral-text mb-2">{pizza.name}</h3>
+                  <p className="text-sm sm:text-base text-neutral-secondary mb-4 leading-relaxed">{pizza.description}</p>
                   <Button 
                     onClick={() => orderPremadePizza(pizza)}
-                    className="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-3 shadow-md"
+                    className="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-2 sm:py-3 shadow-md text-sm sm:text-base"
                   >
                     Order This Pizza
                   </Button>
@@ -182,20 +183,23 @@ export default function Home() {
       </section>
 
       {/* Call to Action */}
-      <section className="bg-gray-100 py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-neutral-text mb-4">
+      <section className="bg-gray-100 py-12 sm:py-16">
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-8 text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold text-neutral-text mb-3 sm:mb-4">
             Need Help with Your Order?
           </h2>
-          <p className="text-xl text-neutral-secondary mb-8">
+          <p className="text-lg sm:text-xl text-neutral-secondary mb-6 sm:mb-8 px-4">
             Our friendly staff is ready to help you create the perfect pizza
           </p>
-          <PhoneButton 
-            size="lg" 
-            className="bg-red-700 hover:bg-red-800 text-white px-8 py-4 text-lg font-bold shadow-lg"
+          <a 
+            href="tel:+1-361-403-0083"
+            className="inline-flex items-center bg-red-700 hover:bg-red-800 text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-bold shadow-lg rounded-md transition-colors no-underline"
+            role="button"
+            aria-label="Call Hunt Brothers Pizza at 361-403-0083"
           >
+            <Phone className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
             Call (361) 403-0083
-          </PhoneButton>
+          </a>
         </div>
       </section>
 
