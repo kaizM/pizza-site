@@ -8,11 +8,13 @@ interface StorageData {
   orders: Order[];
   pizzas: PizzaItem[];
   cancellations: OrderCancellation[];
+  notifications: CustomerNotification[];
   counters: {
     userId: number;
     orderId: number;
     pizzaId: number;
     cancellationId: number;
+    notificationId: number;
   };
 }
 
@@ -41,7 +43,9 @@ export class PersistentStorage implements IStorage {
           users: [],
           orders: [],
           pizzas: [],
-          counters: { userId: 1, orderId: 1, pizzaId: 1 }
+          cancellations: [],
+          notifications: [],
+          counters: { userId: 1, orderId: 1, pizzaId: 1, cancellationId: 1, notificationId: 1 }
         };
       }
     } catch (error) {
@@ -50,7 +54,9 @@ export class PersistentStorage implements IStorage {
         users: [],
         orders: [],
         pizzas: [],
-        counters: { userId: 1, orderId: 1, pizzaId: 1 }
+        cancellations: [],
+        notifications: [],
+        counters: { userId: 1, orderId: 1, pizzaId: 1, cancellationId: 1, notificationId: 1 }
       };
     }
   }
@@ -256,5 +262,56 @@ export class PersistentStorage implements IStorage {
       avgPrepTime: Math.round(avgPrepTime),
       recentOrders
     };
+  }
+
+  // Cancellation tracking methods
+  async recordCancellation(cancellation: InsertOrderCancellation): Promise<OrderCancellation> {
+    const newCancellation: OrderCancellation = {
+      id: this.data.counters.cancellationId++,
+      ...cancellation,
+      cancelledAt: new Date(),
+    };
+    
+    this.data.cancellations.push(newCancellation);
+    this.saveData();
+    return newCancellation;
+  }
+
+  async getAllCancellations(): Promise<OrderCancellation[]> {
+    return [...this.data.cancellations];
+  }
+
+  async getCancellationsByEmployee(employeeName: string): Promise<OrderCancellation[]> {
+    return this.data.cancellations.filter(c => c.employeeName === employeeName);
+  }
+
+  // Customer notification methods
+  async createNotification(notification: InsertCustomerNotification): Promise<CustomerNotification> {
+    const newNotification: CustomerNotification = {
+      id: this.data.counters.notificationId++,
+      ...notification,
+      createdAt: new Date(),
+      respondedAt: null,
+    };
+    
+    this.data.notifications.push(newNotification);
+    this.saveData();
+    return newNotification;
+  }
+
+  async getNotificationsByOrder(orderId: number): Promise<CustomerNotification[]> {
+    return this.data.notifications.filter(n => n.orderId === orderId);
+  }
+
+  async updateNotificationResponse(notificationId: number, response: string, status: string): Promise<CustomerNotification | undefined> {
+    const notification = this.data.notifications.find(n => n.id === notificationId);
+    if (notification) {
+      notification.customerResponse = response;
+      notification.status = status;
+      notification.respondedAt = new Date();
+      this.saveData();
+      return notification;
+    }
+    return undefined;
   }
 }

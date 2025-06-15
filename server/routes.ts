@@ -230,6 +230,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Customer notification endpoints
+  app.post("/api/notifications", async (req, res) => {
+    try {
+      const { orderId, type, message, customerEmail } = req.body;
+      
+      const notification = await storage.createNotification({
+        orderId,
+        type,
+        message,
+        customerEmail,
+        status: 'sent'
+      });
+      
+      // In a real application, you would send an actual email here
+      console.log(`Email notification sent to ${customerEmail}:`);
+      console.log(`Type: ${type}`);
+      console.log(`Message: ${message}`);
+      console.log(`Tracking URL: ${req.protocol}://${req.get('host')}/customer-response/${notification.id}`);
+      
+      res.json(notification);
+    } catch (error) {
+      console.error("Error creating notification:", error);
+      res.status(500).json({ message: "Failed to create notification" });
+    }
+  });
+
+  app.get("/api/notifications/order/:orderId", async (req, res) => {
+    try {
+      const orderId = parseInt(req.params.orderId);
+      const notifications = await storage.getNotificationsByOrder(orderId);
+      res.json(notifications);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+      res.status(500).json({ message: "Failed to fetch notifications" });
+    }
+  });
+
+  app.post("/api/notifications/:id/respond", async (req, res) => {
+    try {
+      const notificationId = parseInt(req.params.id);
+      const { response, status } = req.body;
+      
+      const updatedNotification = await storage.updateNotificationResponse(
+        notificationId,
+        response,
+        status
+      );
+      
+      if (!updatedNotification) {
+        return res.status(404).json({ message: "Notification not found" });
+      }
+      
+      res.json(updatedNotification);
+    } catch (error) {
+      console.error("Error updating notification response:", error);
+      res.status(500).json({ message: "Failed to update notification response" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
