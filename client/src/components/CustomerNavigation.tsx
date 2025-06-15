@@ -114,7 +114,13 @@ export default function CustomerNavigation({
             </Button>
             {showCartButton && (
               <Link href="/checkout">
-                <Button className="bg-green-600 hover:bg-green-700 text-white">
+                <Button 
+                  className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 shadow-lg transition-all duration-200"
+                  style={{ 
+                    background: 'var(--pizza-primary)',
+                    borderColor: 'var(--pizza-primary)'
+                  }}
+                >
                   <ShoppingCart className="mr-2 h-4 w-4" />
                   Cart ({getTotalItems()})
                 </Button>

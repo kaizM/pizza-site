@@ -20,10 +20,13 @@ import {
   CheckCircle2,
   AlertCircle,
   Heart,
-  RefreshCw
+  RefreshCw,
+  Home,
+  ArrowLeft
 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import { Link } from "wouter";
 
 interface OrderTrackingProps {
   orderId: string;
@@ -108,13 +111,32 @@ export default function OrderTracking({ orderId }: OrderTrackingProps) {
     }
   });
 
-  // Loading state with professional design
+  // Loading state with unified pizza theme
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
+      <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-100 py-8" style={{ background: 'var(--pizza-surface)' }}>
         <div className="max-w-4xl mx-auto p-6">
+          {/* Navigation Header */}
+          <div className="mb-6 flex items-center justify-between">
+            <Link href="/">
+              <Button 
+                className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 shadow-lg transition-all duration-200"
+                style={{ 
+                  background: 'var(--pizza-primary)',
+                  borderColor: 'var(--pizza-primary)'
+                }}
+              >
+                <Home className="h-4 w-4" />
+                Back to Homepage
+              </Button>
+            </Link>
+            <div className="text-lg font-semibold" style={{ color: 'var(--pizza-text)' }}>
+              Order Tracking
+            </div>
+          </div>
+          
           <Card className="shadow-xl border-0">
-            <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-t-lg">
+            <CardHeader className="text-white rounded-t-lg" style={{ background: 'var(--pizza-gradient)' }}>
               <div className="flex items-center space-x-3">
                 <RefreshCw className="w-8 h-8 animate-spin" />
                 <div>
@@ -273,11 +295,30 @@ export default function OrderTracking({ orderId }: OrderTrackingProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-orange-50" style={{ background: 'var(--pizza-surface)' }}>
       <div className="max-w-6xl mx-auto p-6">
+        {/* Navigation Header */}
+        <div className="mb-6 flex items-center justify-between">
+          <Link href="/">
+            <Button 
+              className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 shadow-lg transition-all duration-200"
+              style={{ 
+                background: 'var(--pizza-primary)',
+                borderColor: 'var(--pizza-primary)'
+              }}
+            >
+              <Home className="h-4 w-4" />
+              Back to Homepage
+            </Button>
+          </Link>
+          <div className="text-lg font-semibold" style={{ color: 'var(--pizza-text)' }}>
+            Order Tracking
+          </div>
+        </div>
+
         {/* Professional Header with Live Status */}
         <Card className="mb-8 shadow-2xl border-0 overflow-hidden">
-          <CardHeader className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white relative">
+          <CardHeader className="text-white relative" style={{ background: 'var(--pizza-gradient)' }}>
             <div className="absolute inset-0 bg-black/10"></div>
             <div className="relative z-10">
               <div className="flex items-center justify-between">

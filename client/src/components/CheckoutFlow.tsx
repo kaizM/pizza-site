@@ -171,11 +171,11 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
   return (
     <div className="space-y-6">
       {/* Progress Indicator */}
-      <Card>
-        <CardHeader>
+      <Card className="shadow-lg border-0" style={{ background: 'var(--pizza-surface)' }}>
+        <CardHeader className="text-white" style={{ background: 'var(--pizza-gradient)' }}>
           <div className="flex items-center justify-between">
             <CardTitle className="text-xl">Checkout</CardTitle>
-            <div className="flex items-center space-x-2 text-sm text-neutral-secondary">
+            <div className="flex items-center space-x-2 text-sm text-orange-100">
               <Clock className="h-4 w-4" />
               <span>Est. 7-10 mins</span>
             </div>
@@ -184,34 +184,34 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
         <CardContent>
           <div className="flex items-center space-x-4">
             <div className="flex items-center">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                currentStep >= 1 ? "bg-red-600 text-white" : "bg-gray-300 text-gray-600"
-              }`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-200 ${
+                currentStep >= 1 ? "text-white shadow-lg" : "bg-gray-300 text-gray-600"
+              }`} style={currentStep >= 1 ? { background: 'var(--pizza-primary)' } : {}}>
                 {currentStep > 1 ? <CheckCircle className="h-4 w-4" /> : "1"}
               </div>
-              <span className={`ml-2 text-sm font-medium ${currentStep >= 1 ? "text-neutral-text" : "text-gray-600"}`}>
+              <span className={`ml-2 text-sm font-medium ${currentStep >= 1 ? "" : "text-gray-600"}`} style={currentStep >= 1 ? { color: 'var(--pizza-text)' } : {}}>
                 Customer Info
               </span>
             </div>
-            <div className={`flex-1 h-px ${currentStep > 1 ? "bg-red-600" : "bg-gray-300"}`}></div>
+            <div className={`flex-1 h-px transition-all duration-200 ${currentStep > 1 ? "" : "bg-gray-300"}`} style={currentStep > 1 ? { background: 'var(--pizza-primary)' } : {}}></div>
             <div className="flex items-center">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                currentStep >= 2 ? "bg-red-600 text-white" : "bg-gray-300 text-gray-600"
-              }`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-200 ${
+                currentStep >= 2 ? "text-white shadow-lg" : "bg-gray-300 text-gray-600"
+              }`} style={currentStep >= 2 ? { background: 'var(--pizza-primary)' } : {}}>
                 {currentStep > 2 ? <CheckCircle className="h-4 w-4" /> : <CreditCard className="h-4 w-4" />}
               </div>
-              <span className={`ml-2 text-sm font-medium ${currentStep >= 2 ? "text-neutral-text" : "text-gray-600"}`}>
+              <span className={`ml-2 text-sm font-medium ${currentStep >= 2 ? "" : "text-gray-600"}`} style={currentStep >= 2 ? { color: 'var(--pizza-text)' } : {}}>
                 Payment
               </span>
             </div>
-            <div className={`flex-1 h-px ${currentStep > 2 ? "bg-green-600" : "bg-gray-300"}`}></div>
+            <div className={`flex-1 h-px transition-all duration-200 ${currentStep > 2 ? "" : "bg-gray-300"}`} style={currentStep > 2 ? { background: 'var(--pizza-success)' } : {}}></div>
             <div className="flex items-center">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                currentStep >= 3 ? "bg-green-600 text-white" : "bg-gray-300 text-gray-600"
-              }`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-200 ${
+                currentStep >= 3 ? "text-white shadow-lg" : "bg-gray-300 text-gray-600"
+              }`} style={currentStep >= 3 ? { background: 'var(--pizza-success)' } : {}}>
                 {currentStep >= 3 ? <CheckCircle className="h-4 w-4" /> : "3"}
               </div>
-              <span className={`ml-2 text-sm font-medium ${currentStep >= 3 ? "text-green-600" : "text-gray-600"}`}>
+              <span className={`ml-2 text-sm font-medium ${currentStep >= 3 ? "" : "text-gray-600"}`} style={currentStep >= 3 ? { color: 'var(--pizza-success)' } : {}}>
                 Confirmation
               </span>
             </div>
