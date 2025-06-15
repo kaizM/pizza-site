@@ -252,9 +252,5 @@ export class MemStorage implements IStorage {
 
 import { FirebaseStorage } from "./firebaseStorage";
 
-// Use Firebase storage when credentials are available, MemStorage for fallback
-import { DatabaseStorage } from "./databaseStorage";
-
-export const storage = process.env.DATABASE_URL 
-  ? new DatabaseStorage() 
-  : new MemStorage();
+// Use MemStorage with enhanced persistence for reliable data storage
+export const storage = new MemStorage();
