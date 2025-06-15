@@ -54,6 +54,19 @@ export const orderCancellations = pgTable("order_cancellations", {
   cancelledAt: timestamp("cancelled_at").defaultNow(),
 });
 
+export const customerNotifications = pgTable("customer_notifications", {
+  id: serial("id").primaryKey(),
+  orderId: integer("order_id").notNull(),
+  type: text("type").notNull(), // 'substitution_request', 'order_cancelled', 'order_update'
+  message: text("message").notNull(),
+  requestDetails: jsonb("request_details"), // for substitution requests
+  isRead: boolean("is_read").default(false),
+  customerResponse: text("customer_response"), // customer's response to substitution
+  responseStatus: text("response_status").default("pending"), // 'pending', 'approved', 'rejected'
+  createdAt: timestamp("created_at").defaultNow(),
+  respondedAt: timestamp("responded_at"),
+});
+
 // Zod schemas
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
@@ -75,6 +88,12 @@ export const insertOrderCancellationSchema = createInsertSchema(orderCancellatio
   cancelledAt: true,
 });
 
+export const insertCustomerNotificationSchema = createInsertSchema(customerNotifications).omit({
+  id: true,
+  createdAt: true,
+  respondedAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -87,6 +106,9 @@ export type InsertPizzaItem = z.infer<typeof insertPizzaItemSchema>;
 
 export type OrderCancellation = typeof orderCancellations.$inferSelect;
 export type InsertOrderCancellation = z.infer<typeof insertOrderCancellationSchema>;
+
+export type CustomerNotification = typeof customerNotifications.$inferSelect;
+export type InsertCustomerNotification = z.infer<typeof insertCustomerNotificationSchema>;
 
 // Extended types for UI
 export interface CartItem {

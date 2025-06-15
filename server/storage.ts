@@ -1,4 +1,4 @@
-import { users, orders, pizzaItems, orderCancellations, type User, type InsertUser, type Order, type InsertOrder, type PizzaItem, type InsertPizzaItem, type OrderCancellation, type InsertOrderCancellation } from "@shared/schema";
+import { users, orders, pizzaItems, orderCancellations, customerNotifications, type User, type InsertUser, type Order, type InsertOrder, type PizzaItem, type InsertPizzaItem, type OrderCancellation, type InsertOrderCancellation, type CustomerNotification, type InsertCustomerNotification } from "@shared/schema";
 
 // Enhanced storage interface for pizza ordering system
 export interface IStorage {
@@ -35,6 +35,11 @@ export interface IStorage {
   recordCancellation(cancellation: InsertOrderCancellation): Promise<OrderCancellation>;
   getAllCancellations(): Promise<OrderCancellation[]>;
   getCancellationsByEmployee(employeeName: string): Promise<OrderCancellation[]>;
+
+  // Customer notifications
+  createNotification(notification: InsertCustomerNotification): Promise<CustomerNotification>;
+  getNotificationsByOrder(orderId: number): Promise<CustomerNotification[]>;
+  updateNotificationResponse(notificationId: number, response: string, status: string): Promise<CustomerNotification | undefined>;
 }
 
 export class MemStorage implements IStorage {

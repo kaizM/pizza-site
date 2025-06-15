@@ -135,6 +135,49 @@
       "cancellationReason": "out_of_ingredients",
       "cancelledBy": "employee",
       "cancelledAt": "2025-06-15T04:59:04.161Z"
+    },
+    {
+      "id": 4,
+      "customerInfo": {
+        "firstName": "kaiz",
+        "lastName": "maredia",
+        "phone": "8325429817",
+        "email": "kaizmaredia98@gmail.com"
+      },
+      "items": [
+        {
+          "id": "pizza-1749963435847",
+          "name": "Cheese",
+          "size": "Standard",
+          "crust": "Thin",
+          "toppings": [
+            "Onions"
+          ],
+          "price": 11.99,
+          "quantity": 1,
+          "imageUrl": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300"
+        }
+      ],
+      "subtotal": 11.99,
+      "tax": 0.99,
+      "tip": 1.95,
+      "total": 14.93,
+      "orderType": "pickup",
+      "specialInstructions": "",
+      "paymentStatus": "charged",
+      "userId": null,
+      "status": "cancelled",
+      "paymentId": "test_pay_1749964063528_jp3o7ve90",
+      "estimatedTime": 10,
+      "createdAt": "2025-06-15T05:07:43.932Z",
+      "updatedAt": "2025-06-15T05:09:33.828Z",
+      "substitutionReason": "bacon",
+      "substitutionSuggestion": "out",
+      "substitutionRequestedBy": "employee",
+      "substitutionRequestedAt": "2025-06-15T05:08:59.076Z",
+      "cancellationReason": "staffing_issue",
+      "cancelledBy": "employee",
+      "cancelledAt": "2025-06-15T05:09:33.741Z"
     }
   ],
   "pizzas": [
@@ -186,7 +229,7 @@
   ],
   "counters": {
     "userId": 1,
-    "orderId": 4,
+    "orderId": 5,
     "pizzaId": 6
   }
 }
