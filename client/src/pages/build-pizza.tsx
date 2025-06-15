@@ -12,7 +12,7 @@ export default function BuildPizzaPage() {
 
   return (
     <div className="min-h-screen bg-neutral-bg">
-      <CustomerNavigation />
+      <CustomerNavigation showCartButton={true} />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

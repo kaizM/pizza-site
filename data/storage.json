@@ -124,9 +124,13 @@
       "specialInstructions": "Extra crispy crust please",
       "paymentId": "pay_cart_test_123",
       "paymentStatus": "authorized",
-      "status": "confirmed",
+      "status": "substitution_requested",
       "createdAt": "2025-06-15T04:46:11.467Z",
-      "updatedAt": "2025-06-15T04:46:11.467Z"
+      "updatedAt": "2025-06-15T04:52:12.482Z",
+      "substitutionReason": "mushrooms",
+      "substitutionSuggestion": "hh",
+      "substitutionRequestedBy": "employee",
+      "substitutionRequestedAt": "2025-06-15T04:52:12.384Z"
     }
   ],
   "pizzas": [

@@ -817,12 +817,28 @@ export default function EmployeeDashboard() {
                 <SelectContent>
                   <SelectItem value="pepperoni">Pepperoni</SelectItem>
                   <SelectItem value="italian_sausage">Italian Sausage</SelectItem>
+                  <SelectItem value="ham">Ham</SelectItem>
+                  <SelectItem value="bacon">Bacon</SelectItem>
+                  <SelectItem value="chicken">Chicken</SelectItem>
+                  <SelectItem value="ground_beef">Ground Beef</SelectItem>
                   <SelectItem value="mushrooms">Mushrooms</SelectItem>
                   <SelectItem value="green_peppers">Green Peppers</SelectItem>
+                  <SelectItem value="red_peppers">Red Peppers</SelectItem>
                   <SelectItem value="onions">Onions</SelectItem>
                   <SelectItem value="black_olives">Black Olives</SelectItem>
+                  <SelectItem value="green_olives">Green Olives</SelectItem>
+                  <SelectItem value="tomatoes">Fresh Tomatoes</SelectItem>
+                  <SelectItem value="spinach">Spinach</SelectItem>
+                  <SelectItem value="jalapenos">Jalapeños</SelectItem>
+                  <SelectItem value="banana_peppers">Banana Peppers</SelectItem>
+                  <SelectItem value="pineapple">Pineapple</SelectItem>
+                  <SelectItem value="extra_cheese">Extra Cheese</SelectItem>
                   <SelectItem value="stuffed_crust">Stuffed Crust</SelectItem>
                   <SelectItem value="thin_crust">Thin Crust</SelectItem>
+                  <SelectItem value="hand_tossed">Hand Tossed Crust</SelectItem>
+                  <SelectItem value="thick_crust">Thick Crust</SelectItem>
+                  <SelectItem value="gluten_free">Gluten-Free Crust</SelectItem>
+                  <SelectItem value="entire_pizza">Entire Pizza Type</SelectItem>
                   <SelectItem value="other">Other item</SelectItem>
                 </SelectContent>
               </Select>
