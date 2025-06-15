@@ -6,25 +6,25 @@ import AuthModal from "@/components/AuthModal";
 import CheckoutFlow from "@/components/CheckoutFlow";
 import OrderSummary from "@/components/OrderSummary";
 import OrderTracking from "@/components/OrderTracking";
-import { CartItem } from "@shared/schema";
 import { ShoppingCart, User } from "lucide-react";
 import { Link } from "wouter";
+import { useCart } from "@/hooks/useCart";
+import { CartItem } from "@shared/schema";
 
 export default function CheckoutPage() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [completedOrderId, setCompletedOrderId] = useState<string | null>(null);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const { cartItems, updateQuantity, removeItem, clearCart, getTotalItems, addToCart } = useCart();
 
   const { user, loading } = useAuth();
 
   useEffect(() => {
-    // Load premade cart items from localStorage if available
+    // Load premade cart items from localStorage if available (for direct navigation from home page)
     const storedCartItems = localStorage.getItem('premadeCartItems');
     if (storedCartItems) {
       try {
-        const parsedItems = JSON.parse(storedCartItems);
-        setCartItems(parsedItems);
-        // Clear the stored items after loading
+        const parsedItems: CartItem[] = JSON.parse(storedCartItems);
+        parsedItems.forEach(item => addToCart(item));
         localStorage.removeItem('premadeCartItems');
       } catch (error) {
         console.error('Error parsing stored cart items:', error);
@@ -39,23 +39,11 @@ export default function CheckoutPage() {
         // User successfully signed in via redirect
       }
     });
-  }, []);
-
-  const updateQuantity = (id: string, quantity: number) => {
-    setCartItems(items =>
-      items.map(item =>
-        item.id === id ? { ...item, quantity } : item
-      )
-    );
-  };
-
-  const removeItem = (id: string) => {
-    setCartItems(items => items.filter(item => item.id !== id));
-  };
+  }, [addToCart]);
 
   const handleOrderComplete = (orderId: string) => {
     setCompletedOrderId(orderId);
-    setCartItems([]); // Clear cart
+    clearCart();
   };
 
   if (loading) {

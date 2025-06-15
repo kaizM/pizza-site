@@ -5,29 +5,13 @@ import { ShoppingCart, User, ArrowLeft } from "lucide-react";
 import PizzaBuilder from "@/components/PizzaBuilder";
 import OrderSummary from "@/components/OrderSummary";
 import AuthModal from "@/components/AuthModal";
-import { CartItem } from "@shared/schema";
 import { useAuth } from "@/hooks/useAuth";
+import { useCart } from "@/hooks/useCart";
 
 export default function BuildPizzaPage() {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const { user } = useAuth();
-
-  const addToCart = (item: CartItem) => {
-    setCartItems(prev => [...prev, item]);
-  };
-
-  const updateQuantity = (id: string, quantity: number) => {
-    setCartItems(items =>
-      items.map(item =>
-        item.id === id ? { ...item, quantity } : item
-      )
-    );
-  };
-
-  const removeItem = (id: string) => {
-    setCartItems(items => items.filter(item => item.id !== id));
-  };
+  const { cartItems, addToCart, updateQuantity, removeItem, getTotalItems } = useCart();
 
   return (
     <div className="min-h-screen bg-neutral-bg">
@@ -82,7 +66,7 @@ export default function BuildPizzaPage() {
                   <ShoppingCart className="mr-2 h-4 w-4" />
                   Cart
                   <span className="ml-2 bg-yellow-400 text-red-800 text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold border border-red-700">
-                    {cartItems.reduce((sum, item) => sum + item.quantity, 0)}
+                    {getTotalItems()}
                   </span>
                 </Button>
               </Link>
