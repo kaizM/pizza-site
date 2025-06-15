@@ -7,10 +7,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Clock, Store, CreditCard, CheckCircle } from "lucide-react";
 import { CustomerInfo, OrderData, CartItem } from "@shared/schema";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/useAuth";
 import PaymentForm from "@/components/PaymentForm";
+import { apiRequest } from "@/lib/queryClient";
 
 interface CheckoutFlowProps {
   cartItems: CartItem[];
@@ -109,25 +108,25 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
         status: "confirmed",
         paymentId: paymentTransactionId,
         estimatedTime: 10,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
       };
 
-      const docRef = await addDoc(collection(db, "orders"), finalOrderData);
+      const response = await apiRequest("POST", "/api/orders", finalOrderData);
+      const savedOrder = await response.json();
 
       console.log("=== ORDER SUCCESS ===");
-      console.log("Order ID:", docRef.id);
+      console.log("Order ID:", savedOrder.id);
       console.log("Status: CONFIRMED");
-      console.log("Database: Firestore");
+      console.log("Database: Backend Storage");
+      console.log("Full Order:", savedOrder);
       console.log("=====================");
 
       toast({
         title: "Order Placed Successfully!",
-        description: `Your order has been confirmed. Order ID: ${docRef.id}`,
+        description: `Your order has been confirmed. Order ID: ${savedOrder.id}`,
         variant: "success",
       });
 
-      onOrderComplete(docRef.id);
+      onOrderComplete(savedOrder.id.toString());
     } catch (error: any) {
       toast({
         title: "Order Failed",
