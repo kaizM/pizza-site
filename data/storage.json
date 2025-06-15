@@ -124,13 +124,17 @@
       "specialInstructions": "Extra crispy crust please",
       "paymentId": "pay_cart_test_123",
       "paymentStatus": "authorized",
-      "status": "substitution_requested",
+      "status": "cancelled",
       "createdAt": "2025-06-15T04:46:11.467Z",
-      "updatedAt": "2025-06-15T04:58:15.123Z",
+      "updatedAt": "2025-06-15T04:59:04.238Z",
       "substitutionReason": "italian_sausage",
       "substitutionSuggestion": "dont have it",
       "substitutionRequestedBy": "employee",
-      "substitutionRequestedAt": "2025-06-15T04:58:15.045Z"
+      "substitutionRequestedAt": "2025-06-15T04:58:15.045Z",
+      "estimatedTime": 10,
+      "cancellationReason": "out_of_ingredients",
+      "cancelledBy": "employee",
+      "cancelledAt": "2025-06-15T04:59:04.161Z"
     }
   ],
   "pizzas": [

@@ -42,6 +42,18 @@ export const pizzaItems = pgTable("pizza_items", {
   isActive: boolean("is_active").default(true),
 });
 
+export const orderCancellations = pgTable("order_cancellations", {
+  id: serial("id").primaryKey(),
+  orderId: integer("order_id").notNull(),
+  employeeName: text("employee_name").notNull(),
+  cancellationReason: text("cancellation_reason").notNull(),
+  customReason: text("custom_reason"),
+  orderTotal: decimal("order_total", { precision: 10, scale: 2 }).notNull(),
+  customerName: text("customer_name").notNull(),
+  customerPhone: text("customer_phone").notNull(),
+  cancelledAt: timestamp("cancelled_at").defaultNow(),
+});
+
 // Zod schemas
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
@@ -58,6 +70,11 @@ export const insertPizzaItemSchema = createInsertSchema(pizzaItems).omit({
   id: true,
 });
 
+export const insertOrderCancellationSchema = createInsertSchema(orderCancellations).omit({
+  id: true,
+  cancelledAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -67,6 +84,9 @@ export type InsertOrder = z.infer<typeof insertOrderSchema>;
 
 export type PizzaItem = typeof pizzaItems.$inferSelect;
 export type InsertPizzaItem = z.infer<typeof insertPizzaItemSchema>;
+
+export type OrderCancellation = typeof orderCancellations.$inferSelect;
+export type InsertOrderCancellation = z.infer<typeof insertOrderCancellationSchema>;
 
 // Extended types for UI
 export interface CartItem {

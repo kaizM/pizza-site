@@ -1,4 +1,4 @@
-import { users, orders, pizzaItems, type User, type InsertUser, type Order, type InsertOrder, type PizzaItem, type InsertPizzaItem } from "@shared/schema";
+import { users, orders, pizzaItems, orderCancellations, type User, type InsertUser, type Order, type InsertOrder, type PizzaItem, type InsertPizzaItem, type OrderCancellation, type InsertOrderCancellation } from "@shared/schema";
 
 // Enhanced storage interface for pizza ordering system
 export interface IStorage {
@@ -30,15 +30,22 @@ export interface IStorage {
     avgPrepTime: number;
     recentOrders: Order[];
   }>;
+
+  // Cancellation tracking
+  recordCancellation(cancellation: InsertOrderCancellation): Promise<OrderCancellation>;
+  getAllCancellations(): Promise<OrderCancellation[]>;
+  getCancellationsByEmployee(employeeName: string): Promise<OrderCancellation[]>;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private orders: Map<number, Order>;
   private pizzas: Map<number, PizzaItem>;
+  private cancellations: Map<number, OrderCancellation>;
   private currentUserId: number;
   private currentOrderId: number;
   private currentPizzaId: number;
+  private currentCancellationId: number;
 
   constructor() {
     this.users = new Map();

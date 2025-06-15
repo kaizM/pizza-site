@@ -1,16 +1,18 @@
 import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
-import { users, orders, pizzaItems, type User, type InsertUser, type Order, type InsertOrder, type PizzaItem, type InsertPizzaItem } from "@shared/schema";
+import { users, orders, pizzaItems, orderCancellations, type User, type InsertUser, type Order, type InsertOrder, type PizzaItem, type InsertPizzaItem, type OrderCancellation, type InsertOrderCancellation } from "@shared/schema";
 import { IStorage } from "./storage";
 
 interface StorageData {
   users: User[];
   orders: Order[];
   pizzas: PizzaItem[];
+  cancellations: OrderCancellation[];
   counters: {
     userId: number;
     orderId: number;
     pizzaId: number;
+    cancellationId: number;
   };
 }
 
