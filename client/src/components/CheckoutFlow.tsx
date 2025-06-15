@@ -36,6 +36,7 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
   const [cashEligible, setCashEligible] = useState(false);
   const [trustScore, setTrustScore] = useState(0);
   const [checkingEligibility, setCheckingEligibility] = useState(false);
+  const [customerProfile, setCustomerProfile] = useState<any>(null);
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -219,6 +220,39 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
     });
   };
 
+  const handleQuickPayment = async (method: "card" | "cash") => {
+    // Check required fields
+    if (!customerInfo.firstName || !customerInfo.lastName || !customerInfo.phone) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setPaymentMethod(method);
+    
+    if (method === 'cash') {
+      // Check cash payment eligibility
+      if (!cashEligible) {
+        toast({
+          title: "Cash Payment Not Available",
+          description: "Please use card payment or contact us",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      // Process cash payment immediately
+      setCurrentStep(3);
+      submitOrder("CASH_PAYMENT");
+    } else {
+      // Go to card payment step
+      setCurrentStep(2);
+    }
+  };
+
   const submitOrder = async (paymentTransactionId: string) => {
     setLoading(true);
 
@@ -351,7 +385,7 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
 
       {/* Step 1: Customer Information */}
       {currentStep === 1 && (
-        <form onSubmit={handleCustomerInfoSubmit} className="space-y-6">
+        <form id="checkout-form" onSubmit={handleCustomerInfoSubmit} className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>Contact Information</CardTitle>
@@ -608,9 +642,36 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
             </CardContent>
           </Card>
 
-          <Button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3">
-            Continue to Payment
-          </Button>
+          {/* Quick Payment Options */}
+          <div className="space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <Button 
+                type="button" 
+                onClick={() => handleQuickPayment('card')}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 flex items-center justify-center gap-2"
+              >
+                💳 Quick Pay with Card
+              </Button>
+              
+              {cashEligible && (
+                <Button 
+                  type="button" 
+                  onClick={() => handleQuickPayment('cash')}
+                  className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 flex items-center justify-center gap-2"
+                >
+                  💵 Quick Pay Cash
+                </Button>
+              )}
+            </div>
+            
+            <div className="text-center text-sm text-gray-500">
+              or
+            </div>
+            
+            <Button type="submit" variant="outline" className="w-full py-3">
+              Continue to Payment Options
+            </Button>
+          </div>
         </form>
       )}
 

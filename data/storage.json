@@ -309,6 +309,40 @@
       "cancellationReason": "special_request",
       "cancelledBy": "employee",
       "cancelledAt": "2025-06-15T05:47:34.468Z"
+    },
+    {
+      "id": 8,
+      "customerInfo": {
+        "firstName": "kk",
+        "lastName": "nhh",
+        "phone": "8325429818",
+        "email": ""
+      },
+      "items": [
+        {
+          "id": "pizza-1749966833729",
+          "name": "Cheese",
+          "size": "Standard",
+          "crust": "Original",
+          "toppings": [],
+          "price": 11.99,
+          "quantity": 1,
+          "imageUrl": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300"
+        }
+      ],
+      "subtotal": 11.99,
+      "tax": 0.99,
+      "tip": 0,
+      "total": 12.98,
+      "orderType": "pickup",
+      "specialInstructions": "",
+      "paymentStatus": "charged",
+      "userId": null,
+      "status": "completed",
+      "paymentId": "test_pay_1749967273046_3rnokkwpr",
+      "estimatedTime": 10,
+      "createdAt": "2025-06-15T06:01:13.125Z",
+      "updatedAt": "2025-06-15T06:02:23.913Z"
     }
   ],
   "pizzas": [
@@ -360,9 +394,10 @@
   ],
   "counters": {
     "userId": 1,
-    "orderId": 8,
+    "orderId": 9,
     "pizzaId": 6,
-    "notificationId": 5
+    "notificationId": 5,
+    "customerProfileId": null
   },
   "notifications": [
     {
@@ -408,6 +443,25 @@
       "status": "sent",
       "createdAt": "2025-06-15T05:47:34.476Z",
       "respondedAt": null
+    }
+  ],
+  "customerProfiles": [
+    {
+      "id": null,
+      "phone": "8325429818",
+      "firstName": "kk",
+      "lastName": "nhh",
+      "email": null,
+      "totalOrders": 1,
+      "completedOrders": 1,
+      "cancelledOrders": 0,
+      "noShowOrders": 0,
+      "trustScore": 85,
+      "cashPaymentAllowed": false,
+      "lastOrderDate": "2025-06-15T06:01:13.126Z",
+      "notes": null,
+      "createdAt": "2025-06-15T06:01:13.126Z",
+      "updatedAt": "2025-06-15T06:02:23.936Z"
     }
   ]
 }
