@@ -137,6 +137,9 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
       return;
     }
 
+    // Check cash payment eligibility
+    checkCashEligibility(cleanPhone);
+    
     setCurrentStep(2);
   };
 
@@ -444,9 +447,12 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
             <CardHeader>
               <CardTitle>Payment Method</CardTitle>
               <p className="text-sm text-gray-600">Choose how you'd like to pay</p>
+              {checkingEligibility && (
+                <div className="text-sm text-blue-600">Checking customer eligibility...</div>
+              )}
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className={`grid gap-4 ${cashEligible ? 'grid-cols-2' : 'grid-cols-1'}`}>
                 <Button
                   type="button"
                   variant={paymentMethod === "card" ? "default" : "outline"}
@@ -456,15 +462,41 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
                   <CreditCard className="mr-2 h-5 w-5" />
                   Credit Card
                 </Button>
-                <Button
-                  type="button"
-                  variant={paymentMethod === "cash" ? "default" : "outline"}
-                  onClick={() => setPaymentMethod("cash")}
-                  className={`h-16 ${paymentMethod === "cash" ? 'bg-green-600 hover:bg-green-700' : ''}`}
-                >
-                  💵 Cash at Pickup
-                </Button>
+                {cashEligible && (
+                  <Button
+                    type="button"
+                    variant={paymentMethod === "cash" ? "default" : "outline"}
+                    onClick={() => setPaymentMethod("cash")}
+                    className={`h-16 ${paymentMethod === "cash" ? 'bg-green-600 hover:bg-green-700' : ''}`}
+                  >
+                    💵 Cash at Pickup
+                  </Button>
+                )}
               </div>
+
+              {/* Customer Trust Score Display */}
+              {trustScore > 0 && (
+                <div className={`p-4 rounded-lg border ${cashEligible ? 'bg-green-50 border-green-200' : 'bg-orange-50 border-orange-200'}`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-medium text-sm">Customer Trust Score</span>
+                    <span className={`font-bold ${cashEligible ? 'text-green-700' : 'text-orange-700'}`}>
+                      {trustScore}/100
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className={`h-2 rounded-full transition-all duration-300 ${cashEligible ? 'bg-green-600' : 'bg-orange-500'}`}
+                      style={{ width: `${trustScore}%` }}
+                    ></div>
+                  </div>
+                  <p className={`text-xs mt-2 ${cashEligible ? 'text-green-700' : 'text-orange-700'}`}>
+                    {cashEligible 
+                      ? "You're eligible for cash payment as a trusted customer!"
+                      : "Complete a few more orders with card payment to unlock cash payment option."
+                    }
+                  </p>
+                </div>
+              )}
 
               {paymentMethod === "cash" && (
                 <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">

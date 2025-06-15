@@ -108,6 +108,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
       
       const order = await storage.createOrder(sanitizedOrder);
+
+      // Create or update customer profile for trust tracking
+      if (sanitizedOrder.customerInfo && sanitizedOrder.customerInfo.phone) {
+        const { firstName, lastName, phone, email } = sanitizedOrder.customerInfo;
+        
+        let profile = await storage.getCustomerProfile(phone);
+        if (profile) {
+          // Update existing profile
+          await storage.updateCustomerProfile(phone, {
+            totalOrders: (profile.totalOrders || 0) + 1,
+            lastOrderDate: new Date(),
+            email: email || profile.email
+          });
+        } else {
+          // Create new profile for first-time customer
+          await storage.createCustomerProfile({
+            phone,
+            firstName,
+            lastName,
+            email: email || null,
+            totalOrders: 1,
+            completedOrders: 0,
+            cancelledOrders: 0,
+            noShowOrders: 0,
+            trustScore: 50,
+            cashPaymentAllowed: false,
+            lastOrderDate: new Date(),
+            notes: null
+          });
+        }
+      }
+
       res.status(201).json(order);
     } catch (error) {
       res.status(500).json({ message: "Failed to create order" });
@@ -303,6 +335,68 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error updating notification response:", error);
       res.status(500).json({ message: "Failed to update notification response" });
+    }
+  });
+
+  // Customer trust system endpoints
+  app.post("/api/check-cash-eligibility", async (req, res) => {
+    try {
+      const { phone } = req.body;
+      
+      if (!phone) {
+        return res.status(400).json({ message: "Phone number is required" });
+      }
+
+      const eligible = await storage.checkCashPaymentEligibility(phone);
+      const trustScore = await storage.calculateTrustScore(phone);
+      
+      res.json({ 
+        eligible, 
+        trustScore,
+        message: eligible 
+          ? "Customer eligible for cash payment" 
+          : "Customer must use credit card payment"
+      });
+    } catch (error) {
+      console.error("Error checking cash eligibility:", error);
+      res.status(500).json({ message: "Failed to check eligibility" });
+    }
+  });
+
+  app.post("/api/customer-profile", async (req, res) => {
+    try {
+      const { phone, firstName, lastName, email } = req.body;
+      
+      if (!phone || !firstName || !lastName) {
+        return res.status(400).json({ message: "Phone, first name, and last name are required" });
+      }
+
+      // Check if profile already exists
+      const existingProfile = await storage.getCustomerProfile(phone);
+      if (existingProfile) {
+        return res.json(existingProfile);
+      }
+
+      // Create new customer profile
+      const newProfile = await storage.createCustomerProfile({
+        phone,
+        firstName,
+        lastName,
+        email: email || null,
+        totalOrders: 0,
+        completedOrders: 0,
+        cancelledOrders: 0,
+        noShowOrders: 0,
+        trustScore: 50, // Starting trust score
+        cashPaymentAllowed: false,
+        lastOrderDate: null,
+        notes: null
+      });
+      
+      res.json(newProfile);
+    } catch (error) {
+      console.error("Error creating customer profile:", error);
+      res.status(500).json({ message: "Failed to create customer profile" });
     }
   });
 
