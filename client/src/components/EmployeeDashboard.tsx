@@ -603,8 +603,23 @@ export default function EmployeeDashboard() {
                       </DialogContent>
                     </Dialog>
 
-                    {order.status === "confirmed" && (
+                    {(order.status === "confirmed" || order.status === "substitution_requested") && (
                       <div className="space-y-2">
+                        {/* Substitution Status Alert */}
+                        {order.status === "substitution_requested" && (
+                          <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Clock className="h-4 w-4 text-orange-600" />
+                              <span className="text-sm text-orange-800 font-medium">
+                                Waiting for Customer Response
+                              </span>
+                            </div>
+                            <p className="text-xs text-orange-700">
+                              Substitution request sent. You can still manage this order while waiting.
+                            </p>
+                          </div>
+                        )}
+
                         {/* Payment Authorization */}
                         {order.paymentStatus === "authorized" && (
                           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
@@ -658,35 +673,91 @@ export default function EmployeeDashboard() {
                         </div>
                         
                         <div className="grid grid-cols-1 gap-2">
-                          <Button 
-                            onClick={() => updateOrderStatus(order.id, "preparing")}
-                            className="bg-yellow-600 hover:bg-yellow-700 text-white"
-                            size="sm"
-                          >
-                            <ChefHat className="h-4 w-4 mr-1" />
-                            Start Cooking
-                          </Button>
+                          {order.status === "confirmed" && (
+                            <Button 
+                              onClick={() => updateOrderStatus(order.id, "preparing")}
+                              className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                              size="sm"
+                            >
+                              <ChefHat className="h-4 w-4 mr-1" />
+                              Start Cooking
+                            </Button>
+                          )}
                           
-                          {/* Supply Issues Section */}
-                          <div className="grid grid-cols-2 gap-2">
-                            <Button 
-                              onClick={() => openSubstitutionModal(order)}
-                              variant="outline"
-                              size="sm"
-                              className="border-orange-300 text-orange-700 hover:bg-orange-50"
-                            >
-                              <RotateCcw className="h-4 w-4 mr-1" />
-                              Request Substitution
-                            </Button>
-                            <Button 
-                              onClick={() => openCancelModal(order)}
-                              variant="outline"
-                              size="sm"
-                              className="border-red-300 text-red-700 hover:bg-red-50"
-                            >
-                              <XCircle className="h-4 w-4 mr-1" />
-                              Cancel Order
-                            </Button>
+                          {order.status === "substitution_requested" && (
+                            <div className="grid grid-cols-2 gap-2">
+                              <Button 
+                                onClick={() => updateOrderStatus(order.id, "preparing")}
+                                className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                                size="sm"
+                              >
+                                <ChefHat className="h-4 w-4 mr-1" />
+                                Start Anyway
+                              </Button>
+                              <Button 
+                                onClick={() => updateOrderStatus(order.id, "confirmed")}
+                                variant="outline"
+                                size="sm"
+                                className="border-blue-300 text-blue-700 hover:bg-blue-50"
+                              >
+                                <RotateCcw className="h-4 w-4 mr-1" />
+                                Revert to Confirmed
+                              </Button>
+                            </div>
+                          )}
+                          
+                          {/* Always Available Actions - Like Uber Eats */}
+                          <div className="space-y-2">
+                            <div className="grid grid-cols-2 gap-2">
+                              <Button 
+                                onClick={() => openSubstitutionModal(order)}
+                                variant="outline"
+                                size="sm"
+                                className="border-orange-300 text-orange-700 hover:bg-orange-50"
+                              >
+                                <RotateCcw className="h-4 w-4 mr-1" />
+                                {order.status === "substitution_requested" ? "Send Another Request" : "Request Substitution"}
+                              </Button>
+                              <Button 
+                                onClick={() => openCancelModal(order)}
+                                variant="outline"
+                                size="sm"
+                                className="border-red-300 text-red-700 hover:bg-red-50"
+                              >
+                                <XCircle className="h-4 w-4 mr-1" />
+                                Cancel Order
+                              </Button>
+                            </div>
+                            
+                            {/* Additional Management Options */}
+                            {order.status === "substitution_requested" && (
+                              <div className="grid grid-cols-3 gap-1">
+                                <Button 
+                                  onClick={() => updateOrderStatus(order.id, "confirmed")}
+                                  variant="outline"
+                                  size="sm"
+                                  className="border-blue-300 text-blue-700 hover:bg-blue-50 text-xs"
+                                >
+                                  Accept Original
+                                </Button>
+                                <Button 
+                                  onClick={() => setEstimatedTime(order.id, 25)}
+                                  variant="outline"
+                                  size="sm"
+                                  className="border-purple-300 text-purple-700 hover:bg-purple-50 text-xs"
+                                >
+                                  Extend Time
+                                </Button>
+                                <Button 
+                                  onClick={() => openSubstitutionModal(order)}
+                                  variant="outline"
+                                  size="sm"
+                                  className="border-green-300 text-green-700 hover:bg-green-50 text-xs"
+                                >
+                                  New Request
+                                </Button>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>

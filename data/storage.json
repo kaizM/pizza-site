@@ -126,11 +126,11 @@
       "paymentStatus": "authorized",
       "status": "substitution_requested",
       "createdAt": "2025-06-15T04:46:11.467Z",
-      "updatedAt": "2025-06-15T04:52:12.482Z",
-      "substitutionReason": "mushrooms",
-      "substitutionSuggestion": "hh",
+      "updatedAt": "2025-06-15T04:58:15.123Z",
+      "substitutionReason": "italian_sausage",
+      "substitutionSuggestion": "dont have it",
       "substitutionRequestedBy": "employee",
-      "substitutionRequestedAt": "2025-06-15T04:52:12.384Z"
+      "substitutionRequestedAt": "2025-06-15T04:58:15.045Z"
     }
   ],
   "pizzas": [
