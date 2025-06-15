@@ -155,6 +155,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Charge customer payment after supplies confirmed
+  app.post("/api/orders/:id/charge", async (req, res) => {
+    try {
+      const orderId = parseInt(req.params.id);
+      const order = await storage.getOrder(orderId);
+      
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+      
+      if (order.paymentStatus === "charged") {
+        return res.status(400).json({ message: "Payment already charged" });
+      }
+      
+      // Simulate payment charging process
+      const customerInfo = order.customerInfo as any;
+      console.log(`=== CHARGING PAYMENT FOR ORDER #${orderId} ===`);
+      console.log(`Customer: ${customerInfo.firstName} ${customerInfo.lastName}`);
+      console.log(`Amount: $${order.total}`);
+      console.log(`Payment ID: ${order.paymentId || 'N/A'}`);
+      console.log(`Tip Amount: $${order.tip || 0}`);
+      console.log("=== PAYMENT CHARGED SUCCESSFULLY ===");
+      
+      // Update order payment status to charged
+      const updatedOrder = await storage.updateOrder(orderId, {
+        paymentStatus: "charged",
+        updatedAt: new Date()
+      });
+      
+      if (!updatedOrder) {
+        return res.status(500).json({ message: "Failed to update order" });
+      }
+      
+      res.json({ 
+        message: "Payment charged successfully", 
+        order: updatedOrder 
+      });
+    } catch (error) {
+      console.error("Error charging payment:", error);
+      res.status(500).json({ message: "Failed to charge payment" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
