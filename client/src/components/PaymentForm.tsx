@@ -61,38 +61,49 @@ export default function PaymentForm({ total, onPaymentSuccess, onPaymentError }:
     setProcessing(true);
 
     try {
-      // Validate form data
+      // Basic validation - accept any card number for testing
       const cardNumberClean = paymentData.cardNumber.replace(/\s/g, "");
-      if (cardNumberClean.length < 13 || cardNumberClean.length > 19) {
-        throw new Error("Please enter a valid card number");
-      }
-      if (!paymentData.expiryMonth || !paymentData.expiryYear) {
-        throw new Error("Please enter expiry date");
-      }
-      if (paymentData.cvv.length < 3) {
-        throw new Error("Please enter a valid CVV");
+      if (cardNumberClean.length < 4) {
+        throw new Error("Please enter at least 4 digits for testing");
       }
       if (!paymentData.cardholderName.trim()) {
         throw new Error("Please enter cardholder name");
       }
-      if (!paymentData.billingZip.trim()) {
-        throw new Error("Please enter billing ZIP code");
-      }
 
-      // Simulate payment processing (replace with actual payment gateway integration)
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Log payment details to console for testing
+      console.log("=== PAYMENT TEST DATA ===");
+      console.log("Card Number:", cardNumberClean);
+      console.log("Cardholder:", paymentData.cardholderName);
+      console.log("Expiry:", `${paymentData.expiryMonth}/${paymentData.expiryYear}`);
+      console.log("CVV:", paymentData.cvv);
+      console.log("Billing ZIP:", paymentData.billingZip);
+      console.log("Amount:", `$${total.toFixed(2)}`);
+      console.log("=== END PAYMENT DATA ===");
 
-      // For demo purposes, simulate success
-      const paymentId = `pay_${Date.now()}`;
+      // Simulate payment processing
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // Generate test payment ID
+      const paymentId = `test_pay_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Log successful payment
+      console.log("=== PAYMENT SUCCESS ===");
+      console.log("Payment ID:", paymentId);
+      console.log("Status: APPROVED");
+      console.log("========================");
       
       toast({
         title: "Payment Successful",
-        description: `Payment of $${total.toFixed(2)} processed successfully`,
+        description: `Test payment of $${total.toFixed(2)} processed successfully`,
         variant: "success",
       });
 
       onPaymentSuccess(paymentId);
     } catch (error: any) {
+      console.log("=== PAYMENT ERROR ===");
+      console.log("Error:", error.message);
+      console.log("=====================");
+      
       toast({
         title: "Payment Failed",
         description: error.message || "Payment could not be processed",
@@ -128,6 +139,15 @@ export default function PaymentForm({ total, onPaymentSuccess, onPaymentError }:
           <CreditCard className="mr-2 h-5 w-5" />
           Payment Information
         </CardTitle>
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-3">
+          <h4 className="font-semibold text-blue-800 text-sm mb-2">Test Mode - Use Any Card Numbers</h4>
+          <div className="text-xs text-blue-700 space-y-1">
+            <p>• Card: 4111 1111 1111 1111 (or any numbers)</p>
+            <p>• Expiry: Any future date</p>
+            <p>• CVV: Any 3-4 digits</p>
+            <p>• Check browser console for detailed logs</p>
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">

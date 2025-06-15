@@ -77,7 +77,33 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
         specialInstructions,
       };
 
-      const docRef = await addDoc(collection(db, "orders"), {
+      // Log complete order details for testing
+      console.log("=== ORDER SUBMISSION DATA ===");
+      console.log("Customer Info:", {
+        name: `${customerInfo.firstName} ${customerInfo.lastName}`,
+        phone: customerInfo.phone,
+        email: customerInfo.email || 'Not provided'
+      });
+      console.log("Order Items:", cartItems.map(item => ({
+        name: item.name,
+        size: item.size,
+        crust: item.crust,
+        toppings: item.toppings,
+        quantity: item.quantity,
+        price: `$${item.price.toFixed(2)}`
+      })));
+      console.log("Order Type:", orderType);
+      console.log("Special Instructions:", specialInstructions || 'None');
+      console.log("Pricing:", {
+        subtotal: `$${subtotal.toFixed(2)}`,
+        tax: `$${tax.toFixed(2)}`,
+        total: `$${total.toFixed(2)}`
+      });
+      console.log("Payment ID:", paymentTransactionId);
+      console.log("User ID:", user?.uid || 'Guest order');
+      console.log("=== END ORDER DATA ===");
+
+      const finalOrderData = {
         ...orderData,
         userId: user?.uid || null,
         status: "confirmed",
@@ -85,7 +111,15 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
         estimatedTime: 10,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
-      });
+      };
+
+      const docRef = await addDoc(collection(db, "orders"), finalOrderData);
+
+      console.log("=== ORDER SUCCESS ===");
+      console.log("Order ID:", docRef.id);
+      console.log("Status: CONFIRMED");
+      console.log("Database: Firestore");
+      console.log("=====================");
 
       toast({
         title: "Order Placed Successfully!",
