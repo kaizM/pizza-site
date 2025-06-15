@@ -178,6 +178,40 @@
       "cancellationReason": "staffing_issue",
       "cancelledBy": "employee",
       "cancelledAt": "2025-06-15T05:09:33.741Z"
+    },
+    {
+      "id": 5,
+      "customerInfo": {
+        "firstName": "Karim",
+        "lastName": "Maredia",
+        "phone": "8325421647",
+        "email": "grab786@yahoo.com"
+      },
+      "items": [
+        {
+          "id": "pizza-1749964871718",
+          "name": "Cheese",
+          "size": "Standard",
+          "crust": "Original",
+          "toppings": [],
+          "price": 11.99,
+          "quantity": 1,
+          "imageUrl": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300"
+        }
+      ],
+      "subtotal": 11.99,
+      "tax": 0.99,
+      "tip": 2,
+      "total": 14.98,
+      "orderType": "pickup",
+      "specialInstructions": "",
+      "paymentStatus": "charged",
+      "userId": null,
+      "status": "ready",
+      "paymentId": "test_pay_1749965146477_n1embg17x",
+      "estimatedTime": 10,
+      "createdAt": "2025-06-15T05:25:46.802Z",
+      "updatedAt": "2025-06-15T05:27:31.252Z"
     }
   ],
   "pizzas": [
@@ -229,7 +263,8 @@
   ],
   "counters": {
     "userId": 1,
-    "orderId": 5,
-    "pizzaId": 6
+    "orderId": 6,
+    "pizzaId": 6,
+    "notificationId": null
   }
 }

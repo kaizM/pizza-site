@@ -287,6 +287,14 @@ export class PersistentStorage implements IStorage {
 
   // Customer notification methods
   async createNotification(notification: InsertCustomerNotification): Promise<CustomerNotification> {
+    // Ensure notifications array and counter exist
+    if (!this.data.notifications) {
+      this.data.notifications = [];
+    }
+    if (!this.data.counters.notificationId) {
+      this.data.counters.notificationId = 1;
+    }
+
     const newNotification: CustomerNotification = {
       id: this.data.counters.notificationId++,
       ...notification,
@@ -300,14 +308,25 @@ export class PersistentStorage implements IStorage {
   }
 
   async getNotificationsByOrder(orderId: number): Promise<CustomerNotification[]> {
+    // Ensure notifications array exists
+    if (!this.data.notifications) {
+      this.data.notifications = [];
+    }
     return this.data.notifications.filter(n => n.orderId === orderId);
   }
 
   async updateNotificationResponse(notificationId: number, response: string, status: string): Promise<CustomerNotification | undefined> {
+    // Ensure notifications array exists
+    if (!this.data.notifications) {
+      this.data.notifications = [];
+      return undefined;
+    }
+
     const notification = this.data.notifications.find(n => n.id === notificationId);
     if (notification) {
       notification.customerResponse = response;
       notification.status = status;
+      notification.responseStatus = status;
       notification.respondedAt = new Date();
       this.saveData();
       return notification;
