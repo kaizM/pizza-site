@@ -6,6 +6,7 @@ import { Phone, MapPin, Clock } from "lucide-react";
 import { CartItem } from "@shared/schema";
 import { generateOrderId } from "@/lib/utils";
 import { useCart } from "@/hooks/useCart";
+import CustomerNavigation from "@/components/CustomerNavigation";
 
 export default function Home() {
   const [hoveredPizza, setHoveredPizza] = useState<string | null>(null);
@@ -28,8 +29,8 @@ export default function Home() {
     // Add to cart using shared cart system
     addToCart(cartItem);
     
-    // Navigate to checkout
-    setLocation('/checkout');
+    // Navigate to cart summary first
+    setLocation('/cart');
   };
 
   const pizzas = [
