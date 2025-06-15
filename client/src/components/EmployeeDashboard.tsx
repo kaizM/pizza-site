@@ -240,6 +240,31 @@ export default function EmployeeDashboard() {
     }
 
     try {
+      // First, send customer notification if email is available
+      if (selectedOrderForAction.customerInfo.email) {
+        const notificationMessage = `Hello ${selectedOrderForAction.customerInfo.firstName},
+
+We regret to inform you that your order #${selectedOrderForAction.id} has been cancelled.
+
+Reason: ${cancelReason}
+
+Your payment will be refunded within 3-5 business days. If you have any questions, please contact us directly.
+
+We apologize for the inconvenience.`;
+
+        await apiRequest("POST", "/api/notifications", {
+          orderId: selectedOrderForAction.id,
+          type: "order_cancelled",
+          message: notificationMessage,
+          customerEmail: selectedOrderForAction.customerInfo.email,
+          requestDetails: {
+            reason: cancelReason,
+            cancelledBy: "employee",
+            cancelledAt: new Date().toISOString()
+          }
+        });
+      }
+
       const response = await apiRequest("PATCH", `/api/orders/${selectedOrderForAction.id}`, {
         status: "cancelled",
         cancellationReason: cancelReason,
@@ -252,7 +277,9 @@ export default function EmployeeDashboard() {
         await fetchOrders();
         toast({
           title: "Order Cancelled",
-          description: `Order #${selectedOrderForAction.id} has been cancelled. Customer will be notified.`,
+          description: selectedOrderForAction.customerInfo.email 
+            ? `Order #${selectedOrderForAction.id} cancelled. Customer has been notified via email.`
+            : `Order #${selectedOrderForAction.id} cancelled. No email notification sent (no email on file).`,
           variant: "success",
         });
         

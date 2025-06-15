@@ -22,7 +22,8 @@ import {
   Heart,
   RefreshCw,
   Home,
-  ArrowLeft
+  ArrowLeft,
+  XCircle
 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -65,6 +66,9 @@ export default function OrderTracking({ orderId }: OrderTrackingProps) {
   const [feedback, setFeedback] = useState("");
   const [rating, setRating] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [responseText, setResponseText] = useState("");
+  const [selectedNotification, setSelectedNotification] = useState<any>(null);
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const progressRef = useRef<HTMLDivElement>(null);
@@ -81,6 +85,24 @@ export default function OrderTracking({ orderId }: OrderTrackingProps) {
     refetchInterval: 5000, // Refetch every 5 seconds for real-time updates
     enabled: !!orderId
   });
+
+  // Fetch notifications for this order
+  const { data: orderNotifications } = useQuery({
+    queryKey: ["/api/notifications/order", orderId],
+    queryFn: async () => {
+      const response = await fetch(`/api/notifications/order/${orderId}`);
+      if (!response.ok) return [];
+      return response.json();
+    },
+    refetchInterval: 10000, // Check for new notifications every 10 seconds
+    enabled: !!orderId
+  });
+
+  useEffect(() => {
+    if (orderNotifications) {
+      setNotifications(orderNotifications);
+    }
+  }, [orderNotifications]);
 
   const feedbackMutation = useMutation({
     mutationFn: async (feedbackData: { rating: number; comment: string }) => {
@@ -106,6 +128,35 @@ export default function OrderTracking({ orderId }: OrderTrackingProps) {
       toast({
         title: "Feedback submission failed",
         description: "Please try again later.",
+        variant: "destructive"
+      });
+    }
+  });
+
+  const notificationResponseMutation = useMutation({
+    mutationFn: async ({ notificationId, response, status }: { notificationId: number; response: string; status: string }) => {
+      const res = await fetch(`/api/notifications/${notificationId}/respond`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ response, status })
+      });
+      if (!res.ok) throw new Error('Failed to submit response');
+      return res.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Response Submitted",
+        description: "Thank you for your response. The restaurant has been notified.",
+        variant: "default"
+      });
+      setSelectedNotification(null);
+      setResponseText("");
+      queryClient.invalidateQueries({ queryKey: ["/api/notifications/order", orderId] });
+    },
+    onError: () => {
+      toast({
+        title: "Response Failed",
+        description: "Unable to submit your response. Please try again.",
         variant: "destructive"
       });
     }
@@ -570,6 +621,172 @@ export default function OrderTracking({ orderId }: OrderTrackingProps) {
             </Card>
           </div>
         </div>
+
+        {/* Notifications Section */}
+        {notifications && notifications.filter(n => n.type === 'substitution_request' && !n.customerResponse).length > 0 && (
+          <Card className="shadow-xl border-0 mb-8 border-orange-200">
+            <CardHeader className="bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-t-lg">
+              <CardTitle className="flex items-center">
+                <AlertCircle className="mr-2 h-5 w-5" />
+                Action Required - Substitution Request
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              {notifications
+                .filter(n => n.type === 'substitution_request' && !n.customerResponse)
+                .map((notification, index) => (
+                  <div key={notification.id} className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-orange-800 mb-2">Restaurant Message:</h3>
+                        <p className="text-gray-700 mb-3">{notification.message}</p>
+                        <p className="text-sm text-gray-500">
+                          Sent: {new Date(notification.createdAt).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-3">
+                      <Button
+                        onClick={() => notificationResponseMutation.mutate({
+                          notificationId: notification.id,
+                          response: "approved",
+                          status: "approved"
+                        })}
+                        disabled={notificationResponseMutation.isPending}
+                        className="bg-green-600 hover:bg-green-700 text-white"
+                      >
+                        <CheckCircle2 className="w-4 h-4 mr-2" />
+                        Approve Substitution
+                      </Button>
+                      
+                      <Button
+                        onClick={() => notificationResponseMutation.mutate({
+                          notificationId: notification.id,
+                          response: "declined",
+                          status: "declined"
+                        })}
+                        disabled={notificationResponseMutation.isPending}
+                        variant="outline"
+                        className="border-red-300 text-red-600 hover:bg-red-50"
+                      >
+                        <XCircle className="w-4 h-4 mr-2" />
+                        Decline
+                      </Button>
+                      
+                      <Button
+                        onClick={() => setSelectedNotification(notification)}
+                        disabled={notificationResponseMutation.isPending}
+                        variant="outline"
+                      >
+                        <MessageSquare className="w-4 h-4 mr-2" />
+                        Add Comment
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Custom Response Modal */}
+        {selectedNotification && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <Card className="w-full max-w-md">
+              <CardHeader>
+                <CardTitle>Respond to Substitution Request</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label className="text-sm font-medium">Restaurant Message:</Label>
+                  <p className="text-sm text-gray-600 mt-1 p-3 bg-gray-50 rounded">{selectedNotification.message}</p>
+                </div>
+                
+                <div>
+                  <Label htmlFor="response" className="text-sm font-medium">Your Response:</Label>
+                  <Textarea
+                    id="response"
+                    placeholder="Please approve/decline and add any special instructions..."
+                    value={responseText}
+                    onChange={(e) => setResponseText(e.target.value)}
+                    className="mt-1"
+                    rows={3}
+                  />
+                </div>
+                
+                <div className="flex gap-2 pt-4">
+                  <Button
+                    onClick={() => notificationResponseMutation.mutate({
+                      notificationId: selectedNotification.id,
+                      response: responseText || "approved",
+                      status: "approved"
+                    })}
+                    disabled={notificationResponseMutation.isPending}
+                    className="flex-1 bg-green-600 hover:bg-green-700"
+                  >
+                    Approve
+                  </Button>
+                  
+                  <Button
+                    onClick={() => notificationResponseMutation.mutate({
+                      notificationId: selectedNotification.id,
+                      response: responseText || "declined",
+                      status: "declined"
+                    })}
+                    disabled={notificationResponseMutation.isPending}
+                    variant="destructive"
+                    className="flex-1"
+                  >
+                    Decline
+                  </Button>
+                  
+                  <Button
+                    onClick={() => {
+                      setSelectedNotification(null);
+                      setResponseText("");
+                    }}
+                    variant="outline"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Previous Notifications */}
+        {notifications && notifications.filter(n => n.customerResponse).length > 0 && (
+          <Card className="shadow-xl border-0 mb-8">
+            <CardHeader>
+              <CardTitle className="flex items-center text-gray-700">
+                <CheckCircle2 className="mr-2 h-5 w-5 text-green-600" />
+                Previous Responses
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              {notifications
+                .filter(n => n.customerResponse)
+                .map((notification) => (
+                  <div key={notification.id} className="bg-green-50 border border-green-200 rounded-lg p-4 mb-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <p className="text-sm text-gray-600 mb-2">{notification.message}</p>
+                        <p className="font-medium text-green-800">
+                          Your response: {notification.responseStatus} 
+                          {notification.customerResponse !== notification.responseStatus && 
+                            ` - "${notification.customerResponse}"`}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Responded: {new Date(notification.respondedAt!).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+            </CardContent>
+          </Card>
+        )}
 
         {/* Feedback Section */}
         {(order.status === 'completed' || order.status === 'ready') && (
