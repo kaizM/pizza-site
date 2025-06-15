@@ -334,13 +334,9 @@ Please click the link below to approve or decline this substitution:`;
         });
       }
 
-      // Update order status
+      // Keep order status unchanged, but add substitution tracking fields
       const response = await apiRequest("PATCH", `/api/orders/${selectedOrderForAction.id}`, {
-        status: "substitution_requested",
-        substitutionReason: substitutionReason,
-        substitutionSuggestion: substitutionSuggestion,
-        substitutionRequestedBy: "employee",
-        substitutionRequestedAt: new Date().toISOString(),
+        specialInstructions: `SUBSTITUTION REQUEST: ${substitutionReason}. Suggested: ${substitutionSuggestion}. ${selectedOrderForAction.specialInstructions || ''}`.trim(),
         updatedAt: new Date().toISOString()
       });
       
@@ -702,10 +698,10 @@ Please click the link below to approve or decline this substitution:`;
                       </DialogContent>
                     </Dialog>
 
-                    {(order.status === "confirmed" || order.status === "substitution_requested") && (
+                    {order.status === "confirmed" && (
                       <div className="space-y-2">
-                        {/* Substitution Status Alert */}
-                        {order.status === "substitution_requested" && (
+                        {/* Check for substitution request in special instructions */}
+                        {order.specialInstructions?.includes("SUBSTITUTION REQUEST") && (
                           <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
                             <div className="flex items-center gap-2 mb-2">
                               <Clock className="h-4 w-4 text-orange-600" />
@@ -783,7 +779,7 @@ Please click the link below to approve or decline this substitution:`;
                             </Button>
                           )}
                           
-                          {order.status === "substitution_requested" && (
+                          {order.specialInstructions?.includes("SUBSTITUTION REQUEST") && (
                             <div className="grid grid-cols-2 gap-2">
                               <Button 
                                 onClick={() => updateOrderStatus(order.id, "preparing")}
@@ -815,7 +811,7 @@ Please click the link below to approve or decline this substitution:`;
                                 className="border-orange-300 text-orange-700 hover:bg-orange-50"
                               >
                                 <RotateCcw className="h-4 w-4 mr-1" />
-                                {order.status === "substitution_requested" ? "Send Another Request" : "Request Substitution"}
+                                {order.specialInstructions?.includes("SUBSTITUTION REQUEST") ? "Send Another Request" : "Request Substitution"}
                               </Button>
                               <Button 
                                 onClick={() => openCancelModal(order)}
@@ -829,7 +825,7 @@ Please click the link below to approve or decline this substitution:`;
                             </div>
                             
                             {/* Additional Management Options */}
-                            {order.status === "substitution_requested" && (
+                            {order.specialInstructions?.includes("SUBSTITUTION REQUEST") && (
                               <div className="grid grid-cols-3 gap-1">
                                 <Button 
                                   onClick={() => updateOrderStatus(order.id, "confirmed")}
