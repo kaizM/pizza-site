@@ -201,6 +201,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/orders/:id/feedback", async (req, res) => {
+    try {
+      const orderId = parseInt(req.params.id);
+      const { rating, comment } = req.body;
+      
+      if (!rating || rating < 1 || rating > 5) {
+        return res.status(400).json({ message: "Valid rating (1-5) is required" });
+      }
+      
+      const order = await storage.getOrder(orderId);
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+      
+      console.log(`=== FEEDBACK RECEIVED FOR ORDER #${orderId} ===`);
+      console.log(`Rating: ${rating}/5 stars`);
+      console.log(`Comment: ${comment || 'No comment provided'}`);
+      console.log(`Customer: ${order.customerInfo.firstName} ${order.customerInfo.lastName}`);
+      
+      res.json({
+        message: "Feedback submitted successfully",
+        feedback: { orderId, rating, comment, submittedAt: new Date().toISOString() }
+      });
+    } catch (error) {
+      console.error("Error submitting feedback:", error);
+      res.status(500).json({ message: "Failed to submit feedback" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
