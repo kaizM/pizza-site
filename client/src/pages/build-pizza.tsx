@@ -45,7 +45,7 @@ export default function BuildPizzaPage() {
         </div>
       </main>
 
-      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+
     </div>
   );
 }
