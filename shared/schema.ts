@@ -27,7 +27,7 @@ export const orders = pgTable("orders", {
   specialInstructions: text("special_instructions"),
   estimatedTime: integer("estimated_time"), // in minutes
   paymentId: text("payment_id"),
-  paymentStatus: text("payment_status").default("authorized"), // 'authorized', 'charged', 'failed'
+  paymentStatus: text("payment_status").default("authorized"), // 'authorized', 'charged', 'failed', 'cash_pending'
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -140,5 +140,5 @@ export interface OrderData {
   total: number;
   orderType: 'pickup'; // pickup only
   specialInstructions?: string;
-  paymentStatus?: 'authorized' | 'charged' | 'failed';
+  paymentStatus?: 'authorized' | 'charged' | 'failed' | 'cash_pending';
 }

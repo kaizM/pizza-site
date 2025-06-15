@@ -208,7 +208,7 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
         total: parseFloat(finalTotal.toFixed(2)),
         orderType,
         specialInstructions,
-        paymentStatus: "authorized", // Payment held until order confirmed
+        paymentStatus: paymentTransactionId === "CASH_PAYMENT" ? "cash_pending" : "authorized", // Payment held until order confirmed
       };
 
       // Log complete order details for testing
@@ -570,11 +570,65 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
               Back to Info
             </Button>
           </div>
-          <PaymentForm
-            total={finalTotal}
-            onPaymentSuccess={handlePaymentSuccess}
-            onPaymentError={handlePaymentError}
-          />
+          
+          {paymentMethod === "card" ? (
+            <PaymentForm
+              total={finalTotal}
+              onPaymentSuccess={handlePaymentSuccess}
+              onPaymentError={handlePaymentError}
+            />
+          ) : (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  💵 Cash Payment at Pickup
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
+                  <h4 className="font-medium text-green-800 mb-2">Order Summary</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span>Subtotal:</span>
+                      <span>${subtotal.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Tax (8.25%):</span>
+                      <span>${tax.toFixed(2)}</span>
+                    </div>
+                    {tip > 0 && (
+                      <div className="flex justify-between">
+                        <span>Tip:</span>
+                        <span>${tip.toFixed(2)}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between font-bold border-t pt-2">
+                      <span>Total Due at Pickup:</span>
+                      <span>${finalTotal.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                  <h4 className="font-medium text-blue-800 mb-2">Important Reminders</h4>
+                  <ul className="text-sm text-blue-700 space-y-1">
+                    <li>• Bring exact change or cash for ${finalTotal.toFixed(2)}</li>
+                    <li>• Order must be picked up within 30 minutes</li>
+                    <li>• We'll call you when your order is ready</li>
+                    <li>• Orders not picked up on time will be cancelled</li>
+                  </ul>
+                </div>
+
+                <Button
+                  onClick={handleCashPayment}
+                  disabled={!phoneVerified}
+                  className="w-full bg-green-600 hover:bg-green-700 h-12 text-lg font-semibold"
+                >
+                  {phoneVerified ? "Place Cash Order" : "Phone Verification Required"}
+                </Button>
+              </CardContent>
+            </Card>
+          )}
         </div>
       )}
 
@@ -592,10 +646,26 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
               <div className="text-center py-8">
                 <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
                 <h3 className="text-2xl font-bold text-green-600 mb-2">Order Confirmed!</h3>
-                <p className="text-neutral-secondary mb-4">
-                  Your payment has been processed and your order is being prepared.
-                </p>
-                {paymentId && (
+                {paymentId === "CASH_PAYMENT" ? (
+                  <div className="space-y-3">
+                    <p className="text-neutral-secondary mb-4">
+                      Your order is confirmed and being prepared. Payment due at pickup: <strong>${finalTotal.toFixed(2)}</strong>
+                    </p>
+                    <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg max-w-md mx-auto">
+                      <h4 className="font-medium text-blue-800 mb-2">Pickup Instructions</h4>
+                      <ul className="text-sm text-blue-700 space-y-1 text-left">
+                        <li>• We'll call you when your order is ready</li>
+                        <li>• Bring ${finalTotal.toFixed(2)} in cash</li>
+                        <li>• Pickup within 30 minutes to avoid cancellation</li>
+                      </ul>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-neutral-secondary mb-4">
+                    Your payment has been processed and your order is being prepared.
+                  </p>
+                )}
+                {paymentId && paymentId !== "CASH_PAYMENT" && (
                   <p className="text-xs text-neutral-secondary">
                     Payment ID: {paymentId}
                   </p>
