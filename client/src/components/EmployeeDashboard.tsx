@@ -3,6 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
   Clock, 
   ChefHat, 
@@ -15,7 +18,10 @@ import {
   AlertCircle,
   Pizza,
   Package,
-  Users
+  Users,
+  XCircle,
+  MessageSquare,
+  RotateCcw
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -57,6 +63,12 @@ export default function EmployeeDashboard() {
   const [newOrdersCount, setNewOrdersCount] = useState(0);
   const [lastRefresh, setLastRefresh] = useState(new Date());
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [substitutionModalOpen, setSubstitutionModalOpen] = useState(false);
+  const [selectedOrderForAction, setSelectedOrderForAction] = useState<Order | null>(null);
+  const [cancelReason, setCancelReason] = useState("");
+  const [substitutionReason, setSubstitutionReason] = useState("");
+  const [substitutionSuggestion, setSubstitutionSuggestion] = useState("");
   const { toast } = useToast();
 
   // Auto-refresh current time every second
@@ -213,6 +225,104 @@ export default function EmployeeDashboard() {
         variant: "destructive",
       });
     }
+  };
+
+  // Cancel order with reason
+  const cancelOrder = async () => {
+    if (!selectedOrderForAction || !cancelReason.trim()) {
+      toast({
+        title: "Missing Information",
+        description: "Please provide a reason for cancellation",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const response = await apiRequest("PATCH", `/api/orders/${selectedOrderForAction.id}`, {
+        status: "cancelled",
+        cancellationReason: cancelReason,
+        cancelledBy: "employee",
+        cancelledAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      });
+      
+      if (response.ok) {
+        await fetchOrders();
+        toast({
+          title: "Order Cancelled",
+          description: `Order #${selectedOrderForAction.id} has been cancelled. Customer will be notified.`,
+          variant: "success",
+        });
+        
+        // Reset modal state
+        setCancelModalOpen(false);
+        setCancelReason("");
+        setSelectedOrderForAction(null);
+      }
+    } catch (error) {
+      toast({
+        title: "Cancellation Failed",
+        description: "Failed to cancel order. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Request substitution from customer
+  const requestSubstitution = async () => {
+    if (!selectedOrderForAction || !substitutionReason.trim() || !substitutionSuggestion.trim()) {
+      toast({
+        title: "Missing Information",
+        description: "Please provide both reason and suggested replacement",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const response = await apiRequest("PATCH", `/api/orders/${selectedOrderForAction.id}`, {
+        status: "substitution_requested",
+        substitutionReason: substitutionReason,
+        substitutionSuggestion: substitutionSuggestion,
+        substitutionRequestedBy: "employee",
+        substitutionRequestedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      });
+      
+      if (response.ok) {
+        await fetchOrders();
+        toast({
+          title: "Substitution Requested",
+          description: `Customer will be contacted about substitution for Order #${selectedOrderForAction.id}`,
+          variant: "success",
+        });
+        
+        // Reset modal state
+        setSubstitutionModalOpen(false);
+        setSubstitutionReason("");
+        setSubstitutionSuggestion("");
+        setSelectedOrderForAction(null);
+      }
+    } catch (error) {
+      toast({
+        title: "Request Failed",
+        description: "Failed to send substitution request. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Open cancellation modal
+  const openCancelModal = (order: Order) => {
+    setSelectedOrderForAction(order);
+    setCancelModalOpen(true);
+  };
+
+  // Open substitution modal
+  const openSubstitutionModal = (order: Order) => {
+    setSelectedOrderForAction(order);
+    setSubstitutionModalOpen(true);
   };
 
   // Auto-refresh every 30 seconds
@@ -547,14 +657,38 @@ export default function EmployeeDashboard() {
                           </div>
                         </div>
                         
-                        <Button 
-                          onClick={() => updateOrderStatus(order.id, "preparing")}
-                          className="bg-yellow-600 hover:bg-yellow-700 text-white w-full"
-                          size="sm"
-                        >
-                          <ChefHat className="h-4 w-4 mr-1" />
-                          Start Cooking
-                        </Button>
+                        <div className="grid grid-cols-1 gap-2">
+                          <Button 
+                            onClick={() => updateOrderStatus(order.id, "preparing")}
+                            className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                            size="sm"
+                          >
+                            <ChefHat className="h-4 w-4 mr-1" />
+                            Start Cooking
+                          </Button>
+                          
+                          {/* Supply Issues Section */}
+                          <div className="grid grid-cols-2 gap-2">
+                            <Button 
+                              onClick={() => openSubstitutionModal(order)}
+                              variant="outline"
+                              size="sm"
+                              className="border-orange-300 text-orange-700 hover:bg-orange-50"
+                            >
+                              <RotateCcw className="h-4 w-4 mr-1" />
+                              Request Substitution
+                            </Button>
+                            <Button 
+                              onClick={() => openCancelModal(order)}
+                              variant="outline"
+                              size="sm"
+                              className="border-red-300 text-red-700 hover:bg-red-50"
+                            >
+                              <XCircle className="h-4 w-4 mr-1" />
+                              Cancel Order
+                            </Button>
+                          </div>
+                        </div>
                       </div>
                     )}
 
@@ -586,6 +720,150 @@ export default function EmployeeDashboard() {
           })}
         </div>
       )}
+
+      {/* Order Cancellation Modal */}
+      <Dialog open={cancelModalOpen} onOpenChange={setCancelModalOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-red-700">
+              <XCircle className="h-5 w-5" />
+              Cancel Order #{selectedOrderForAction?.id}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+              <p className="text-sm text-red-800">
+                This will cancel the order and notify the customer. Please provide a reason for cancellation.
+              </p>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="cancelReason">Cancellation Reason</Label>
+              <Select value={cancelReason} onValueChange={setCancelReason}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a reason..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="out_of_ingredients">Out of ingredients</SelectItem>
+                  <SelectItem value="equipment_issue">Equipment malfunction</SelectItem>
+                  <SelectItem value="staffing_issue">Insufficient staffing</SelectItem>
+                  <SelectItem value="high_volume">Too many orders - cannot fulfill in time</SelectItem>
+                  <SelectItem value="special_request">Cannot accommodate special request</SelectItem>
+                  <SelectItem value="other">Other reason</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {cancelReason === "other" && (
+              <div className="space-y-2">
+                <Label htmlFor="customReason">Please specify:</Label>
+                <Textarea
+                  id="customReason"
+                  placeholder="Enter specific reason for cancellation..."
+                  value={cancelReason === "other" ? "" : cancelReason}
+                  onChange={(e) => setCancelReason(e.target.value)}
+                  rows={3}
+                />
+              </div>
+            )}
+
+            <div className="flex space-x-2 pt-4">
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  setCancelModalOpen(false);
+                  setCancelReason("");
+                  setSelectedOrderForAction(null);
+                }}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={cancelOrder}
+                className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                disabled={!cancelReason.trim()}
+              >
+                <XCircle className="h-4 w-4 mr-1" />
+                Cancel Order
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Substitution Request Modal */}
+      <Dialog open={substitutionModalOpen} onOpenChange={setSubstitutionModalOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-orange-700">
+              <RotateCcw className="h-5 w-5" />
+              Request Substitution - Order #{selectedOrderForAction?.id}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+              <p className="text-sm text-orange-800">
+                Request a substitution from the customer when ingredients are unavailable. The customer will be contacted to approve or decline.
+              </p>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="substitutionReason">What item is unavailable?</Label>
+              <Select value={substitutionReason} onValueChange={setSubstitutionReason}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select unavailable item..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="pepperoni">Pepperoni</SelectItem>
+                  <SelectItem value="italian_sausage">Italian Sausage</SelectItem>
+                  <SelectItem value="mushrooms">Mushrooms</SelectItem>
+                  <SelectItem value="green_peppers">Green Peppers</SelectItem>
+                  <SelectItem value="onions">Onions</SelectItem>
+                  <SelectItem value="black_olives">Black Olives</SelectItem>
+                  <SelectItem value="stuffed_crust">Stuffed Crust</SelectItem>
+                  <SelectItem value="thin_crust">Thin Crust</SelectItem>
+                  <SelectItem value="other">Other item</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="substitutionSuggestion">Suggested replacement:</Label>
+              <Textarea
+                id="substitutionSuggestion"
+                placeholder="e.g., 'Replace pepperoni with Italian sausage' or 'Substitute stuffed crust with hand-tossed'"
+                value={substitutionSuggestion}
+                onChange={(e) => setSubstitutionSuggestion(e.target.value)}
+                rows={3}
+              />
+            </div>
+
+            <div className="flex space-x-2 pt-4">
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  setSubstitutionModalOpen(false);
+                  setSubstitutionReason("");
+                  setSubstitutionSuggestion("");
+                  setSelectedOrderForAction(null);
+                }}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={requestSubstitution}
+                className="flex-1 bg-orange-600 hover:bg-orange-700 text-white"
+                disabled={!substitutionReason.trim() || !substitutionSuggestion.trim()}
+              >
+                <MessageSquare className="h-4 w-4 mr-1" />
+                Request Substitution
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
