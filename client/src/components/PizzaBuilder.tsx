@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Plus, Minus } from "lucide-react";
 import { CartItem } from "@shared/schema";
+import PizzaVisualizer from "@/components/PizzaVisualizer";
 
 interface PizzaBuilderProps {
   onAddToCart: (item: CartItem) => void;
@@ -143,32 +144,13 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
           {/* Pizza Visual */}
           <Card className="border-2 border-red-200 lg:sticky lg:top-4 h-fit">
             <CardContent className="p-6">
-              <div className="aspect-square bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-full flex items-center justify-center mb-4 border-4 border-yellow-400">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-red-700">{selectedPizza}</div>
-                  <div className="text-lg text-red-600">Standard Size</div>
-                  <div className="text-sm text-gray-600">{selectedCrust} Crust</div>
-                </div>
-              </div>
-              
-              {/* Selected Toppings Display */}
-              <div className="space-y-2">
-                <h3 className="font-semibold text-red-700">Your Toppings ({pricing.freeToppings}/10 free):</h3>
-                <div className="flex flex-wrap gap-2">
-                  {doubleCheeseSelected && (
-                    <Badge className="bg-yellow-500 text-black">Double Cheese</Badge>
-                  )}
-                  {selectedToppings.map((topping) => (
-                    <Badge key={topping} className="bg-red-600 text-white">{topping}</Badge>
-                  ))}
-                  {extraToppings.map((topping) => (
-                    <Badge key={`extra-${topping}`} className="bg-orange-600 text-white">Extra {topping}</Badge>
-                  ))}
-                  {selectedToppings.length === 0 && !doubleCheeseSelected && (
-                    <span className="text-gray-500">Just cheese</span>
-                  )}
-                </div>
-              </div>
+              <PizzaVisualizer
+                size="Standard"
+                crust={selectedCrust}
+                selectedToppings={selectedToppings}
+                extraToppings={extraToppings}
+                doubleCheeseSelected={doubleCheeseSelected}
+              />
 
               {/* Pricing Preview */}
               <div className="mt-4 bg-yellow-50 p-3 rounded-lg border-2 border-yellow-300">
