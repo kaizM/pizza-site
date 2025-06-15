@@ -184,14 +184,15 @@ export default function Home() {
           <p className="text-xl text-neutral-secondary mb-8">
             Our friendly staff is ready to help you create the perfect pizza
           </p>
-          <Button 
-            size="lg" 
-            className="bg-red-700 hover:bg-red-800 text-white px-8 py-4 text-lg font-bold shadow-lg"
-            onClick={() => window.location.href = 'tel:+13614030083'}
-          >
-            <Phone className="mr-2 h-5 w-5" />
-            Call (361) 403-0083
-          </Button>
+          <a href="tel:+13614030083" className="inline-block">
+            <Button 
+              size="lg" 
+              className="bg-red-700 hover:bg-red-800 text-white px-8 py-4 text-lg font-bold shadow-lg"
+            >
+              <Phone className="mr-2 h-5 w-5" />
+              Call (361) 403-0083
+            </Button>
+          </a>
         </div>
       </section>
 
@@ -225,9 +226,9 @@ export default function Home() {
                     <p className="text-red-200">Palacios, TX 77465</p>
                   </div>
                 </div>
-                <div 
-                  className="flex items-center justify-center md:justify-start group cursor-pointer"
-                  onClick={() => window.location.href = 'tel:+13614030083'}
+                <a 
+                  href="tel:+13614030083"
+                  className="flex items-center justify-center md:justify-start group cursor-pointer hover:bg-white/10 rounded-lg p-2 transition-all"
                 >
                   <div className="bg-yellow-400 p-2 rounded-full mr-4 group-hover:scale-110 transition-transform">
                     <Phone className="h-5 w-5 text-red-800" />
@@ -236,7 +237,7 @@ export default function Home() {
                     <p className="text-white font-semibold">(361) 403-0083</p>
                     <p className="text-red-200">Call to order</p>
                   </div>
-                </div>
+                </a>
               </div>
             </div>
             

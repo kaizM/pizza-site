@@ -28,10 +28,12 @@ export default function CustomerNavigation({
             </div>
             
             <div className="flex items-center space-x-4">
-              <Button className="bg-red-600 hover:bg-red-700 text-white flex items-center">
-                <Phone className="h-4 w-4 mr-1" />
-                (361) 403-0083
-              </Button>
+              <a href="tel:+13614030083" className="inline-block">
+                <Button className="bg-red-600 hover:bg-red-700 text-white flex items-center">
+                  <Phone className="h-4 w-4 mr-1" />
+                  (361) 403-0083
+                </Button>
+              </a>
             </div>
           </div>
         </div>
@@ -67,10 +69,12 @@ export default function CustomerNavigation({
             </nav>
             
             <div className="flex items-center space-x-4">
-              <Button className="bg-yellow-400 hover:bg-yellow-300 text-black font-bold shadow-lg transform hover:scale-105 transition-all">
-                <Phone className="h-4 w-4 mr-1" />
-                Call Now
-              </Button>
+              <a href="tel:+13614030083" className="inline-block">
+                <Button className="bg-yellow-400 hover:bg-yellow-300 text-black font-bold shadow-lg transform hover:scale-105 transition-all">
+                  <Phone className="h-4 w-4 mr-1" />
+                  Call Now
+                </Button>
+              </a>
             </div>
           </div>
         </div>
@@ -108,13 +112,14 @@ export default function CustomerNavigation({
           </nav>
           
           <div className="flex items-center space-x-4">
-            <Button 
-              className="bg-red-600 hover:bg-red-700 text-white flex items-center"
-              onClick={() => window.location.href = 'tel:+13614030083'}
-            >
-              <Phone className="h-4 w-4 mr-1" />
-              (361) 403-0083
-            </Button>
+            <a href="tel:+13614030083" className="inline-block">
+              <Button 
+                className="bg-red-600 hover:bg-red-700 text-white flex items-center"
+              >
+                <Phone className="h-4 w-4 mr-1" />
+                (361) 403-0083
+              </Button>
+            </a>
             {showCartButton && (
               <Link href="/cart">
                 <Button 
