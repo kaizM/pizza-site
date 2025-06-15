@@ -828,6 +828,48 @@ export default function EmployeeDashboard() {
                         Complete
                       </Button>
                     )}
+
+                    {/* Order History - Restore Options */}
+                    {(order.status === "completed" || order.status === "cancelled") && activeTab === "history" && (
+                      <div className="space-y-2">
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                          <p className="text-sm text-blue-800 font-medium mb-2">
+                            Order Restoration - Go Back One Step
+                          </p>
+                          <div className="grid grid-cols-2 gap-2">
+                            {order.status === "completed" && (
+                              <Button 
+                                onClick={() => updateOrderStatus(order.id, "ready")}
+                                className="bg-orange-600 hover:bg-orange-700 text-white"
+                                size="sm"
+                              >
+                                <RotateCcw className="h-4 w-4 mr-1" />
+                                Back to Ready
+                              </Button>
+                            )}
+                            {order.status === "cancelled" && (
+                              <Button 
+                                onClick={() => updateOrderStatus(order.id, "confirmed")}
+                                className="bg-green-600 hover:bg-green-700 text-white"
+                                size="sm"
+                              >
+                                <RotateCcw className="h-4 w-4 mr-1" />
+                                Restore Order
+                              </Button>
+                            )}
+                            <Button 
+                              onClick={() => updateOrderStatus(order.id, "preparing")}
+                              variant="outline"
+                              size="sm"
+                              className="border-blue-300 text-blue-700 hover:bg-blue-50"
+                            >
+                              <ChefHat className="h-4 w-4 mr-1" />
+                              Back to Kitchen
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
