@@ -250,7 +250,7 @@ export class MemStorage implements IStorage {
   }
 }
 
-import { FirebaseStorage } from "./firebaseStorage";
+import { PersistentStorage } from "./persistentStorage";
 
-// Use MemStorage with enhanced persistence for reliable data storage
-export const storage = new MemStorage();
+// Use persistent file-based storage for reliable data across server restarts
+export const storage = new PersistentStorage();
