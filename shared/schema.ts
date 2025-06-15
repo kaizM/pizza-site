@@ -20,9 +20,8 @@ export const orders = pgTable("orders", {
   items: jsonb("items").notNull(),
   subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
   tax: decimal("tax", { precision: 10, scale: 2 }).notNull(),
-  deliveryFee: decimal("delivery_fee", { precision: 10, scale: 2 }).default('0.00'),
   total: decimal("total", { precision: 10, scale: 2 }).notNull(),
-  orderType: text("order_type").notNull(), // 'pickup' or 'delivery'
+  orderType: text("order_type").notNull().default('pickup'), // pickup only
   status: text("status").notNull().default('confirmed'), // 'confirmed', 'preparing', 'ready', 'completed', 'cancelled'
   specialInstructions: text("special_instructions"),
   estimatedTime: integer("estimated_time"), // in minutes
@@ -90,8 +89,7 @@ export interface OrderData {
   items: CartItem[];
   subtotal: number;
   tax: number;
-  deliveryFee: number;
   total: number;
-  orderType: 'pickup' | 'delivery';
+  orderType: 'pickup'; // pickup only
   specialInstructions?: string;
 }

@@ -30,8 +30,8 @@ export function calculateTax(subtotal: number, taxRate: number = 0.0825): number
   return subtotal * taxRate;
 }
 
-export function getEstimatedTime(orderType: 'pickup' | 'delivery'): number {
-  return orderType === 'pickup' ? 25 : 35;
+export function getEstimatedTime(): number {
+  return 10; // 7-10 minutes for pickup only
 }
 
 // Utility for handling Firebase timestamp conversion

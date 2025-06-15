@@ -206,9 +206,9 @@ export class FirebaseStorage implements IStorage {
         items: insertOrder.items,
         subtotal: insertOrder.subtotal,
         tax: insertOrder.tax,
-        deliveryFee: insertOrder.deliveryFee || null,
+
         total: insertOrder.total,
-        orderType: insertOrder.orderType,
+        orderType: insertOrder.orderType || "pickup",
         specialInstructions: insertOrder.specialInstructions || null,
         estimatedTime: insertOrder.estimatedTime || null,
         createdAt: orderData.createdAt.toDate(),

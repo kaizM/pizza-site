@@ -45,7 +45,6 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
         items: cartItems,
         subtotal: parseFloat(subtotal.toFixed(2)),
         tax: parseFloat(tax.toFixed(2)),
-        deliveryFee: 0,
         total: parseFloat(total.toFixed(2)),
         orderType,
         specialInstructions,

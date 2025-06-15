@@ -84,10 +84,7 @@ export default function OrderSummary({ cartItems, onUpdateQuantity, onRemoveItem
             <span className="text-neutral-secondary">Tax (8.25%)</span>
             <span className="text-neutral-text">${tax.toFixed(2)}</span>
           </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-neutral-secondary">Delivery Fee</span>
-            <span className="text-neutral-text">${deliveryFee.toFixed(2)}</span>
-          </div>
+
           <div className="border-t border-gray-200 pt-2">
             <div className="flex justify-between font-semibold text-lg">
               <span className="text-neutral-text">Total</span>
