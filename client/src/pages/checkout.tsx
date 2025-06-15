@@ -155,9 +155,9 @@ export default function CheckoutPage() {
             </div>
             
             <nav className="hidden md:flex items-center space-x-6">
-              <a href="/" className="text-neutral-text hover:text-red-600 transition-colors font-medium">Menu</a>
-              <a href="#" className="text-neutral-text hover:text-red-600 transition-colors font-medium">Build Pizza</a>
-              <a href="#" className="text-neutral-text hover:text-red-600 transition-colors font-medium">Track Order</a>
+              <Link href="/" className="text-neutral-text hover:text-red-600 transition-colors font-medium">Menu</Link>
+              <Link href="/build-pizza" className="text-neutral-text hover:text-red-600 transition-colors font-medium">Build Pizza</Link>
+              <Link href="/track-order" className="text-neutral-text hover:text-red-600 transition-colors font-medium">Track Order</Link>
             </nav>
             
             <div className="flex items-center space-x-4">
@@ -175,7 +175,7 @@ export default function CheckoutPage() {
                 <ShoppingCart className="mr-2 h-4 w-4" />
                 Cart
                 <span className="ml-2 bg-yellow-400 text-neutral-text text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
-                  {cartItems.reduce((sum, item) => sum + item.quantity, 0)}
+                  {getTotalItems()}
                 </span>
               </Button>
             </div>

@@ -5,10 +5,12 @@ import { Link, useLocation } from "wouter";
 import { Phone, MapPin, Clock } from "lucide-react";
 import { CartItem } from "@shared/schema";
 import { generateOrderId } from "@/lib/utils";
+import { useCart } from "@/hooks/useCart";
 
 export default function Home() {
   const [hoveredPizza, setHoveredPizza] = useState<string | null>(null);
   const [, setLocation] = useLocation();
+  const { addToCart } = useCart();
 
   const orderPremadePizza = (pizza: typeof pizzas[0]) => {
     // Create cart item from premade pizza
@@ -23,8 +25,8 @@ export default function Home() {
       imageUrl: pizza.image,
     };
 
-    // Store in localStorage for checkout page
-    localStorage.setItem('premadeCartItems', JSON.stringify([cartItem]));
+    // Add to cart using shared cart system
+    addToCart(cartItem);
     
     // Navigate to checkout
     setLocation('/checkout');
