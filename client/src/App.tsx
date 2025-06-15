@@ -18,8 +18,8 @@ function Router() {
       <Route path="/build-pizza" component={BuildPizzaPage} />
       <Route path="/checkout" component={CheckoutPage} />
       <Route path="/track-order" component={TrackOrderPage} />
-      <Route path="/employee" component={EmployeePage} />
-      <Route path="/admin" component={AdminPage} />
+      <Route path="/kitchen-display-system" component={EmployeePage} />
+      <Route path="/management-portal" component={AdminPage} />
       <Route component={NotFound} />
     </Switch>
   );
