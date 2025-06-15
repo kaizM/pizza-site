@@ -10,9 +10,37 @@ interface OrderSummaryProps {
 }
 
 export default function OrderSummary({ cartItems, onUpdateQuantity, onRemoveItem }: OrderSummaryProps) {
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  // Calculate subtotal with Hunt Brothers pricing structure
+  const calculateSubtotal = () => {
+    const firstPizzaPrice = 11.99;
+    const additionalPizzaPrice = 10.99;
+    
+    let subtotal = 0;
+    let totalPizzaCount = 0;
+    
+    // Count total pizzas and calculate topping costs
+    cartItems.forEach(item => {
+      totalPizzaCount += item.quantity;
+      
+      // Extract topping costs (price minus base pizza price)
+      const toppingsPerPizza = item.price - firstPizzaPrice;
+      subtotal += toppingsPerPizza * item.quantity;
+    });
+    
+    // Apply discount structure for pizza base pricing
+    if (totalPizzaCount === 1) {
+      subtotal += firstPizzaPrice;
+    } else if (totalPizzaCount > 1) {
+      subtotal += firstPizzaPrice + (additionalPizzaPrice * (totalPizzaCount - 1));
+    }
+    
+    return subtotal;
+  };
+
+  const subtotal = calculateSubtotal();
   const tax = subtotal * 0.0825; // 8.25% tax
   const total = subtotal + tax; // No delivery fee - pickup only
+  const totalPizzaCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <Card className="sticky top-24">
@@ -74,8 +102,26 @@ export default function OrderSummary({ cartItems, onUpdateQuantity, onRemoveItem
           ))}
         </div>
 
-        {/* Order Totals */}
+        {/* Pricing Breakdown */}
         <div className="space-y-2">
+          {totalPizzaCount > 0 && (
+            <div className="bg-yellow-50 p-3 rounded-lg border border-yellow-200">
+              <h4 className="text-sm font-medium text-yellow-800 mb-2">Pizza Pricing:</h4>
+              <div className="space-y-1 text-xs text-yellow-700">
+                <div className="flex justify-between">
+                  <span>First pizza:</span>
+                  <span>$11.99</span>
+                </div>
+                {totalPizzaCount > 1 && (
+                  <div className="flex justify-between">
+                    <span>Additional pizzas ({totalPizzaCount - 1}):</span>
+                    <span>$10.99 each</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+          
           <div className="flex justify-between text-sm">
             <span className="text-neutral-secondary">Subtotal</span>
             <span className="text-neutral-text">${subtotal.toFixed(2)}</span>

@@ -115,13 +115,27 @@ export default function PizzaBuilder({ onAddToCart }: PizzaBuilderProps) {
     
     if (doubleCheeseSelected) allToppings.push("Double Cheese");
 
+    // Calculate base price per pizza (toppings only, cart will handle pizza base pricing)
+    let toppingsPrice = 0;
+    extraToppings.forEach(topping => {
+      if (meatToppings.includes(topping)) {
+        toppingsPrice += extraMeatPrice;
+      } else if (veggieToppings.includes(topping)) {
+        toppingsPrice += extraVeggiePrice;
+      }
+    });
+    
+    if (doubleCheeseSelected) {
+      toppingsPrice += doubleCheesePrice;
+    }
+
     const cartItem: CartItem = {
       id: `pizza-${Date.now()}`,
       name: selectedPizza,
       size: "Standard",
       crust: selectedCrust,
       toppings: allToppings,
-      price: pricing.total,
+      price: firstPizzaPrice + toppingsPrice, // Base price + toppings, cart will recalculate
       quantity: quantity,
       imageUrl: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300"
     };

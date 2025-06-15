@@ -56,7 +56,35 @@ export function useCart() {
   };
 
   const getSubtotal = () => {
-    return cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    // Hunt Brothers pricing: First pizza $11.99, additional pizzas $10.99
+    const firstPizzaPrice = 11.99;
+    const additionalPizzaPrice = 10.99;
+    
+    let subtotal = 0;
+    let totalPizzaCount = 0;
+    
+    // First pass: count total pizzas and calculate topping costs
+    cartItems.forEach(item => {
+      totalPizzaCount += item.quantity;
+      
+      // Calculate toppings cost for this item
+      let toppingsPerPizza = 0;
+      
+      // Extract topping costs from the item price (subtract base pizza price)
+      toppingsPerPizza = item.price - firstPizzaPrice;
+      
+      // Add toppings cost for all quantities of this item
+      subtotal += toppingsPerPizza * item.quantity;
+    });
+    
+    // Calculate pizza base pricing with discount structure
+    if (totalPizzaCount === 1) {
+      subtotal += firstPizzaPrice;
+    } else if (totalPizzaCount > 1) {
+      subtotal += firstPizzaPrice + (additionalPizzaPrice * (totalPizzaCount - 1));
+    }
+    
+    return subtotal;
   };
 
   return {
