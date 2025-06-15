@@ -69,7 +69,7 @@ export default function EmployeeDashboard() {
   const [cancelReason, setCancelReason] = useState("");
   const [substitutionReason, setSubstitutionReason] = useState("");
   const [substitutionSuggestion, setSubstitutionSuggestion] = useState("");
-  const [activeTab, setActiveTab] = useState<"all" | "confirmed" | "preparing" | "ready" | "completed" | "cancelled">("all");
+  const [activeTab, setActiveTab] = useState<"all" | "confirmed" | "preparing" | "ready" | "completed" | "cancelled" | "history">("all");
   const { toast } = useToast();
 
   // Auto-refresh current time every second
@@ -463,7 +463,8 @@ export default function EmployeeDashboard() {
             { key: "preparing", label: "Preparing", count: orders.filter(o => o.status === "preparing").length },
             { key: "ready", label: "Ready", count: orders.filter(o => o.status === "ready").length },
             { key: "completed", label: "Completed", count: orders.filter(o => o.status === "completed").length },
-            { key: "cancelled", label: "Cancelled", count: orders.filter(o => o.status === "cancelled").length }
+            { key: "cancelled", label: "Cancelled", count: orders.filter(o => o.status === "cancelled").length },
+            { key: "history", label: "Order History", count: orders.filter(o => o.status === "completed" || o.status === "cancelled").length }
           ].map((tab) => (
             <button
               key={tab.key}
@@ -497,7 +498,16 @@ export default function EmployeeDashboard() {
         </div>
       ) : (
         <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-6">
-          {(activeTab === "all" ? orders : orders.filter(o => o.status === activeTab)).map((order) => {
+          {(() => {
+            let filteredOrders;
+            if (activeTab === "all") {
+              filteredOrders = orders;
+            } else if (activeTab === "history") {
+              filteredOrders = orders.filter(o => o.status === "completed" || o.status === "cancelled");
+            } else {
+              filteredOrders = orders.filter(o => o.status === activeTab);
+            }
+            return filteredOrders.map((order) => {
             const timeElapsed = getTimeElapsed(order.createdAt);
             const isUrgent = timeElapsed > 10; // Red alert after 10 minutes
             
@@ -822,7 +832,8 @@ export default function EmployeeDashboard() {
                 </CardContent>
               </Card>
             );
-          })}
+            });
+          })()}
         </div>
       )}
 
@@ -985,7 +996,6 @@ export default function EmployeeDashboard() {
           </div>
         </DialogContent>
       </Dialog>
-      )}
     </div>
   );
 }
