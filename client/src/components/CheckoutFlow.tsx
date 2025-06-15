@@ -125,7 +125,8 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
       console.log("Pricing:", {
         subtotal: `$${subtotal.toFixed(2)}`,
         tax: `$${tax.toFixed(2)}`,
-        total: `$${total.toFixed(2)}`
+        tip: `$${tip.toFixed(2)}`,
+        total: `$${finalTotal.toFixed(2)}`
       });
       console.log("Payment ID:", paymentTransactionId);
       console.log("User ID:", user?.uid || 'Guest order');
@@ -311,6 +312,59 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
             </CardContent>
           </Card>
 
+          {/* Tip Selection */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Add a Tip (Optional)</CardTitle>
+              <p className="text-sm text-gray-600">Show your appreciation for great service</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {tipOptions.map((option) => (
+                  <Button
+                    key={option.label}
+                    type="button"
+                    variant={tip === option.value ? "default" : "outline"}
+                    onClick={() => handleTipSelection(option.value)}
+                    className={`${tip === option.value ? 'bg-green-600 hover:bg-green-700' : ''}`}
+                  >
+                    {option.label}
+                    {option.value > 0 && (
+                      <div className="text-xs mt-1">${option.value.toFixed(2)}</div>
+                    )}
+                  </Button>
+                ))}
+              </div>
+              
+              {(tip === 0 && customTip !== "") || tipOptions.find(o => o.label === "Custom" && tip === 0) ? (
+                <div className="mt-4">
+                  <Label htmlFor="customTip">Custom Tip Amount</Label>
+                  <div className="flex items-center mt-1">
+                    <span className="text-lg mr-2">$</span>
+                    <Input
+                      id="customTip"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={customTip}
+                      onChange={(e) => handleCustomTipChange(e.target.value)}
+                      placeholder="0.00"
+                      className="w-24"
+                    />
+                  </div>
+                </div>
+              ) : null}
+              
+              {tip > 0 && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                  <p className="text-green-800 text-sm font-medium">
+                    Thank you! Tip amount: ${tip.toFixed(2)}
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
           <Button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3">
             Continue to Payment
           </Button>
@@ -327,7 +381,7 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
             </Button>
           </div>
           <PaymentForm
-            total={total}
+            total={finalTotal}
             onPaymentSuccess={handlePaymentSuccess}
             onPaymentError={handlePaymentError}
           />

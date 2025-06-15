@@ -39,11 +39,13 @@ interface Order {
     price: number;
   }>;
   total: number;
+  tip?: number;
   status: "confirmed" | "preparing" | "ready" | "completed";
   orderType: "pickup" | "delivery";
   specialInstructions?: string;
   estimatedTime?: number;
   paymentId?: string;
+  paymentStatus?: "authorized" | "charged" | "failed";
   createdAt: string;
   updatedAt: string;
 }
@@ -128,13 +130,19 @@ export default function EmployeeDashboard() {
     }
   };
 
-  // Update order status
-  const updateOrderStatus = async (orderId: number, newStatus: string) => {
+  // Update order status with time estimation
+  const updateOrderStatus = async (orderId: number, newStatus: string, estimatedTime?: number) => {
     try {
-      const response = await apiRequest("PATCH", `/api/orders/${orderId}`, {
+      const updateData: any = {
         status: newStatus,
         updatedAt: new Date().toISOString()
-      });
+      };
+      
+      if (estimatedTime) {
+        updateData.estimatedTime = estimatedTime;
+      }
+      
+      const response = await apiRequest("PATCH", `/api/orders/${orderId}`, updateData);
       
       if (response.ok) {
         await fetchOrders(); // Refresh orders
