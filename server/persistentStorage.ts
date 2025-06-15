@@ -9,12 +9,14 @@ interface StorageData {
   pizzas: PizzaItem[];
   cancellations: OrderCancellation[];
   notifications: CustomerNotification[];
+  customerProfiles: CustomerProfile[];
   counters: {
     userId: number;
     orderId: number;
     pizzaId: number;
     cancellationId: number;
     notificationId: number;
+    customerProfileId: number;
   };
 }
 

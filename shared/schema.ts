@@ -12,6 +12,24 @@ export const users = pgTable("users", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const customerProfiles = pgTable("customer_profiles", {
+  id: serial("id").primaryKey(),
+  phone: text("phone").notNull().unique(),
+  firstName: text("first_name").notNull(),
+  lastName: text("last_name").notNull(),
+  email: text("email"),
+  totalOrders: integer("total_orders").default(0),
+  completedOrders: integer("completed_orders").default(0),
+  cancelledOrders: integer("cancelled_orders").default(0),
+  noShowOrders: integer("no_show_orders").default(0),
+  trustScore: integer("trust_score").default(0), // 0-100 scale
+  cashPaymentAllowed: boolean("cash_payment_allowed").default(false),
+  lastOrderDate: timestamp("last_order_date"),
+  notes: text("notes"), // Staff notes about customer
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export const orders = pgTable("orders", {
   id: serial("id").primaryKey(),
   firebaseOrderId: text("firebase_order_id").notNull().unique(),
@@ -96,6 +114,12 @@ export const insertCustomerNotificationSchema = createInsertSchema(customerNotif
   respondedAt: true,
 });
 
+export const insertCustomerProfileSchema = createInsertSchema(customerProfiles).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -111,6 +135,9 @@ export type InsertOrderCancellation = z.infer<typeof insertOrderCancellationSche
 
 export type CustomerNotification = typeof customerNotifications.$inferSelect;
 export type InsertCustomerNotification = z.infer<typeof insertCustomerNotificationSchema>;
+
+export type CustomerProfile = typeof customerProfiles.$inferSelect;
+export type InsertCustomerProfile = z.infer<typeof insertCustomerProfileSchema>;
 
 // Extended types for UI
 export interface CartItem {
