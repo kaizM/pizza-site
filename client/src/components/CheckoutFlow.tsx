@@ -4,13 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-
 import { useToast } from "@/hooks/use-toast";
-import { Clock, Store } from "lucide-react";
+import { Clock, Store, CreditCard, CheckCircle } from "lucide-react";
 import { CustomerInfo, OrderData, CartItem } from "@shared/schema";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/useAuth";
+import PaymentForm from "@/components/PaymentForm";
 
 interface CheckoutFlowProps {
   cartItems: CartItem[];
@@ -25,6 +25,8 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
     email: "",
   });
   const [specialInstructions, setSpecialInstructions] = useState("");
+  const [currentStep, setCurrentStep] = useState(1);
+  const [paymentId, setPaymentId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
@@ -35,8 +37,34 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
   const deliveryFee = 0; // No delivery service
   const total = subtotal + tax;
 
-  const handleSubmitOrder = async (e: React.FormEvent) => {
+  const handleCustomerInfoSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!customerInfo.firstName || !customerInfo.lastName || !customerInfo.phone) {
+      toast({
+        title: "Required Information Missing",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setCurrentStep(2);
+  };
+
+  const handlePaymentSuccess = (paymentTransactionId: string) => {
+    setPaymentId(paymentTransactionId);
+    setCurrentStep(3);
+    submitOrder(paymentTransactionId);
+  };
+
+  const handlePaymentError = (error: string) => {
+    toast({
+      title: "Payment Failed",
+      description: error,
+      variant: "destructive",
+    });
+  };
+
+  const submitOrder = async (paymentTransactionId: string) => {
     setLoading(true);
 
     try {
@@ -50,11 +78,12 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
         specialInstructions,
       };
 
-      // Submit to Firestore
+      // Submit to Firestore with payment info
       const docRef = await addDoc(collection(db, "orders"), {
         ...orderData,
         userId: user?.uid || null,
         status: "confirmed",
+        paymentId: paymentTransactionId,
         estimatedTime: 10, // 7-10 minutes for pickup
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
@@ -68,7 +97,6 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
 
       onOrderComplete(docRef.id);
     } catch (error: any) {
-      // Log error securely without exposing sensitive data
       toast({
         title: "Order Failed",
         description: "There was an error placing your order. Please try again.",
