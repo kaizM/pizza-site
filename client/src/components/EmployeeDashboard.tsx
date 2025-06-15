@@ -166,6 +166,55 @@ export default function EmployeeDashboard() {
     }
   };
 
+  // Charge customer payment after confirming supplies
+  const chargeCustomer = async (orderId: number) => {
+    try {
+      const response = await apiRequest("POST", `/api/orders/${orderId}/charge`, {
+        updatedAt: new Date().toISOString()
+      });
+      
+      if (response.ok) {
+        await fetchOrders();
+        toast({
+          title: "Payment Charged",
+          description: `Customer payment has been successfully charged for order #${orderId}`,
+          variant: "success",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Charge Failed",
+        description: "Failed to charge customer payment. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Set estimated time for order
+  const setEstimatedTime = async (orderId: number, minutes: number) => {
+    try {
+      const response = await apiRequest("PATCH", `/api/orders/${orderId}`, {
+        estimatedTime: minutes,
+        updatedAt: new Date().toISOString()
+      });
+      
+      if (response.ok) {
+        await fetchOrders();
+        toast({
+          title: "Time Estimated",
+          description: `Order #${orderId} will be ready in ${minutes} minutes`,
+          variant: "success",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to set estimated time",
+        variant: "destructive",
+      });
+    }
+  };
+
   // Auto-refresh every 30 seconds
   useEffect(() => {
     fetchOrders();
@@ -427,21 +476,86 @@ export default function EmployeeDashboard() {
                             ))}
                           </div>
                           <div>
+                            {order.tip && order.tip > 0 && (
+                              <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-3">
+                                <h4 className="font-semibold text-green-800">Customer Tip: ${order.tip.toFixed(2)}</h4>
+                                <p className="text-sm text-green-600">To be distributed among today's staff</p>
+                              </div>
+                            )}
                             <h4 className="font-semibold">Total: ${order.total.toFixed(2)}</h4>
+                            {order.paymentStatus && (
+                              <p className="text-sm text-gray-600 mt-1">
+                                Payment Status: <span className="capitalize">{order.paymentStatus}</span>
+                              </p>
+                            )}
                           </div>
                         </div>
                       </DialogContent>
                     </Dialog>
 
                     {order.status === "confirmed" && (
-                      <Button 
-                        onClick={() => updateOrderStatus(order.id, "preparing")}
-                        className="bg-yellow-600 hover:bg-yellow-700 text-white flex-1"
-                        size="sm"
-                      >
-                        <ChefHat className="h-4 w-4 mr-1" />
-                        Start Cooking
-                      </Button>
+                      <div className="space-y-2">
+                        {/* Payment Authorization */}
+                        {order.paymentStatus === "authorized" && (
+                          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-sm text-yellow-800 font-medium">
+                                Payment on Hold
+                              </span>
+                              <Badge variant="outline" className="text-yellow-700 border-yellow-300">
+                                ${order.total.toFixed(2)} Authorized
+                              </Badge>
+                            </div>
+                            <Button 
+                              onClick={() => chargeCustomer(order.id)}
+                              className="bg-green-600 hover:bg-green-700 text-white w-full"
+                              size="sm"
+                            >
+                              Confirm Supplies & Charge Customer
+                            </Button>
+                          </div>
+                        )}
+                        
+                        {/* Time Estimation */}
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                          <p className="text-sm text-blue-800 font-medium mb-2">Set Estimated Time</p>
+                          <div className="grid grid-cols-3 gap-2">
+                            <Button 
+                              onClick={() => setEstimatedTime(order.id, 10)}
+                              variant="outline"
+                              size="sm"
+                              className="text-xs"
+                            >
+                              10 min
+                            </Button>
+                            <Button 
+                              onClick={() => setEstimatedTime(order.id, 15)}
+                              variant="outline"
+                              size="sm"
+                              className="text-xs"
+                            >
+                              15 min
+                            </Button>
+                            <Button 
+                              onClick={() => setEstimatedTime(order.id, 20)}
+                              variant="outline"
+                              size="sm"
+                              className="text-xs"
+                            >
+                              20 min
+                            </Button>
+                          </div>
+                        </div>
+                        
+                        <Button 
+                          onClick={() => updateOrderStatus(order.id, "preparing")}
+                          className="bg-yellow-600 hover:bg-yellow-700 text-white w-full"
+                          size="sm"
+                        >
+                          <ChefHat className="h-4 w-4 mr-1" />
+                          Start Cooking
+                        </Button>
+                      </div>
                     )}
 
                     {order.status === "preparing" && (

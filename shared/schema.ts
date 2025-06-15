@@ -20,11 +20,14 @@ export const orders = pgTable("orders", {
   items: jsonb("items").notNull(),
   subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
   tax: decimal("tax", { precision: 10, scale: 2 }).notNull(),
+  tip: decimal("tip", { precision: 10, scale: 2 }).default("0"),
   total: decimal("total", { precision: 10, scale: 2 }).notNull(),
   orderType: text("order_type").notNull().default('pickup'), // pickup only
   status: text("status").notNull().default('confirmed'), // 'confirmed', 'preparing', 'ready', 'completed', 'cancelled'
   specialInstructions: text("special_instructions"),
   estimatedTime: integer("estimated_time"), // in minutes
+  paymentId: text("payment_id"),
+  paymentStatus: text("payment_status").default("authorized"), // 'authorized', 'charged', 'failed'
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
