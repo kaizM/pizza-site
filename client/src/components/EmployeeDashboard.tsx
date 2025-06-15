@@ -282,6 +282,32 @@ export default function EmployeeDashboard() {
     }
 
     try {
+      // First, send customer notification
+      if (selectedOrderForAction.customerInfo.email) {
+        const notificationMessage = `Hello ${selectedOrderForAction.customerInfo.firstName},
+
+We need to make a substitution for your order #${selectedOrderForAction.id}.
+
+Reason: ${substitutionReason}
+Suggested alternative: ${substitutionSuggestion}
+
+Please click the link below to approve or decline this substitution:`;
+
+        await apiRequest("POST", "/api/notifications", {
+          orderId: selectedOrderForAction.id,
+          type: "substitution_request",
+          message: notificationMessage,
+          customerEmail: selectedOrderForAction.customerInfo.email,
+          requestDetails: {
+            reason: substitutionReason,
+            suggestion: substitutionSuggestion,
+            requestedBy: "employee",
+            requestedAt: new Date().toISOString()
+          }
+        });
+      }
+
+      // Update order status
       const response = await apiRequest("PATCH", `/api/orders/${selectedOrderForAction.id}`, {
         status: "substitution_requested",
         substitutionReason: substitutionReason,
@@ -295,7 +321,9 @@ export default function EmployeeDashboard() {
         await fetchOrders();
         toast({
           title: "Substitution Requested",
-          description: `Customer will be contacted about substitution for Order #${selectedOrderForAction.id}`,
+          description: selectedOrderForAction.customerInfo.email 
+            ? `Customer has been emailed about substitution for Order #${selectedOrderForAction.id}`
+            : `Substitution logged for Order #${selectedOrderForAction.id} - No email on file`,
           variant: "success",
         });
         

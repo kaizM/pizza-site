@@ -256,6 +256,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/notifications/:id", async (req, res) => {
+    try {
+      const notificationId = parseInt(req.params.id);
+      const notifications = await storage.getNotificationsByOrder(0); // Get all notifications
+      const notification = notifications.find(n => n.id === notificationId);
+      
+      if (!notification) {
+        return res.status(404).json({ message: "Notification not found or expired" });
+      }
+      
+      res.json(notification);
+    } catch (error) {
+      console.error("Error fetching notification:", error);
+      res.status(500).json({ message: "Failed to fetch notification" });
+    }
+  });
+
   app.get("/api/notifications/order/:orderId", async (req, res) => {
     try {
       const orderId = parseInt(req.params.orderId);

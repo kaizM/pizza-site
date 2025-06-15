@@ -59,10 +59,12 @@ export const customerNotifications = pgTable("customer_notifications", {
   orderId: integer("order_id").notNull(),
   type: text("type").notNull(), // 'substitution_request', 'order_cancelled', 'order_update'
   message: text("message").notNull(),
+  customerEmail: text("customer_email").notNull(),
   requestDetails: jsonb("request_details"), // for substitution requests
   isRead: boolean("is_read").default(false),
   customerResponse: text("customer_response"), // customer's response to substitution
   responseStatus: text("response_status").default("pending"), // 'pending', 'approved', 'rejected'
+  status: text("status").default("sent"), // 'sent', 'delivered', 'responded'
   createdAt: timestamp("created_at").defaultNow(),
   respondedAt: timestamp("responded_at"),
 });
