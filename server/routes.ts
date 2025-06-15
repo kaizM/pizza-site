@@ -149,10 +149,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.patch("/api/orders/:id", async (req, res) => {
     try {
       const orderId = parseInt(req.params.id);
+      const previousOrder = await storage.getOrder(orderId);
       const order = await storage.updateOrder(orderId, req.body);
       
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
+      }
+
+      // Update customer trust score based on order status changes
+      if (previousOrder && order.customerInfo && (order.customerInfo as any).phone) {
+        const phone = (order.customerInfo as any).phone;
+        const oldStatus = previousOrder.status;
+        const newStatus = order.status;
+
+        // Track order completion for trust score
+        if (oldStatus !== 'completed' && newStatus === 'completed') {
+          const profile = await storage.getCustomerProfile(phone);
+          if (profile) {
+            await storage.updateCustomerProfile(phone, {
+              completedOrders: (profile.completedOrders || 0) + 1
+            });
+            await storage.calculateTrustScore(phone);
+          }
+        }
+
+        // Track cancellations and no-shows
+        if (oldStatus !== 'cancelled' && newStatus === 'cancelled') {
+          const profile = await storage.getCustomerProfile(phone);
+          if (profile) {
+            // Check if this was a no-show (order not picked up in time) vs regular cancellation
+            const orderAge = Date.now() - new Date(order.createdAt || '').getTime();
+            const isNoShow = orderAge > 30 * 60 * 1000; // 30 minutes
+
+            if (isNoShow) {
+              await storage.updateCustomerProfile(phone, {
+                noShowOrders: (profile.noShowOrders || 0) + 1
+              });
+            } else {
+              await storage.updateCustomerProfile(phone, {
+                cancelledOrders: (profile.cancelledOrders || 0) + 1
+              });
+            }
+            await storage.calculateTrustScore(phone);
+          }
+        }
       }
       
       res.json(order);
@@ -397,6 +437,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error creating customer profile:", error);
       res.status(500).json({ message: "Failed to create customer profile" });
+    }
+  });
+
+  // Admin endpoint to view customer profiles
+  app.get("/api/admin/customer-profiles", async (req, res) => {
+    try {
+      // This would need authentication in production
+      const profiles = await storage.getCustomerProfile(""); // Get all profiles
+      res.json(profiles);
+    } catch (error) {
+      console.error("Error fetching customer profiles:", error);
+      res.status(500).json({ message: "Failed to fetch customer profiles" });
+    }
+  });
+
+  // Block/unblock customer endpoint
+  app.post("/api/admin/customer/:phone/block", async (req, res) => {
+    try {
+      const { phone } = req.params;
+      const { blocked, notes } = req.body;
+      
+      const updatedProfile = await storage.updateCustomerProfile(phone, {
+        cashPaymentAllowed: !blocked,
+        trustScore: blocked ? 0 : undefined,
+        notes: notes || null
+      });
+      
+      if (!updatedProfile) {
+        return res.status(404).json({ message: "Customer not found" });
+      }
+      
+      res.json(updatedProfile);
+    } catch (error) {
+      console.error("Error updating customer status:", error);
+      res.status(500).json({ message: "Failed to update customer status" });
     }
   });
 
