@@ -7,6 +7,7 @@ import { CartItem } from "@shared/schema";
 import { generateOrderId } from "@/lib/utils";
 import { useCart } from "@/hooks/useCart";
 import CustomerNavigation from "@/components/CustomerNavigation";
+import PhoneButton from "@/components/PhoneButton";
 
 export default function Home() {
   const [hoveredPizza, setHoveredPizza] = useState<string | null>(null);
@@ -184,21 +185,12 @@ export default function Home() {
           <p className="text-xl text-neutral-secondary mb-8">
             Our friendly staff is ready to help you create the perfect pizza
           </p>
-          <a 
-            href="tel:+1-361-403-0083" 
-            className="inline-block"
-            role="button"
-            aria-label="Call Hunt Brothers Pizza at 361-403-0083"
+          <PhoneButton 
+            size="lg" 
+            className="bg-red-700 hover:bg-red-800 text-white px-8 py-4 text-lg font-bold shadow-lg"
           >
-            <Button 
-              size="lg" 
-              className="bg-red-700 hover:bg-red-800 text-white px-8 py-4 text-lg font-bold shadow-lg"
-              type="button"
-            >
-              <Phone className="mr-2 h-5 w-5" />
-              Call (361) 403-0083
-            </Button>
-          </a>
+            Call (361) 403-0083
+          </PhoneButton>
         </div>
       </section>
 
@@ -232,11 +224,33 @@ export default function Home() {
                     <p className="text-red-200">Palacios, TX 77465</p>
                   </div>
                 </div>
-                <a 
-                  href="tel:+1-361-403-0083"
+                <div 
                   className="flex items-center justify-center md:justify-start group cursor-pointer hover:bg-white/10 rounded-lg p-2 transition-all"
+                  onClick={() => {
+                    // Multi-method phone calling for iOS compatibility
+                    try {
+                      window.location.href = 'tel:+1-361-403-0083';
+                    } catch (error) {
+                      const link = document.createElement('a');
+                      link.href = 'tel:+1-361-403-0083';
+                      link.click();
+                    }
+                  }}
                   role="button"
                   aria-label="Call Hunt Brothers Pizza at 361-403-0083"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      try {
+                        window.location.href = 'tel:+1-361-403-0083';
+                      } catch (error) {
+                        const link = document.createElement('a');
+                        link.href = 'tel:+1-361-403-0083';
+                        link.click();
+                      }
+                    }
+                  }}
                 >
                   <div className="bg-yellow-400 p-2 rounded-full mr-4 group-hover:scale-110 transition-transform">
                     <Phone className="h-5 w-5 text-red-800" />
@@ -245,7 +259,7 @@ export default function Home() {
                     <p className="text-white font-semibold">(361) 403-0083</p>
                     <p className="text-red-200">Call to order</p>
                   </div>
-                </a>
+                </div>
               </div>
             </div>
             

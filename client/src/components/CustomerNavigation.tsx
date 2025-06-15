@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { ShoppingCart } from "lucide-react";
+import { Phone, ShoppingCart } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
 import PhoneButton from "@/components/PhoneButton";
 
@@ -67,20 +67,9 @@ export default function CustomerNavigation({
             </nav>
             
             <div className="flex items-center space-x-4">
-              <a 
-                href="tel:+1-361-403-0083" 
-                className="inline-block"
-                role="button"
-                aria-label="Call Hunt Brothers Pizza at 361-403-0083"
-              >
-                <Button 
-                  className="bg-yellow-400 hover:bg-yellow-300 text-black font-bold shadow-lg transform hover:scale-105 transition-all"
-                  type="button"
-                >
-                  <Phone className="h-4 w-4 mr-1" />
-                  Call Now
-                </Button>
-              </a>
+              <PhoneButton className="bg-yellow-400 hover:bg-yellow-300 text-black font-bold shadow-lg transform hover:scale-105 transition-all">
+                Call Now
+              </PhoneButton>
             </div>
           </div>
         </div>
@@ -118,20 +107,9 @@ export default function CustomerNavigation({
           </nav>
           
           <div className="flex items-center space-x-4">
-            <a 
-              href="tel:+1-361-403-0083" 
-              className="inline-block"
-              role="button"
-              aria-label="Call Hunt Brothers Pizza at 361-403-0083"
-            >
-              <Button 
-                className="bg-red-600 hover:bg-red-700 text-white flex items-center"
-                type="button"
-              >
-                <Phone className="h-4 w-4 mr-1" />
-                (361) 403-0083
-              </Button>
-            </a>
+            <PhoneButton className="bg-red-600 hover:bg-red-700 text-white flex items-center">
+              (361) 403-0083
+            </PhoneButton>
             {showCartButton && (
               <Link href="/cart">
                 <Button 

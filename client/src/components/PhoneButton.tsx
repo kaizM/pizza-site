@@ -59,9 +59,8 @@ export default function PhoneButton({
         aria-label="Call Hunt Brothers Pizza at 361-403-0083"
         onClick={handlePhoneClick}
         style={{ 
-          WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)',
-          tapHighlightColor: 'rgba(0, 0, 0, 0)'
-        }}
+          WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'
+        } as React.CSSProperties}
       >
         <Button 
           className={className}
