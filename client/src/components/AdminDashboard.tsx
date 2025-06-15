@@ -23,623 +23,674 @@ import {
   Edit,
   Trash2,
   Pizza,
-  Users
+  Users,
+  TrendingUp,
+  ShoppingCart,
+  CheckCircle,
+  AlertCircle,
+  Calendar,
+  BarChart3
 } from "lucide-react";
-import { collection, query, orderBy, onSnapshot, doc, updateDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 
 interface Order {
-  id: string;
+  id: number;
   customerInfo: {
     firstName: string;
     lastName: string;
     phone: string;
+    email?: string;
   };
   items: Array<{
+    id: string;
     name: string;
     size: string;
     quantity: number;
+    toppings: string[];
+    crust?: string;
+    price: number;
   }>;
   total: number;
   status: "confirmed" | "preparing" | "ready" | "completed";
   orderType: "pickup" | "delivery";
-  createdAt: any;
+  specialInstructions?: string;
+  estimatedTime?: number;
+  paymentId?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface PizzaItem {
-  id: string;
+  id: number;
   name: string;
   description: string;
   basePrice: number;
   imageUrl: string;
   category: string;
   isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
-interface ToppingItem {
-  id: string;
-  name: string;
-  type: "meat" | "veggie";
-  price: number;
-  isActive: boolean;
+interface DashboardStats {
+  todayOrders: number;
+  todayRevenue: number;
+  activeOrders: number;
+  avgPrepTime: number;
+  recentOrders: Order[];
 }
 
 export default function AdminDashboard() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [pizzas, setPizzas] = useState<PizzaItem[]>([]);
-  const [toppings, setToppings] = useState<ToppingItem[]>([]);
+  const [stats, setStats] = useState<DashboardStats>({
+    todayOrders: 0,
+    todayRevenue: 0,
+    activeOrders: 0,
+    avgPrepTime: 0,
+    recentOrders: []
+  });
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [activeTab, setActiveTab] = useState("orders");
+  const [activeTab, setActiveTab] = useState("overview");
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [newPizza, setNewPizza] = useState({
     name: "",
     description: "",
-    basePrice: "",
+    basePrice: 0,
     imageUrl: "",
-    category: "signature"
-  });
-  const [newTopping, setNewTopping] = useState({
-    name: "",
-    type: "meat" as "meat" | "veggie",
-    price: ""
+    category: "signature",
+    isActive: true
   });
   const { toast } = useToast();
 
-  useEffect(() => {
-    const q = query(
-      collection(db, "orders"),
-      orderBy("createdAt", "desc")
-    );
-
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const ordersData: Order[] = [];
-      querySnapshot.forEach((doc) => {
-        ordersData.push({ id: doc.id, ...doc.data() } as Order);
-      });
-      setOrders(ordersData);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  const updateOrderStatus = async (orderId: string, newStatus: string) => {
+  // Fetch all data
+  const fetchData = async () => {
     try {
-      await updateDoc(doc(db, "orders", orderId), {
+      setLoading(true);
+      
+      // Fetch orders
+      const ordersResponse = await apiRequest("GET", "/api/orders");
+      const allOrders = await ordersResponse.json();
+      setOrders(allOrders);
+
+      // Fetch pizzas
+      const pizzasResponse = await apiRequest("GET", "/api/pizzas");
+      const allPizzas = await pizzasResponse.json();
+      setPizzas(allPizzas);
+
+      // Calculate stats
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      const todayOrders = allOrders.filter((order: Order) => 
+        new Date(order.createdAt) >= today
+      );
+      
+      const todayRevenue = todayOrders.reduce((sum: number, order: Order) => 
+        sum + order.total, 0
+      );
+      
+      const activeOrders = allOrders.filter((order: Order) => 
+        order.status !== "completed"
+      );
+
+      const recentOrders = allOrders
+        .sort((a: Order, b: Order) => 
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        )
+        .slice(0, 10);
+
+      setStats({
+        todayOrders: todayOrders.length,
+        todayRevenue,
+        activeOrders: activeOrders.length,
+        avgPrepTime: 8, // Default estimated time
+        recentOrders
+      });
+
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch data. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Update order status
+  const updateOrderStatus = async (orderId: number, newStatus: string) => {
+    try {
+      const response = await apiRequest("PATCH", `/api/orders/${orderId}`, {
         status: newStatus,
-        updatedAt: new Date(),
+        updatedAt: new Date().toISOString()
       });
       
-      toast({
-        title: "Order Updated",
-        description: `Order ${orderId.slice(-8).toUpperCase()} marked as ${newStatus}`,
-        variant: "success",
-      });
+      if (response.ok) {
+        await fetchData();
+        toast({
+          title: "Order Updated",
+          description: `Order #${orderId} status updated to ${newStatus}`,
+          variant: "success",
+        });
+      }
     } catch (error) {
-      // Log error securely without exposing sensitive data
       toast({
-        title: "Update Failed",
+        title: "Error",
         description: "Failed to update order status",
         variant: "destructive",
       });
     }
   };
 
-  const filteredOrders = orders.filter(order => 
-    statusFilter === "all" || order.status === statusFilter
-  );
+  // Add new pizza
+  const addPizza = async () => {
+    try {
+      if (!newPizza.name || !newPizza.description || newPizza.basePrice <= 0) {
+        toast({
+          title: "Error",
+          description: "Please fill in all required fields",
+          variant: "destructive",
+        });
+        return;
+      }
 
-  const todayOrders = orders.filter(order => {
-    const orderDate = new Date(order.createdAt?.toDate());
-    const today = new Date();
-    return orderDate.toDateString() === today.toDateString();
-  });
+      const response = await apiRequest("POST", "/api/pizzas", newPizza);
+      
+      if (response.ok) {
+        await fetchData();
+        setNewPizza({
+          name: "",
+          description: "",
+          basePrice: 0,
+          imageUrl: "",
+          category: "signature",
+          isActive: true
+        });
+        toast({
+          title: "Pizza Added",
+          description: "New pizza item has been added to the menu",
+          variant: "success",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add pizza",
+        variant: "destructive",
+      });
+    }
+  };
 
-  const todayRevenue = todayOrders.reduce((sum, order) => sum + order.total, 0);
-  const activeOrders = orders.filter(order => 
-    order.status === "confirmed" || order.status === "preparing" || order.status === "ready"
-  );
+  // Auto-refresh every 60 seconds
+  useEffect(() => {
+    fetchData();
+    const interval = setInterval(fetchData, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
-  const getStatusBadge = (status: string) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
-      case "confirmed":
-        return <Badge variant="secondary">Confirmed</Badge>;
-      case "preparing":
-        return <Badge className="bg-orange-100 text-orange-800">Preparing</Badge>;
-      case "ready":
-        return <Badge className="bg-green-100 text-green-800">Ready</Badge>;
-      case "completed":
-        return <Badge className="bg-blue-100 text-blue-800">Completed</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
+      case "confirmed": return "bg-blue-500 text-white";
+      case "preparing": return "bg-yellow-500 text-black";
+      case "ready": return "bg-green-500 text-white";
+      case "completed": return "bg-gray-500 text-white";
+      default: return "bg-gray-500 text-white";
     }
   };
 
-  const getTimeElapsed = (createdAt: any) => {
-    if (!createdAt) return "Unknown";
-    const now = new Date();
-    const orderTime = new Date(createdAt.toDate());
-    const diffMinutes = Math.floor((now.getTime() - orderTime.getTime()) / (1000 * 60));
-    
-    if (diffMinutes < 60) {
-      return `${diffMinutes}m ago`;
-    } else {
-      const hours = Math.floor(diffMinutes / 60);
-      return `${hours}h ${diffMinutes % 60}m ago`;
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-gray-200 rounded w-1/4"></div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-32 bg-gray-200 rounded-xl"></div>
-            ))}
-          </div>
-          <div className="h-96 bg-gray-200 rounded-xl"></div>
-        </div>
-      </div>
-    );
-  }
-
-  const exportOrdersToCSV = () => {
-    const csvData = orders.map(order => ({
-      OrderID: order.id.slice(-8).toUpperCase(),
-      Customer: `${order.customerInfo.firstName} ${order.customerInfo.lastName}`,
-      Phone: order.customerInfo.phone,
-      Total: order.total,
-      Status: order.status,
-      Type: order.orderType,
-      Date: order.createdAt ? new Date(order.createdAt.toDate()).toLocaleDateString() : 'N/A'
-    }));
-
+  const exportOrders = () => {
     const csvContent = [
-      Object.keys(csvData[0]).join(','),
-      ...csvData.map(row => Object.values(row).join(','))
-    ].join('\n');
+      ["Order ID", "Customer", "Phone", "Items", "Total", "Status", "Date"].join(","),
+      ...orders.map(order => [
+        order.id,
+        `${order.customerInfo.firstName} ${order.customerInfo.lastName}`,
+        order.customerInfo.phone,
+        order.items.map(item => `${item.quantity}x ${item.name}`).join("; "),
+        order.total.toFixed(2),
+        order.status,
+        new Date(order.createdAt).toLocaleDateString()
+      ].join(","))
+    ].join("\n");
 
-    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const blob = new Blob([csvContent], { type: "text/csv" });
     const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = `orders-${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
     window.URL.revokeObjectURL(url);
   };
 
-  const addPizza = () => {
-    if (!newPizza.name || !newPizza.basePrice) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const pizza: PizzaItem = {
-      id: Date.now().toString(),
-      name: newPizza.name,
-      description: newPizza.description,
-      basePrice: parseFloat(newPizza.basePrice),
-      imageUrl: newPizza.imageUrl || "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
-      category: newPizza.category,
-      isActive: true
-    };
-
-    setPizzas(prev => [...prev, pizza]);
-    setNewPizza({ name: "", description: "", basePrice: "", imageUrl: "", category: "signature" });
-    
-    toast({
-      title: "Pizza Added",
-      description: `${pizza.name} has been added to the menu`,
-      variant: "success",
-    });
-  };
-
-  const addTopping = () => {
-    if (!newTopping.name || !newTopping.price) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const topping: ToppingItem = {
-      id: Date.now().toString(),
-      name: newTopping.name,
-      type: newTopping.type,
-      price: parseFloat(newTopping.price),
-      isActive: true
-    };
-
-    setToppings(prev => [...prev, topping]);
-    setNewTopping({ name: "", type: "meat", price: "" });
-    
-    toast({
-      title: "Topping Added",
-      description: `${topping.name} has been added to available toppings`,
-      variant: "success",
-    });
-  };
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <RefreshCw className="h-8 w-8 animate-spin text-gray-600 mx-auto mb-4" />
+          <p className="text-gray-600">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-7xl mx-auto p-6 space-y-8">
+    <div className="min-h-screen bg-gray-50 p-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-neutral-text">Admin Dashboard</h1>
-          <p className="text-neutral-secondary">Complete restaurant management system</p>
-        </div>
-        <div className="flex items-center space-x-4">
-          <Button variant="outline" onClick={exportOrdersToCSV}>
-            <Download className="mr-2 h-4 w-4" />
-            Export Orders
-          </Button>
-          <Button className="bg-red-600 hover:bg-red-700">
-            <Plus className="mr-2 h-4 w-4" />
-            Quick Actions
-          </Button>
+      <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="p-3 bg-red-600 rounded-full">
+              <BarChart3 className="h-8 w-8 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+              <p className="text-gray-600">Hunt Brothers Pizza - Management Portal</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            <Button onClick={exportOrders} variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Export Orders
+            </Button>
+            <Button onClick={fetchData} disabled={loading}>
+              <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+              Refresh
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Management Tabs */}
-      <Tabs defaultValue="orders" className="w-full">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Today's Orders</CardTitle>
+            <Receipt className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.todayOrders}</div>
+            <p className="text-xs text-muted-foreground">
+              <TrendingUp className="h-3 w-3 inline mr-1" />
+              +12% from yesterday
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Today's Revenue</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">${stats.todayRevenue.toFixed(2)}</div>
+            <p className="text-xs text-muted-foreground">
+              <TrendingUp className="h-3 w-3 inline mr-1" />
+              +8% from yesterday
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Orders</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.activeOrders}</div>
+            <p className="text-xs text-muted-foreground">
+              Currently in progress
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Avg Prep Time</CardTitle>
+            <Timer className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.avgPrepTime}m</div>
+            <p className="text-xs text-muted-foreground">
+              Within target range
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Main Content */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="orders">Orders</TabsTrigger>
-          <TabsTrigger value="pizzas">Pizza Menu</TabsTrigger>
-          <TabsTrigger value="toppings">Toppings</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
+          <TabsTrigger value="menu">Menu Management</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
 
-        {/* Dashboard Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-neutral-secondary text-sm">Today's Orders</p>
-                  <p className="text-2xl font-bold text-neutral-text">{todayOrders.length}</p>
-                </div>
-                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                  <Receipt className="h-6 w-6 text-green-600" />
-                </div>
-              </div>
-              <div className="mt-2 flex items-center text-sm">
-                <ArrowUp className="h-4 w-4 text-green-500 mr-1" />
-                <span className="text-green-500">+12%</span>
-                <span className="text-neutral-secondary ml-1">vs yesterday</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-neutral-secondary text-sm">Revenue</p>
-                  <p className="text-2xl font-bold text-neutral-text">${todayRevenue.toFixed(2)}</p>
-                </div>
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                  <DollarSign className="h-6 w-6 text-blue-600" />
-                </div>
-              </div>
-              <div className="mt-2 flex items-center text-sm">
-                <ArrowUp className="h-4 w-4 text-green-500 mr-1" />
-                <span className="text-green-500">+8%</span>
-                <span className="text-neutral-secondary ml-1">vs yesterday</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-neutral-secondary text-sm">Active Orders</p>
-                  <p className="text-2xl font-bold text-neutral-text">{activeOrders.length}</p>
-                </div>
-                <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
-                  <Clock className="h-6 w-6 text-orange-600" />
-                </div>
-              </div>
-              <div className="mt-2 text-sm text-neutral-secondary">
-                In kitchen & ready
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-neutral-secondary text-sm">Avg. Prep Time</p>
-                  <p className="text-2xl font-bold text-neutral-text">23m</p>
-                </div>
-                <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                  <Timer className="h-6 w-6 text-purple-600" />
-                </div>
-              </div>
-              <div className="mt-2 flex items-center text-sm">
-                <ArrowDown className="h-4 w-4 text-green-500 mr-1" />
-                <span className="text-green-500">-3m</span>
-                <span className="text-neutral-secondary ml-1">improvement</span>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Tab Content */}
-        <TabsContent value="orders">
+        <TabsContent value="overview" className="space-y-6">
+          {/* Recent Orders */}
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>Live Orders</CardTitle>
-                <div className="flex items-center space-x-3">
-                  <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-40">
-                      <SelectValue placeholder="Filter by status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Orders</SelectItem>
-                      <SelectItem value="confirmed">Confirmed</SelectItem>
-                      <SelectItem value="preparing">Preparing</SelectItem>
-                      <SelectItem value="ready">Ready</SelectItem>
-                      <SelectItem value="completed">Completed</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Button variant="outline" size="sm">
-                    <RefreshCw className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+              <CardTitle>Recent Orders</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Order</TableHead>
-                      <TableHead>Customer</TableHead>
-                      <TableHead>Items</TableHead>
-                      <TableHead>Total</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Time</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredOrders.map((order) => (
-                      <TableRow key={order.id} className="hover:bg-gray-50">
-                        <TableCell>
-                          <div>
-                            <div className="font-medium">#{order.id.slice(-8).toUpperCase()}</div>
-                            <div className="text-sm text-neutral-secondary capitalize">
-                              {order.orderType}
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div>
-                            <div className="font-medium">
-                              {order.customerInfo.firstName} {order.customerInfo.lastName}
-                            </div>
-                            <div className="text-sm text-neutral-secondary">
-                              {order.customerInfo.phone}
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="text-sm">
-                            {order.items.map((item, index) => (
-                              <div key={index}>
-                                {item.quantity}x {item.name} ({item.size})
-                              </div>
-                            ))}
-                          </div>
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          ${order.total.toFixed(2)}
-                        </TableCell>
-                        <TableCell>
-                          {getStatusBadge(order.status)}
-                        </TableCell>
-                        <TableCell className="text-sm text-neutral-text">
-                          {getTimeElapsed(order.createdAt)}
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            {order.status === "confirmed" && (
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => updateOrderStatus(order.id, "preparing")}
-                              >
-                                Start
-                              </Button>
-                            )}
-                            {order.status === "preparing" && (
-                              <Button
-                                size="sm"
-                                className="bg-green-600 hover:bg-green-700"
-                                onClick={() => updateOrderStatus(order.id, "ready")}
-                              >
-                                Ready
-                              </Button>
-                            )}
-                            {order.status === "ready" && (
-                              <Button
-                                size="sm"
-                                className="bg-blue-600 hover:bg-blue-700"
-                                onClick={() => updateOrderStatus(order.id, "completed")}
-                              >
-                                Complete
-                              </Button>
-                            )}
-                            <Button size="sm" variant="ghost" className="text-red-600 hover:text-red-700">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Order ID</TableHead>
+                    <TableHead>Customer</TableHead>
+                    <TableHead>Items</TableHead>
+                    <TableHead>Total</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Time</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {stats.recentOrders.map((order) => (
+                    <TableRow key={order.id}>
+                      <TableCell className="font-medium">#{order.id}</TableCell>
+                      <TableCell>
+                        {order.customerInfo.firstName} {order.customerInfo.lastName}
+                      </TableCell>
+                      <TableCell>
+                        {order.items.map(item => `${item.quantity}x ${item.name}`).join(", ").slice(0, 30)}...
+                      </TableCell>
+                      <TableCell>${order.total.toFixed(2)}</TableCell>
+                      <TableCell>
+                        <Badge className={getStatusColor(order.status)}>
+                          {order.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {new Date(order.createdAt).toLocaleTimeString()}
+                      </TableCell>
+                      <TableCell>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="outline" size="sm">
                               View
                             </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-2xl">
+                            <DialogHeader>
+                              <DialogTitle>Order #{order.id} Details</DialogTitle>
+                            </DialogHeader>
+                            <div className="space-y-4">
+                              <div>
+                                <h4 className="font-semibold mb-2">Customer Information</h4>
+                                <p>{order.customerInfo.firstName} {order.customerInfo.lastName}</p>
+                                <p>{order.customerInfo.phone}</p>
+                                {order.customerInfo.email && <p>{order.customerInfo.email}</p>}
+                              </div>
+                              <div>
+                                <h4 className="font-semibold mb-2">Order Items</h4>
+                                {order.items.map((item, index) => (
+                                  <div key={index} className="border rounded p-3 mb-2">
+                                    <div className="font-medium">{item.quantity}x {item.name}</div>
+                                    <div className="text-sm text-gray-600">{item.size} • {item.crust}</div>
+                                    {item.toppings.length > 0 && (
+                                      <div className="text-sm text-gray-500">Toppings: {item.toppings.join(', ')}</div>
+                                    )}
+                                    <div className="text-sm font-medium">${item.price.toFixed(2)}</div>
+                                  </div>
+                                ))}
+                              </div>
+                              <div className="flex justify-between items-center pt-4 border-t">
+                                <h4 className="font-semibold">Total: ${order.total.toFixed(2)}</h4>
+                                <div className="space-x-2">
+                                  {order.status !== "completed" && (
+                                    <Button 
+                                      onClick={() => updateOrderStatus(order.id, "completed")}
+                                      size="sm"
+                                    >
+                                      Mark Complete
+                                    </Button>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="orders" className="space-y-6">
+          {/* All Orders */}
+          <Card>
+            <CardHeader>
+              <CardTitle>All Orders ({orders.length})</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Order ID</TableHead>
+                    <TableHead>Customer</TableHead>
+                    <TableHead>Phone</TableHead>
+                    <TableHead>Items</TableHead>
+                    <TableHead>Total</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {orders.map((order) => (
+                    <TableRow key={order.id}>
+                      <TableCell className="font-medium">#{order.id}</TableCell>
+                      <TableCell>
+                        {order.customerInfo.firstName} {order.customerInfo.lastName}
+                      </TableCell>
+                      <TableCell>{order.customerInfo.phone}</TableCell>
+                      <TableCell>
+                        {order.items.length} item{order.items.length > 1 ? 's' : ''}
+                      </TableCell>
+                      <TableCell>${order.total.toFixed(2)}</TableCell>
+                      <TableCell>
+                        <Select
+                          value={order.status}
+                          onValueChange={(value) => updateOrderStatus(order.id, value)}
+                        >
+                          <SelectTrigger className="w-32">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="confirmed">Confirmed</SelectItem>
+                            <SelectItem value="preparing">Preparing</SelectItem>
+                            <SelectItem value="ready">Ready</SelectItem>
+                            <SelectItem value="completed">Completed</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </TableCell>
+                      <TableCell>
+                        {new Date(order.createdAt).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>
+                        <Button variant="outline" size="sm">
+                          View Details
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="menu" className="space-y-6">
+          {/* Add New Pizza */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Add New Pizza</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="name">Pizza Name</Label>
+                  <Input
+                    id="name"
+                    value={newPizza.name}
+                    onChange={(e) => setNewPizza({...newPizza, name: e.target.value})}
+                    placeholder="e.g., Pepperoni Supreme"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="basePrice">Base Price</Label>
+                  <Input
+                    id="basePrice"
+                    type="number"
+                    step="0.01"
+                    value={newPizza.basePrice || ""}
+                    onChange={(e) => setNewPizza({...newPizza, basePrice: parseFloat(e.target.value) || 0})}
+                    placeholder="11.99"
+                  />
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  value={newPizza.description}
+                  onChange={(e) => setNewPizza({...newPizza, description: e.target.value})}
+                  placeholder="Delicious pizza with fresh ingredients..."
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="category">Category</Label>
+                  <Select
+                    value={newPizza.category}
+                    onValueChange={(value) => setNewPizza({...newPizza, category: value})}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="signature">Signature</SelectItem>
+                      <SelectItem value="classic">Classic</SelectItem>
+                      <SelectItem value="specialty">Specialty</SelectItem>
+                      <SelectItem value="vegetarian">Vegetarian</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="imageUrl">Image URL</Label>
+                  <Input
+                    id="imageUrl"
+                    value={newPizza.imageUrl}
+                    onChange={(e) => setNewPizza({...newPizza, imageUrl: e.target.value})}
+                    placeholder="https://example.com/pizza.jpg"
+                  />
+                </div>
+              </div>
+              <Button onClick={addPizza} className="w-full">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Pizza to Menu
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Current Menu */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Current Menu ({pizzas.length} items)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {pizzas.map((pizza) => (
+                  <Card key={pizza.id} className="relative">
+                    <CardHeader>
+                      <div className="flex justify-between items-start">
+                        <CardTitle className="text-lg">{pizza.name}</CardTitle>
+                        <Badge variant={pizza.isActive ? "default" : "secondary"}>
+                          {pizza.isActive ? "Active" : "Inactive"}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-gray-600 mb-2">{pizza.description}</p>
+                      <div className="flex justify-between items-center">
+                        <span className="font-bold text-lg">${pizza.basePrice.toFixed(2)}</span>
+                        <div className="space-x-2">
+                          <Button variant="outline" size="sm">
+                            <Edit className="h-3 w-3" />
+                          </Button>
+                          <Button variant="outline" size="sm">
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="pizzas">
-          <div className="space-y-6">
+        <TabsContent value="analytics" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Pizza className="mr-2 h-5 w-5" />
-                  Add New Pizza
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="pizza-name">Pizza Name</Label>
-                    <Input
-                      id="pizza-name"
-                      value={newPizza.name}
-                      onChange={(e) => setNewPizza({ ...newPizza, name: e.target.value })}
-                      placeholder="Margherita Pizza"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="pizza-price">Base Price</Label>
-                    <Input
-                      id="pizza-price"
-                      type="number"
-                      step="0.01"
-                      value={newPizza.basePrice}
-                      onChange={(e) => setNewPizza({ ...newPizza, basePrice: e.target.value })}
-                      placeholder="12.99"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Label htmlFor="pizza-description">Description</Label>
-                  <Textarea
-                    id="pizza-description"
-                    value={newPizza.description}
-                    onChange={(e) => setNewPizza({ ...newPizza, description: e.target.value })}
-                    placeholder="Fresh mozzarella, tomato sauce, and basil"
-                  />
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="pizza-image">Image URL</Label>
-                    <Input
-                      id="pizza-image"
-                      value={newPizza.imageUrl}
-                      onChange={(e) => setNewPizza({ ...newPizza, imageUrl: e.target.value })}
-                      placeholder="https://example.com/pizza.jpg"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="pizza-category">Category</Label>
-                    <Select value={newPizza.category} onValueChange={(value) => setNewPizza({ ...newPizza, category: value })}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="signature">Signature</SelectItem>
-                        <SelectItem value="classic">Classic</SelectItem>
-                        <SelectItem value="specialty">Specialty</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <Button onClick={addPizza} className="bg-red-600 hover:bg-red-700">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Pizza
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="toppings">
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Add New Topping</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <Label htmlFor="topping-name">Topping Name</Label>
-                    <Input
-                      id="topping-name"
-                      value={newTopping.name}
-                      onChange={(e) => setNewTopping({ ...newTopping, name: e.target.value })}
-                      placeholder="Pepperoni"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="topping-type">Type</Label>
-                    <Select value={newTopping.type} onValueChange={(value: "meat" | "veggie") => setNewTopping({ ...newTopping, type: value })}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="meat">Meat</SelectItem>
-                        <SelectItem value="veggie">Veggie</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="topping-price">Price</Label>
-                    <Input
-                      id="topping-price"
-                      type="number"
-                      step="0.01"
-                      value={newTopping.price}
-                      onChange={(e) => setNewTopping({ ...newTopping, price: e.target.value })}
-                      placeholder="1.50"
-                    />
-                  </div>
-                </div>
-                <Button onClick={addTopping} className="bg-red-600 hover:bg-red-700">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Topping
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="reports">
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Sales Reports</CardTitle>
+                <CardTitle>Sales Summary</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-green-600">${todayRevenue.toFixed(2)}</div>
-                    <div className="text-sm text-neutral-secondary">Today's Revenue</div>
+                <div className="space-y-4">
+                  <div className="flex justify-between">
+                    <span>Total Orders:</span>
+                    <span className="font-bold">{orders.length}</span>
                   </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-blue-600">{todayOrders.length}</div>
-                    <div className="text-sm text-neutral-secondary">Orders Today</div>
+                  <div className="flex justify-between">
+                    <span>Total Revenue:</span>
+                    <span className="font-bold">
+                      ${orders.reduce((sum, order) => sum + order.total, 0).toFixed(2)}
+                    </span>
                   </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-orange-600">{todayOrders.length > 0 ? (todayRevenue / todayOrders.length).toFixed(2) : '0.00'}</div>
-                    <div className="text-sm text-neutral-secondary">Avg Order Value</div>
+                  <div className="flex justify-between">
+                    <span>Average Order Value:</span>
+                    <span className="font-bold">
+                      ${orders.length > 0 ? (orders.reduce((sum, order) => sum + order.total, 0) / orders.length).toFixed(2) : '0.00'}
+                    </span>
                   </div>
+                  <div className="flex justify-between">
+                    <span>Completed Orders:</span>
+                    <span className="font-bold">
+                      {orders.filter(order => order.status === "completed").length}
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Order Status Distribution</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {["confirmed", "preparing", "ready", "completed"].map(status => {
+                    const count = orders.filter(order => order.status === status).length;
+                    const percentage = orders.length > 0 ? (count / orders.length * 100).toFixed(1) : '0';
+                    return (
+                      <div key={status} className="flex justify-between items-center">
+                        <span className="capitalize">{status}:</span>
+                        <div className="flex items-center space-x-2">
+                          <span className="font-bold">{count}</span>
+                          <span className="text-sm text-gray-500">({percentage}%)</span>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>
