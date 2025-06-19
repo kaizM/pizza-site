@@ -1,0 +1,21 @@
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="96" cy="96" r="96" fill="#f97316"/>
+  
+  <!-- Pizza Base -->
+  <circle cx="96" cy="96" r="60" fill="#fbbf24"/>
+  
+  <!-- Pizza Toppings -->
+  <circle cx="85" cy="85" r="8" fill="#dc2626"/>
+  <circle cx="110" cy="90" r="6" fill="#16a34a"/>
+  <circle cx="95" cy="105" r="7" fill="#dc2626"/>
+  <circle cx="115" cy="110" r="5" fill="#16a34a"/>
+  <circle cx="80" cy="110" r="6" fill="#dc2626"/>
+  
+  <!-- Chef Hat Icon -->
+  <path d="M96 50 L86 40 L96 35 L106 40 Z" fill="white"/>
+  <rect x="88" y="40" width="16" height="12" fill="white"/>
+  
+  <!-- Text -->
+  <text x="96" y="170" text-anchor="middle" fill="white" font-family="sans-serif" font-size="16" font-weight="bold">LE11</text>
+</svg>

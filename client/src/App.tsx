@@ -13,6 +13,7 @@ import AdminPage from "@/pages/admin";
 import NotFound from "@/pages/not-found";
 import OrderTrackingPage from "@/pages/order-tracking";
 import CustomerResponse from "@/pages/CustomerResponse";
+import EmployeeMobileApp from "@/components/EmployeeMobileApp";
 
 function Router() {
   return (
@@ -25,6 +26,7 @@ function Router() {
       <Route path="/order-tracking/:orderId" component={OrderTrackingPage} />
       <Route path="/customer-response/:id" component={CustomerResponse} />
       <Route path="/kitchen-display-system" component={EmployeePage} />
+      <Route path="/employee" component={EmployeeMobileApp} />
       <Route path="/management-portal" component={AdminPage} />
       <Route component={NotFound} />
     </Switch>
