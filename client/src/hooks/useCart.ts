@@ -4,25 +4,25 @@ import { CartItem } from "@shared/schema";
 const CART_STORAGE_KEY = "huntbrothers_cart";
 
 export function useCart() {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-
-  // Load cart from localStorage on mount
-  useEffect(() => {
-    const savedCart = localStorage.getItem(CART_STORAGE_KEY);
-    if (savedCart) {
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    // Initialize from localStorage immediately to prevent empty state flash
+    if (typeof window !== 'undefined') {
       try {
-        const parsedCart = JSON.parse(savedCart);
-        setCartItems(parsedCart);
+        const savedCart = localStorage.getItem(CART_STORAGE_KEY);
+        return savedCart ? JSON.parse(savedCart) : [];
       } catch (error) {
         console.error("Error loading cart from localStorage:", error);
-        localStorage.removeItem(CART_STORAGE_KEY);
+        return [];
       }
     }
-  }, []);
+    return [];
+  });
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+    }
   }, [cartItems]);
 
   const addToCart = (item: CartItem) => {
