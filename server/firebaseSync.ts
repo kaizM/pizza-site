@@ -15,9 +15,9 @@ class FirebaseSync {
         total: order.total,
         status: order.status,
         orderType: order.orderType,
-        specialInstructions: order.specialInstructions,
-        estimatedTime: order.estimatedTime,
-        paymentId: order.paymentId,
+        specialInstructions: order.specialInstructions || "",
+        estimatedTime: order.estimatedTime || 15,
+        paymentId: order.paymentId || "",
         createdAt: order.createdAt ? new Date(order.createdAt) : serverTimestamp(),
         updatedAt: serverTimestamp()
       };
