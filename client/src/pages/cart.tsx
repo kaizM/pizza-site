@@ -185,12 +185,12 @@ export default function Cart() {
                             Customize
                           </Button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-lg">
+                        <DialogContent className="max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
                           <DialogHeader>
                             <DialogTitle>Customize {editingItem?.name}</DialogTitle>
                           </DialogHeader>
                           {editingItem && (
-                            <div className="space-y-6">
+                            <div className="space-y-4 overflow-y-auto flex-1 pr-2">
                               {/* Crust Selection */}
                               <div>
                                 <label className="text-sm font-medium mb-2 block">Crust</label>
@@ -214,7 +214,7 @@ export default function Cart() {
                                 <label className="text-sm font-medium mb-3 block">
                                   Regular Toppings (Free)
                                 </label>
-                                <div className="grid grid-cols-2 gap-2 max-h-32 overflow-y-auto border rounded p-2">
+                                <div className="grid grid-cols-2 gap-2 max-h-24 overflow-y-auto border rounded p-2">
                                   {regularToppings.map(topping => (
                                     <div key={topping} className="flex items-center space-x-2">
                                       <Checkbox
@@ -237,7 +237,7 @@ export default function Cart() {
                                 <label className="text-sm font-medium mb-3 block">
                                   Extra Meat Toppings (+$1.50 each)
                                 </label>
-                                <div className="space-y-2 max-h-24 overflow-y-auto border rounded p-2">
+                                <div className="space-y-2 max-h-20 overflow-y-auto border rounded p-2">
                                   {meatToppings.map(topping => (
                                     <div key={topping.name} className="flex items-center justify-between">
                                       <div className="flex items-center space-x-2">
@@ -265,7 +265,7 @@ export default function Cart() {
                                 <label className="text-sm font-medium mb-3 block">
                                   Extra Veggie Toppings (+$1.00 each)
                                 </label>
-                                <div className="space-y-2 max-h-24 overflow-y-auto border rounded p-2">
+                                <div className="space-y-2 max-h-20 overflow-y-auto border rounded p-2">
                                   {veggieToppings.map(topping => (
                                     <div key={topping.name} className="flex items-center justify-between">
                                       <div className="flex items-center space-x-2">
@@ -346,12 +346,15 @@ export default function Cart() {
                                 </div>
                               </div>
 
-                              {/* Save Button */}
-                              <Button onClick={handleSaveEdit} className="w-full">
-                                Save Changes
-                              </Button>
                             </div>
                           )}
+                          
+                          {/* Save Button - Fixed at bottom */}
+                          <div className="border-t pt-4 mt-4">
+                            <Button onClick={handleSaveEdit} className="w-full">
+                              Save Changes
+                            </Button>
+                          </div>
                         </DialogContent>
                       </Dialog>
 
