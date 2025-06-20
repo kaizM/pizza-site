@@ -6,6 +6,7 @@ import { Phone, MapPin, Clock } from "lucide-react";
 import { CartItem } from "@shared/schema";
 import { generateOrderId } from "@/lib/utils";
 import { useCart } from "@/hooks/useCart";
+import { useToast } from "@/hooks/use-toast";
 import CustomerNavigation from "@/components/CustomerNavigation";
 import PhoneButton from "@/components/PhoneButton";
 
@@ -13,16 +14,23 @@ export default function Home() {
   const [hoveredPizza, setHoveredPizza] = useState<string | null>(null);
   const [, setLocation] = useLocation();
   const { addToCart } = useCart();
+  const { toast } = useToast();
 
   const orderPremadePizza = (pizza: typeof pizzas[0]) => {
-    // Create cart item from premade pizza
+    // Calculate proper price including toppings
+    const basePizzaPrice = 11.99;
+    const toppingPrice = 0.75; // Standard topping price
+    const totalToppingsPrice = pizza.toppings.length * toppingPrice;
+    const finalPrice = basePizzaPrice + totalToppingsPrice;
+
+    // Create cart item from premade pizza with all preset configurations
     const cartItem: CartItem = {
       id: generateOrderId(),
       name: pizza.name,
       size: pizza.size,
       crust: pizza.crust,
-      toppings: pizza.toppings,
-      price: pizza.price,
+      toppings: [...pizza.toppings], // Ensure toppings array is copied
+      price: finalPrice,
       quantity: 1,
       imageUrl: pizza.image,
     };
@@ -30,8 +38,22 @@ export default function Home() {
     // Add to cart using shared cart system
     addToCart(cartItem);
     
-    // Navigate to cart summary first
+    // Show success feedback
+    toast({
+      title: "Pizza Added to Cart!",
+      description: `${pizza.name} with ${pizza.toppings.length} toppings added`,
+      variant: "default",
+    });
+    
+    // Navigate to cart to show the added item
     setLocation('/cart');
+  };
+
+  // Calculate accurate pricing for featured pizzas
+  const calculatePizzaPrice = (toppings: string[]) => {
+    const basePizzaPrice = 11.99;
+    const toppingPrice = 0.75;
+    return basePizzaPrice + (toppings.length * toppingPrice);
   };
 
   const pizzas = [
@@ -39,31 +61,31 @@ export default function Home() {
       id: "lotsa-meat",
       name: "Lotsa Meat",
       description: "Loaded with pepperoni, sausage, bacon, and beef — for the ultimate meat lover.",
-      price: 11.99,
-      image: "/lotsa-meat-pizza.png",
       toppings: ["Pepperoni", "Italian Sausage", "Bacon", "Beef"],
       size: "Large",
       crust: "Original",
+      image: "/lotsa-meat-pizza.png",
+      get price() { return calculatePizzaPrice(this.toppings); }
     },
     {
       id: "veggie-delight", 
       name: "Veggie Delight",
       description: "Bell peppers, onions, mushrooms, black olives, banana peppers, jalapeños. No meat.",
-      price: 11.99,
-      image: "/veggie-delight-pizza.jpeg",
       toppings: ["Bell Peppers", "Onions", "Mushrooms", "Black Olives", "Banana Peppers", "Jalapeños"],
       size: "Large",
       crust: "Original",
+      image: "/veggie-delight-pizza.jpeg",
+      get price() { return calculatePizzaPrice(this.toppings); }
     },
     {
       id: "loaded",
       name: "Loaded", 
       description: "Combo of meats & veggies: pepperoni, sausage, mushrooms, bell peppers, onions.",
-      price: 11.99,
-      image: "/loaded-pizza.jpeg",
       toppings: ["Pepperoni", "Italian Sausage", "Mushrooms", "Bell Peppers", "Onions"],
       size: "Large",
       crust: "Original",
+      image: "/loaded-pizza.jpeg",
+      get price() { return calculatePizzaPrice(this.toppings); }
     },
   ];
 
