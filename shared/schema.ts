@@ -33,6 +33,7 @@ export const customerProfiles = pgTable("customer_profiles", {
 export const orders = pgTable("orders", {
   id: serial("id").primaryKey(),
   firebaseOrderId: text("firebase_order_id").notNull().unique(),
+  uniqueOrderId: text("unique_order_id").unique(), // Customer-facing unique ID
   userId: text("user_id"),
   customerInfo: jsonb("customer_info").notNull(),
   items: jsonb("items").notNull(),

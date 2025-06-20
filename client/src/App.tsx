@@ -24,7 +24,7 @@ function Router() {
       <Route path="/build-pizza" component={BuildPizzaPage} />
       <Route path="/checkout" component={CheckoutPage} />
       <Route path="/track-order" component={TrackOrderPage} />
-      <Route path="/order-tracking/:orderId" component={OrderTrackingPage} />
+      <Route path="/order-tracking" component={OrderTrackingPage} />
       <Route path="/customer-response/:id" component={CustomerResponse} />
       <Route path="/kitchen-display-system" component={EmployeePage} />
       <Route path="/employee" component={FirebaseEmployeeMobileApp} />

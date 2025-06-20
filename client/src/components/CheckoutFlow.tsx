@@ -10,6 +10,8 @@ import { CustomerInfo, OrderData, CartItem } from "@shared/schema";
 import { useAuth } from "@/hooks/useAuth";
 import PaymentForm from "@/components/PaymentForm";
 import { apiRequest } from "@/lib/queryClient";
+import { orderStorage } from "@/lib/orderStorage";
+import { useLocation } from "wouter";
 
 interface CheckoutFlowProps {
   cartItems: CartItem[];
@@ -39,6 +41,7 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
   const [customerProfile, setCustomerProfile] = useState<any>(null);
   const { toast } = useToast();
   const { user } = useAuth();
+  const [, setLocation] = useLocation();
 
   const orderType = "pickup";
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -257,6 +260,9 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
     setLoading(true);
 
     try {
+      // Generate unique order ID
+      const uniqueOrderId = orderStorage.generateOrderId();
+      
       const orderData: OrderData = {
         customerInfo,
         items: cartItems,
@@ -271,6 +277,7 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
 
       // Log complete order details for testing
       console.log("=== ORDER SUBMISSION DATA ===");
+      console.log("Unique Order ID:", uniqueOrderId);
       console.log("Customer Info:", {
         name: `${customerInfo.firstName} ${customerInfo.lastName}`,
         phone: customerInfo.phone,
@@ -302,13 +309,26 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
         status: "confirmed",
         paymentId: paymentTransactionId,
         estimatedTime: 10,
+        uniqueOrderId: uniqueOrderId, // Add unique order ID to database
       };
 
       const response = await apiRequest("POST", "/api/orders", finalOrderData);
       const savedOrder = await response.json();
 
+      // Save order tracking info to localStorage
+      const orderTrackingInfo = {
+        orderId: uniqueOrderId,
+        orderNumber: savedOrder.id,
+        customerName: `${customerInfo.firstName} ${customerInfo.lastName}`,
+        timestamp: new Date().toISOString(),
+        status: "confirmed"
+      };
+      
+      orderStorage.saveOrderInfo(orderTrackingInfo);
+
       console.log("=== ORDER SUCCESS ===");
       console.log("Order ID:", savedOrder.id);
+      console.log("Unique ID:", uniqueOrderId);
       console.log("Status: CONFIRMED");
       console.log("Database: Backend Storage");
       console.log("Full Order:", savedOrder);
@@ -316,11 +336,16 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
 
       toast({
         title: "Order Placed Successfully!",
-        description: `Your order has been confirmed. Order ID: ${savedOrder.id}`,
+        description: `Your order has been confirmed. Order ID: ${uniqueOrderId}`,
         variant: "success",
       });
 
-      onOrderComplete(savedOrder.id.toString());
+      // Automatically redirect to order tracking page with the unique ID
+      setTimeout(() => {
+        setLocation(`/order-tracking?id=${uniqueOrderId}`);
+      }, 2000); // 2 second delay to show success message
+
+      onOrderComplete(uniqueOrderId);
     } catch (error: any) {
       toast({
         title: "Order Failed",

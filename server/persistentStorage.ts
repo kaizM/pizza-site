@@ -180,7 +180,11 @@ export class PersistentStorage implements IStorage {
     };
     this.data.orders.push(order);
     this.saveData();
-    console.log(`Created order #${order.id} for ${order.customerInfo.firstName} ${order.customerInfo.lastName}`);
+    
+    const customerName = typeof order.customerInfo === 'object' 
+      ? `${order.customerInfo.firstName} ${order.customerInfo.lastName}`
+      : 'Customer';
+    console.log(`Created order #${order.id} (${order.uniqueOrderId}) for ${customerName}`);
     return order;
   }
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -9,6 +9,7 @@ import { Minus, Plus, Trash2, ShoppingCart, ArrowLeft, Edit3 } from "lucide-reac
 import { useCart } from "@/hooks/useCart";
 import { CartItem } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
+import { cartStorage } from "@/lib/cartStorage";
 
 export default function Cart() {
   const [, setLocation] = useLocation();

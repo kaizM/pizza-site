@@ -66,18 +66,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/orders/:id", async (req, res) => {
     try {
-      const orderId = parseInt(req.params.id);
-      if (isNaN(orderId)) {
-        return res.status(400).json({ message: "Invalid order ID" });
+      const idParam = req.params.id;
+      let order;
+
+      // Check if it's a unique order ID (starts with "LE") or numeric ID
+      if (idParam.startsWith('LE')) {
+        // Search by unique order ID
+        const orders = await storage.getAllOrders();
+        order = orders.find(o => o.uniqueOrderId === idParam);
+      } else {
+        // Search by numeric ID
+        const orderId = parseInt(idParam);
+        if (isNaN(orderId)) {
+          return res.status(400).json({ message: "Invalid order ID" });
+        }
+        order = await storage.getOrder(orderId);
       }
       
-      const order = await storage.getOrder(orderId);
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
       }
+
+      // Parse customer info and items if they're JSON strings
+      const response = {
+        ...order,
+        customerName: typeof order.customerInfo === 'string' 
+          ? JSON.parse(order.customerInfo).firstName + ' ' + JSON.parse(order.customerInfo).lastName
+          : order.customerInfo.firstName + ' ' + order.customerInfo.lastName,
+        customerPhone: typeof order.customerInfo === 'string'
+          ? JSON.parse(order.customerInfo).phone
+          : order.customerInfo.phone,
+        customerEmail: typeof order.customerInfo === 'string'
+          ? JSON.parse(order.customerInfo).email
+          : order.customerInfo.email,
+      };
       
-      res.json(order);
+      res.json(response);
     } catch (error) {
+      console.error('Order lookup error:', error);
       res.status(500).json({ message: "Failed to fetch order" });
     }
   });
