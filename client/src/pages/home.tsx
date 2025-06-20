@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link, useLocation } from "wouter";
-import { Phone, MapPin, Clock } from "lucide-react";
+import { Phone, MapPin, Clock, ShoppingCart } from "lucide-react";
 import { CartItem } from "@shared/schema";
 import { generateOrderId } from "@/lib/utils";
 import { useCart } from "@/hooks/useCart";
@@ -13,7 +13,7 @@ import PhoneButton from "@/components/PhoneButton";
 export default function Home() {
   const [hoveredPizza, setHoveredPizza] = useState<string | null>(null);
   const [, setLocation] = useLocation();
-  const { addToCart } = useCart();
+  const { addToCart, getTotalItems } = useCart();
   const { toast } = useToast();
 
   const orderPremadePizza = (pizza: typeof pizzas[0]) => {
@@ -36,6 +36,7 @@ export default function Home() {
       variant: "default",
     });
     
+    // Navigate to cart to show the added item
     setLocation('/cart');
   };
 
@@ -102,8 +103,22 @@ export default function Home() {
               </Link>
             </nav>
             
-            {/* Phone Button - Always Visible */}
-            <div className="flex items-center">
+            {/* Action Buttons */}
+            <div className="flex items-center space-x-2">
+              {/* Cart Button - Only show if items in cart */}
+              {getTotalItems() > 0 && (
+                <Link href="/cart">
+                  <Button 
+                    className="bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-2 sm:px-4 py-2 rounded-md shadow-lg transition-all text-sm sm:text-base"
+                  >
+                    <ShoppingCart className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                    <span className="hidden xs:inline">Cart ({getTotalItems()})</span>
+                    <span className="xs:hidden">({getTotalItems()})</span>
+                  </Button>
+                </Link>
+              )}
+              
+              {/* Phone Button */}
               <a 
                 href="tel:+1-361-403-0083"
                 className="bg-red-600 hover:bg-red-700 text-white flex items-center px-2 sm:px-4 py-2 rounded-md font-medium transition-colors no-underline text-sm sm:text-base"
