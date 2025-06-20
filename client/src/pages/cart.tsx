@@ -17,8 +17,7 @@ export default function Cart() {
   const [editingItem, setEditingItem] = useState<CartItem | null>(null);
 
   // Available options for customization
-  const sizes = ["Small", "Medium", "Large", "Extra Large"];
-  const crusts = ["Original", "Thin", "Thick", "Stuffed Crust"];
+  const crusts = ["Original", "Thin"];
   const availableToppings = [
     "Pepperoni", "Italian Sausage", "Bacon", "Beef", "Ham",
     "Bell Peppers", "Onions", "Mushrooms", "Black Olives", 
@@ -32,14 +31,10 @@ export default function Cart() {
   const handleSaveEdit = () => {
     if (!editingItem) return;
 
-    // Calculate new price based on toppings
-    const basePrice = 11.99;
-    const toppingPrice = 0.75;
-    const newPrice = basePrice + (editingItem.toppings.length * toppingPrice);
-
+    // Keep price at $11.99 regardless of toppings
     const updatedItem = {
       ...editingItem,
-      price: newPrice
+      price: 11.99
     };
 
     // Remove old item and add updated one
@@ -163,24 +158,6 @@ export default function Cart() {
                           </DialogHeader>
                           {editingItem && (
                             <div className="space-y-6">
-                              {/* Size Selection */}
-                              <div>
-                                <label className="text-sm font-medium mb-2 block">Size</label>
-                                <Select
-                                  value={editingItem.size}
-                                  onValueChange={(value) => setEditingItem({...editingItem, size: value})}
-                                >
-                                  <SelectTrigger>
-                                    <SelectValue />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {sizes.map(size => (
-                                      <SelectItem key={size} value={size}>{size}</SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              </div>
-
                               {/* Crust Selection */}
                               <div>
                                 <label className="text-sm font-medium mb-2 block">Crust</label>
@@ -202,7 +179,7 @@ export default function Cart() {
                               {/* Toppings Selection */}
                               <div>
                                 <label className="text-sm font-medium mb-3 block">
-                                  Toppings (+$0.75 each)
+                                  Select Your Toppings
                                 </label>
                                 <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto">
                                   {availableToppings.map(topping => (
@@ -225,10 +202,10 @@ export default function Cart() {
                               {/* Price Preview */}
                               <div className="bg-gray-50 p-3 rounded">
                                 <p className="text-sm text-gray-600">
-                                  Price: $11.99 + {editingItem.toppings.length} toppings × $0.75
+                                  All pizzas are one price with unlimited toppings
                                 </p>
                                 <p className="font-bold">
-                                  Total: ${(11.99 + editingItem.toppings.length * 0.75).toFixed(2)}
+                                  Total: $11.99
                                 </p>
                               </div>
 
