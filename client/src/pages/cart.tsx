@@ -18,10 +18,18 @@ export default function Cart() {
 
   // Available options for customization
   const crusts = ["Original", "Thin"];
-  const availableToppings = [
+  const regularToppings = [
     "Pepperoni", "Italian Sausage", "Bacon", "Beef", "Ham",
     "Bell Peppers", "Onions", "Mushrooms", "Black Olives", 
-    "Banana Peppers", "Jalapeños", "Tomatoes", "Extra Cheese"
+    "Banana Peppers", "Jalapeños", "Tomatoes"
+  ];
+  const extraToppings = [
+    { name: "Extra Cheese", price: 1.50 },
+    { name: "Double Pepperoni", price: 2.00 },
+    { name: "Extra Bacon", price: 2.00 },
+    { name: "Premium Sausage", price: 1.75 },
+    { name: "Fresh Mushrooms", price: 1.25 },
+    { name: "Stuffed Crust", price: 3.00 }
   ];
 
   const handleEditItem = (item: CartItem) => {
@@ -31,10 +39,18 @@ export default function Cart() {
   const handleSaveEdit = () => {
     if (!editingItem) return;
 
-    // Keep price at $11.99 regardless of toppings
+    // Calculate price: base $11.99 + extra toppings
+    let totalPrice = 11.99;
+    editingItem.toppings.forEach(topping => {
+      const extraTopping = extraToppings.find(et => et.name === topping);
+      if (extraTopping) {
+        totalPrice += extraTopping.price;
+      }
+    });
+
     const updatedItem = {
       ...editingItem,
-      price: 11.99
+      price: totalPrice
     };
 
     // Remove old item and add updated one
@@ -176,13 +192,13 @@ export default function Cart() {
                                 </Select>
                               </div>
 
-                              {/* Toppings Selection */}
+                              {/* Regular Toppings Selection */}
                               <div>
                                 <label className="text-sm font-medium mb-3 block">
-                                  Select Your Toppings
+                                  Regular Toppings (Free)
                                 </label>
-                                <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto">
-                                  {availableToppings.map(topping => (
+                                <div className="grid grid-cols-2 gap-2 max-h-32 overflow-y-auto border rounded p-2">
+                                  {regularToppings.map(topping => (
                                     <div key={topping} className="flex items-center space-x-2">
                                       <Checkbox
                                         id={topping}
@@ -199,14 +215,62 @@ export default function Cart() {
                                 </div>
                               </div>
 
+                              {/* Extra Toppings Selection */}
+                              <div>
+                                <label className="text-sm font-medium mb-3 block">
+                                  Extra Toppings (Additional Cost)
+                                </label>
+                                <div className="space-y-2 max-h-32 overflow-y-auto border rounded p-2">
+                                  {extraToppings.map(topping => (
+                                    <div key={topping.name} className="flex items-center justify-between">
+                                      <div className="flex items-center space-x-2">
+                                        <Checkbox
+                                          id={topping.name}
+                                          checked={editingItem.toppings.includes(topping.name)}
+                                          onCheckedChange={(checked) => 
+                                            handleToppingChange(topping.name, checked as boolean)
+                                          }
+                                        />
+                                        <label htmlFor={topping.name} className="text-sm">
+                                          {topping.name}
+                                        </label>
+                                      </div>
+                                      <span className="text-sm font-medium text-green-600">
+                                        +${topping.price.toFixed(2)}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+
                               {/* Price Preview */}
                               <div className="bg-gray-50 p-3 rounded">
-                                <p className="text-sm text-gray-600">
-                                  All pizzas are one price with unlimited toppings
-                                </p>
-                                <p className="font-bold">
-                                  Total: $11.99
-                                </p>
+                                <div className="space-y-1">
+                                  <p className="text-sm text-gray-600">Base Pizza: $11.99</p>
+                                  {editingItem.toppings.some(t => extraToppings.find(et => et.name === t)) && (
+                                    <div className="text-sm text-gray-600">
+                                      <p>Extra Toppings:</p>
+                                      {editingItem.toppings.map(topping => {
+                                        const extra = extraToppings.find(et => et.name === topping);
+                                        return extra ? (
+                                          <p key={topping} className="ml-2">
+                                            {extra.name}: +${extra.price.toFixed(2)}
+                                          </p>
+                                        ) : null;
+                                      })}
+                                    </div>
+                                  )}
+                                  <p className="font-bold text-lg">
+                                    Total: ${(() => {
+                                      let total = 11.99;
+                                      editingItem.toppings.forEach(topping => {
+                                        const extra = extraToppings.find(et => et.name === topping);
+                                        if (extra) total += extra.price;
+                                      });
+                                      return total.toFixed(2);
+                                    })()}
+                                  </p>
+                                </div>
                               </div>
 
                               {/* Save Button */}
