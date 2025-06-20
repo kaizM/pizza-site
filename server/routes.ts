@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import rateLimit from "express-rate-limit";
 import { storage } from "./storage";
 import { firebaseSync } from "./firebaseSync";
+import { loadFirebaseConfig } from "./config-loader.js";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Rate limiting
@@ -27,6 +28,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Health check endpoint
   app.get("/api/health", (req, res) => {
     res.json({ status: "ok", timestamp: new Date().toISOString() });
+  });
+
+  // Firebase config endpoint
+  app.get("/api/firebase-config", (req, res) => {
+    try {
+      const config = loadFirebaseConfig();
+      // Only send safe config data to client
+      res.json({
+        authDomain: config.authDomain,
+        projectId: config.projectId,
+        storageBucket: config.storageBucket,
+        appId: config.appId
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Firebase configuration not available" });
+    }
   });
 
   // Users endpoints
