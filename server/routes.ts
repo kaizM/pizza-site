@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import rateLimit from "express-rate-limit";
 import { storage } from "./storage";
+import { firebaseSync } from "./firebaseSync";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Rate limiting
@@ -109,6 +110,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const order = await storage.createOrder(sanitizedOrder);
 
+      // Sync order to Firebase for real-time updates
+      await firebaseSync.syncOrderToFirebase(order);
+
       // Create or update customer profile for trust tracking
       if (sanitizedOrder.customerInfo && sanitizedOrder.customerInfo.phone) {
         const { firstName, lastName, phone, email } = sanitizedOrder.customerInfo;
@@ -155,6 +159,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
       }
+
+      // Sync order updates to Firebase for real-time mobile app updates
+      await firebaseSync.updateOrderStatusInFirebase(orderId, req.body);
 
       // Update customer trust score based on order status changes
       if (previousOrder && order.customerInfo && (order.customerInfo as any).phone) {
