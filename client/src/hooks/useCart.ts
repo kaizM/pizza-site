@@ -1,24 +1,22 @@
 import { useState, useEffect } from "react";
 import { CartItem } from "@shared/schema";
 
-const CART_STORAGE_KEY = "huntbrothers_cart";
+const CART_STORAGE_KEY = "pizza-cart-v2";
 
 export function useCart() {
+  // Initialize state with localStorage data if available
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
-    // Initialize from localStorage immediately to prevent empty state flash
-    if (typeof window !== 'undefined') {
-      try {
-        const savedCart = localStorage.getItem(CART_STORAGE_KEY);
-        return savedCart ? JSON.parse(savedCart) : [];
-      } catch (error) {
-        console.error("Error loading cart from localStorage:", error);
-        return [];
-      }
+    if (typeof window === 'undefined') return [];
+    
+    try {
+      const saved = localStorage.getItem(CART_STORAGE_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
     }
-    return [];
   });
 
-  // Save cart to localStorage whenever it changes
+  // Auto-save to localStorage when cart changes
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
@@ -26,7 +24,7 @@ export function useCart() {
   }, [cartItems]);
 
   const addToCart = (item: CartItem) => {
-    setCartItems(prev => [...prev, item]);
+    setCartItems(current => [...current, item]);
   };
 
   const updateQuantity = (id: string, quantity: number) => {

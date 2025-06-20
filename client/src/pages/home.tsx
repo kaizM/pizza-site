@@ -17,29 +17,25 @@ export default function Home() {
   const { toast } = useToast();
 
   const orderPremadePizza = (pizza: typeof pizzas[0]) => {
-    // Featured pizzas are $11.99 with all default toppings included
     const cartItem: CartItem = {
       id: generateOrderId(),
       name: pizza.name,
       size: pizza.size,
       crust: pizza.crust,
-      toppings: [...pizza.toppings], // Include all preset toppings
-      price: 11.99, // Fixed price as requested
+      toppings: [...pizza.toppings],
+      price: 11.99,
       quantity: 1,
       imageUrl: pizza.image,
     };
 
-    // Add to cart using shared cart system
     addToCart(cartItem);
     
-    // Show success feedback
     toast({
       title: "Pizza Added to Cart!",
       description: `${pizza.name} with all toppings added for $11.99`,
       variant: "default",
     });
     
-    // Navigate to cart to show the added item
     setLocation('/cart');
   };
 
