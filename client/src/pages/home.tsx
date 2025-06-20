@@ -17,43 +17,49 @@ export default function Home() {
   const { toast } = useToast();
 
   const orderPremadePizza = (pizza: typeof pizzas[0]) => {
-    // Calculate proper price including toppings
-    const basePizzaPrice = 11.99;
-    const toppingPrice = 0.75; // Standard topping price
-    const totalToppingsPrice = pizza.toppings.length * toppingPrice;
-    const finalPrice = basePizzaPrice + totalToppingsPrice;
-
-    // Create cart item from premade pizza with all preset configurations
+    console.log("Order button clicked for:", pizza.name);
+    
+    // Featured pizzas are $11.99 with all default toppings included
     const cartItem: CartItem = {
       id: generateOrderId(),
       name: pizza.name,
       size: pizza.size,
       crust: pizza.crust,
-      toppings: [...pizza.toppings], // Ensure toppings array is copied
-      price: finalPrice,
+      toppings: [...pizza.toppings], // Include all preset toppings
+      price: 11.99, // Fixed price as requested
       quantity: 1,
       imageUrl: pizza.image,
     };
 
-    // Add to cart using shared cart system
-    addToCart(cartItem);
-    
-    // Show success feedback
-    toast({
-      title: "Pizza Added to Cart!",
-      description: `${pizza.name} with ${pizza.toppings.length} toppings added`,
-      variant: "default",
-    });
-    
-    // Navigate to cart to show the added item
-    setLocation('/cart');
-  };
+    console.log("Creating cart item:", cartItem);
+    console.log("Cart addToCart function:", typeof addToCart);
 
-  // Calculate accurate pricing for featured pizzas
-  const calculatePizzaPrice = (toppings: string[]) => {
-    const basePizzaPrice = 11.99;
-    const toppingPrice = 0.75;
-    return basePizzaPrice + (toppings.length * toppingPrice);
+    try {
+      // Add to cart using shared cart system
+      addToCart(cartItem);
+      console.log("Successfully added to cart");
+      
+      // Show success feedback
+      toast({
+        title: "Pizza Added to Cart!",
+        description: `${pizza.name} with all toppings added for $11.99`,
+        variant: "default",
+      });
+      
+      // Small delay before navigation to ensure cart is updated
+      setTimeout(() => {
+        console.log("Navigating to cart");
+        setLocation('/cart');
+      }, 100);
+      
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add pizza to cart",
+        variant: "destructive",
+      });
+    }
   };
 
   const pizzas = [
@@ -61,31 +67,31 @@ export default function Home() {
       id: "lotsa-meat",
       name: "Lotsa Meat",
       description: "Loaded with pepperoni, sausage, bacon, and beef — for the ultimate meat lover.",
+      price: 11.99,
+      image: "/lotsa-meat-pizza.png",
       toppings: ["Pepperoni", "Italian Sausage", "Bacon", "Beef"],
       size: "Large",
       crust: "Original",
-      image: "/lotsa-meat-pizza.png",
-      get price() { return calculatePizzaPrice(this.toppings); }
     },
     {
       id: "veggie-delight", 
       name: "Veggie Delight",
       description: "Bell peppers, onions, mushrooms, black olives, banana peppers, jalapeños. No meat.",
+      price: 11.99,
+      image: "/veggie-delight-pizza.jpeg",
       toppings: ["Bell Peppers", "Onions", "Mushrooms", "Black Olives", "Banana Peppers", "Jalapeños"],
       size: "Large",
       crust: "Original",
-      image: "/veggie-delight-pizza.jpeg",
-      get price() { return calculatePizzaPrice(this.toppings); }
     },
     {
       id: "loaded",
       name: "Loaded", 
       description: "Combo of meats & veggies: pepperoni, sausage, mushrooms, bell peppers, onions.",
+      price: 11.99,
+      image: "/loaded-pizza.jpeg",
       toppings: ["Pepperoni", "Italian Sausage", "Mushrooms", "Bell Peppers", "Onions"],
       size: "Large",
       crust: "Original",
-      image: "/loaded-pizza.jpeg",
-      get price() { return calculatePizzaPrice(this.toppings); }
     },
   ];
 
