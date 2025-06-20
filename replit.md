@@ -123,8 +123,9 @@ Preferred communication style: Simple, everyday language.
 - Security implementation: Client/server separation with proper authentication layers
 - Mobile app security: Testing credentials implemented for App Store deployment
 - Featured pizza ordering: Fixed "Order This Pizza" functionality with preset toppings at $11.99
-- Cart customization: Added inline editing with size, crust, and toppings selection
+- Cart customization: Added inline editing with crust and toppings selection (removed size options)
 - UI cleanup: Removed unnecessary "Add More Items" and "Custom Pizza" buttons from checkout
+- Pricing system: Updated cart to use correct topping prices (meat +$1.50, veggie +$1.00, double cheese +$2.19)
 
 ## Changelog
 

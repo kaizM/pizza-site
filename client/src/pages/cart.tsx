@@ -18,19 +18,36 @@ export default function Cart() {
 
   // Available options for customization
   const crusts = ["Original", "Thin"];
+  
+  // Regular toppings included with pizza
   const regularToppings = [
-    "Pepperoni", "Italian Sausage", "Bacon", "Beef", "Ham",
+    "Pepperoni", "Italian Sausage", "Beef", "Bacon",
     "Bell Peppers", "Onions", "Mushrooms", "Black Olives", 
-    "Banana Peppers", "Jalapeños", "Tomatoes"
+    "Banana Peppers", "Jalapeños"
   ];
-  const extraToppings = [
-    { name: "Extra Cheese", price: 1.50 },
-    { name: "Double Pepperoni", price: 2.00 },
-    { name: "Extra Bacon", price: 2.00 },
-    { name: "Premium Sausage", price: 1.75 },
-    { name: "Fresh Mushrooms", price: 1.25 },
-    { name: "Stuffed Crust", price: 3.00 }
+  
+  // Extra toppings with proper pricing
+  const meatToppings = [
+    { name: "Extra Pepperoni", price: 1.50 },
+    { name: "Extra Italian Sausage", price: 1.50 },
+    { name: "Extra Beef", price: 1.50 },
+    { name: "Extra Bacon", price: 1.50 }
   ];
+  
+  const veggieToppings = [
+    { name: "Extra Bell Peppers", price: 1.00 },
+    { name: "Extra Onions", price: 1.00 },
+    { name: "Extra Mushrooms", price: 1.00 },
+    { name: "Extra Black Olives", price: 1.00 },
+    { name: "Extra Banana Peppers", price: 1.00 },
+    { name: "Extra Jalapeños", price: 1.00 }
+  ];
+  
+  const specialToppings = [
+    { name: "Double Cheese", price: 2.19 }
+  ];
+  
+  const extraToppings = [...meatToppings, ...veggieToppings, ...specialToppings];
 
   const handleEditItem = (item: CartItem) => {
     setEditingItem({ ...item });
@@ -215,13 +232,41 @@ export default function Cart() {
                                 </div>
                               </div>
 
-                              {/* Extra Toppings Selection */}
+                              {/* Extra Meat Toppings */}
                               <div>
                                 <label className="text-sm font-medium mb-3 block">
-                                  Extra Toppings (Additional Cost)
+                                  Extra Meat Toppings (+$1.50 each)
                                 </label>
-                                <div className="space-y-2 max-h-32 overflow-y-auto border rounded p-2">
-                                  {extraToppings.map(topping => (
+                                <div className="space-y-2 max-h-24 overflow-y-auto border rounded p-2">
+                                  {meatToppings.map(topping => (
+                                    <div key={topping.name} className="flex items-center justify-between">
+                                      <div className="flex items-center space-x-2">
+                                        <Checkbox
+                                          id={topping.name}
+                                          checked={editingItem.toppings.includes(topping.name)}
+                                          onCheckedChange={(checked) => 
+                                            handleToppingChange(topping.name, checked as boolean)
+                                          }
+                                        />
+                                        <label htmlFor={topping.name} className="text-sm">
+                                          {topping.name}
+                                        </label>
+                                      </div>
+                                      <span className="text-sm font-medium text-red-600">
+                                        +${topping.price.toFixed(2)}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Extra Veggie Toppings */}
+                              <div>
+                                <label className="text-sm font-medium mb-3 block">
+                                  Extra Veggie Toppings (+$1.00 each)
+                                </label>
+                                <div className="space-y-2 max-h-24 overflow-y-auto border rounded p-2">
+                                  {veggieToppings.map(topping => (
                                     <div key={topping.name} className="flex items-center justify-between">
                                       <div className="flex items-center space-x-2">
                                         <Checkbox
@@ -236,6 +281,34 @@ export default function Cart() {
                                         </label>
                                       </div>
                                       <span className="text-sm font-medium text-green-600">
+                                        +${topping.price.toFixed(2)}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Special Toppings */}
+                              <div>
+                                <label className="text-sm font-medium mb-3 block">
+                                  Special Toppings
+                                </label>
+                                <div className="space-y-2 border rounded p-2">
+                                  {specialToppings.map(topping => (
+                                    <div key={topping.name} className="flex items-center justify-between">
+                                      <div className="flex items-center space-x-2">
+                                        <Checkbox
+                                          id={topping.name}
+                                          checked={editingItem.toppings.includes(topping.name)}
+                                          onCheckedChange={(checked) => 
+                                            handleToppingChange(topping.name, checked as boolean)
+                                          }
+                                        />
+                                        <label htmlFor={topping.name} className="text-sm">
+                                          {topping.name}
+                                        </label>
+                                      </div>
+                                      <span className="text-sm font-medium text-blue-600">
                                         +${topping.price.toFixed(2)}
                                       </span>
                                     </div>
