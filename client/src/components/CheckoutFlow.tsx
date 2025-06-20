@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,7 @@ import PaymentForm from "@/components/PaymentForm";
 import { apiRequest } from "@/lib/queryClient";
 import { orderStorage } from "@/lib/orderStorage";
 import { useLocation } from "wouter";
+import { FormPersistence } from "@/lib/formPersistence";
 
 interface CheckoutFlowProps {
   cartItems: CartItem[];
@@ -42,6 +43,22 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
   const { toast } = useToast();
   const { user } = useAuth();
   const [, setLocation] = useLocation();
+
+  // Load saved customer info on component mount
+  useEffect(() => {
+    const savedData = FormPersistence.getFormData('checkout-customer-info');
+    if (savedData.firstName || savedData.lastName || savedData.phone || savedData.email) {
+      setCustomerInfo({
+        firstName: savedData.firstName || "",
+        lastName: savedData.lastName || "",
+        phone: savedData.phone || "",
+        email: savedData.email || "",
+      });
+    }
+    if (savedData.specialInstructions) {
+      setSpecialInstructions(savedData.specialInstructions);
+    }
+  }, []);
 
   const orderType = "pickup";
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -95,6 +112,27 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
     // Check if name contains only letters, spaces, hyphens, and apostrophes
     const nameRegex = /^[a-zA-Z\s\-']+$/;
     return nameRegex.test(name) && name.trim().length >= 2;
+  };
+
+  // Auto-save customer info when it changes
+  const handleCustomerInfoChange = (field: keyof CustomerInfo, value: string) => {
+    const updatedInfo = { ...customerInfo, [field]: value };
+    setCustomerInfo(updatedInfo);
+    
+    // Save to localStorage automatically
+    FormPersistence.saveFormData('checkout-customer-info', {
+      ...updatedInfo,
+      specialInstructions
+    });
+  };
+
+  // Auto-save special instructions
+  const handleSpecialInstructionsChange = (value: string) => {
+    setSpecialInstructions(value);
+    FormPersistence.saveFormData('checkout-customer-info', {
+      ...customerInfo,
+      specialInstructions: value
+    });
   };
 
   const handleCustomerInfoSubmit = (e: React.FormEvent) => {
@@ -424,7 +462,7 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
                     type="text"
                     placeholder="John"
                     value={customerInfo.firstName}
-                    onChange={(e) => setCustomerInfo(prev => ({ ...prev, firstName: e.target.value }))}
+                    onChange={(e) => handleCustomerInfoChange('firstName', e.target.value)}
                     required
                   />
                 </div>
@@ -435,7 +473,7 @@ export default function CheckoutFlow({ cartItems, onOrderComplete }: CheckoutFlo
                     type="text"
                     placeholder="Doe"
                     value={customerInfo.lastName}
-                    onChange={(e) => setCustomerInfo(prev => ({ ...prev, lastName: e.target.value }))}
+                    onChange={(e) => handleCustomerInfoChange('lastName', e.target.value)}
                     required
                   />
                 </div>
