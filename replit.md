@@ -122,6 +122,9 @@ Preferred communication style: Simple, everyday language.
 - Admin controls: Full dashboard with sales viewing, price editing, menu management
 - Security implementation: Client/server separation with proper authentication layers
 - Mobile app security: Testing credentials implemented for App Store deployment
+- Featured pizza ordering: Fixed "Order This Pizza" functionality with preset toppings at $11.99
+- Cart customization: Added inline editing with size, crust, and toppings selection
+- UI cleanup: Removed unnecessary "Add More Items" and "Custom Pizza" buttons from checkout
 
 ## Changelog
 

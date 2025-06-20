@@ -320,23 +320,6 @@ export default function Cart() {
                   >
                     Proceed to Checkout
                   </Button>
-                  
-                  <div className="grid grid-cols-2 gap-2">
-                    <Button 
-                      variant="outline"
-                      onClick={() => setLocation('/menu')}
-                      className="text-sm"
-                    >
-                      Add More Items
-                    </Button>
-                    <Button 
-                      variant="outline"
-                      onClick={() => setLocation('/custom-pizza')}
-                      className="text-sm"
-                    >
-                      Custom Pizza
-                    </Button>
-                  </div>
                 </div>
 
                 {/* Pickup Information */}
