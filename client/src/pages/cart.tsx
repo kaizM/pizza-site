@@ -1,13 +1,72 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Link, useLocation } from "wouter";
-import { Minus, Plus, Trash2, ShoppingCart, ArrowLeft } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingCart, ArrowLeft, Edit3 } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
+import { CartItem } from "@shared/schema";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Cart() {
   const [, setLocation] = useLocation();
-  const { cartItems, updateQuantity, removeItem, clearCart, getSubtotal, getTotalItems } = useCart();
+  const { cartItems, updateQuantity, removeItem, clearCart, getSubtotal, getTotalItems, addToCart } = useCart();
+  const { toast } = useToast();
+  const [editingItem, setEditingItem] = useState<CartItem | null>(null);
+
+  // Available options for customization
+  const sizes = ["Small", "Medium", "Large", "Extra Large"];
+  const crusts = ["Original", "Thin", "Thick", "Stuffed Crust"];
+  const availableToppings = [
+    "Pepperoni", "Italian Sausage", "Bacon", "Beef", "Ham",
+    "Bell Peppers", "Onions", "Mushrooms", "Black Olives", 
+    "Banana Peppers", "Jalapeños", "Tomatoes", "Extra Cheese"
+  ];
+
+  const handleEditItem = (item: CartItem) => {
+    setEditingItem({ ...item });
+  };
+
+  const handleSaveEdit = () => {
+    if (!editingItem) return;
+
+    // Calculate new price based on toppings
+    const basePrice = 11.99;
+    const toppingPrice = 0.75;
+    const newPrice = basePrice + (editingItem.toppings.length * toppingPrice);
+
+    const updatedItem = {
+      ...editingItem,
+      price: newPrice
+    };
+
+    // Remove old item and add updated one
+    removeItem(editingItem.id);
+    addToCart(updatedItem);
+
+    toast({
+      title: "Pizza Updated!",
+      description: "Your pizza customization has been saved",
+      variant: "default",
+    });
+
+    setEditingItem(null);
+  };
+
+  const handleToppingChange = (topping: string, checked: boolean) => {
+    if (!editingItem) return;
+
+    const newToppings = checked
+      ? [...editingItem.toppings, topping]
+      : editingItem.toppings.filter(t => t !== topping);
+
+    setEditingItem({
+      ...editingItem,
+      toppings: newToppings
+    });
+  };
 
   const subtotal = getSubtotal();
   const tax = subtotal * 0.0825;
@@ -85,6 +144,103 @@ export default function Cart() {
                     </div>
 
                     <div className="flex items-center gap-4">
+                      {/* Edit Button */}
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleEditItem(item)}
+                            className="text-blue-600 hover:bg-blue-50"
+                          >
+                            <Edit3 className="h-4 w-4 mr-1" />
+                            Customize
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-lg">
+                          <DialogHeader>
+                            <DialogTitle>Customize {editingItem?.name}</DialogTitle>
+                          </DialogHeader>
+                          {editingItem && (
+                            <div className="space-y-6">
+                              {/* Size Selection */}
+                              <div>
+                                <label className="text-sm font-medium mb-2 block">Size</label>
+                                <Select
+                                  value={editingItem.size}
+                                  onValueChange={(value) => setEditingItem({...editingItem, size: value})}
+                                >
+                                  <SelectTrigger>
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {sizes.map(size => (
+                                      <SelectItem key={size} value={size}>{size}</SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </div>
+
+                              {/* Crust Selection */}
+                              <div>
+                                <label className="text-sm font-medium mb-2 block">Crust</label>
+                                <Select
+                                  value={editingItem.crust}
+                                  onValueChange={(value) => setEditingItem({...editingItem, crust: value})}
+                                >
+                                  <SelectTrigger>
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {crusts.map(crust => (
+                                      <SelectItem key={crust} value={crust}>{crust}</SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </div>
+
+                              {/* Toppings Selection */}
+                              <div>
+                                <label className="text-sm font-medium mb-3 block">
+                                  Toppings (+$0.75 each)
+                                </label>
+                                <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto">
+                                  {availableToppings.map(topping => (
+                                    <div key={topping} className="flex items-center space-x-2">
+                                      <Checkbox
+                                        id={topping}
+                                        checked={editingItem.toppings.includes(topping)}
+                                        onCheckedChange={(checked) => 
+                                          handleToppingChange(topping, checked as boolean)
+                                        }
+                                      />
+                                      <label htmlFor={topping} className="text-sm">
+                                        {topping}
+                                      </label>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Price Preview */}
+                              <div className="bg-gray-50 p-3 rounded">
+                                <p className="text-sm text-gray-600">
+                                  Price: $11.99 + {editingItem.toppings.length} toppings × $0.75
+                                </p>
+                                <p className="font-bold">
+                                  Total: ${(11.99 + editingItem.toppings.length * 0.75).toFixed(2)}
+                                </p>
+                              </div>
+
+                              {/* Save Button */}
+                              <Button onClick={handleSaveEdit} className="w-full">
+                                Save Changes
+                              </Button>
+                            </div>
+                          )}
+                        </DialogContent>
+                      </Dialog>
+
                       {/* Quantity Controls */}
                       <div className="flex items-center gap-2">
                         <Button

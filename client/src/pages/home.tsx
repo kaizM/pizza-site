@@ -17,8 +17,6 @@ export default function Home() {
   const { toast } = useToast();
 
   const orderPremadePizza = (pizza: typeof pizzas[0]) => {
-    console.log("Order button clicked for:", pizza.name);
-    
     // Featured pizzas are $11.99 with all default toppings included
     const cartItem: CartItem = {
       id: generateOrderId(),
@@ -31,35 +29,18 @@ export default function Home() {
       imageUrl: pizza.image,
     };
 
-    console.log("Creating cart item:", cartItem);
-    console.log("Cart addToCart function:", typeof addToCart);
-
-    try {
-      // Add to cart using shared cart system
-      addToCart(cartItem);
-      console.log("Successfully added to cart");
-      
-      // Show success feedback
-      toast({
-        title: "Pizza Added to Cart!",
-        description: `${pizza.name} with all toppings added for $11.99`,
-        variant: "default",
-      });
-      
-      // Small delay before navigation to ensure cart is updated
-      setTimeout(() => {
-        console.log("Navigating to cart");
-        setLocation('/cart');
-      }, 100);
-      
-    } catch (error) {
-      console.error("Error adding to cart:", error);
-      toast({
-        title: "Error",
-        description: "Failed to add pizza to cart",
-        variant: "destructive",
-      });
-    }
+    // Add to cart using shared cart system
+    addToCart(cartItem);
+    
+    // Show success feedback
+    toast({
+      title: "Pizza Added to Cart!",
+      description: `${pizza.name} with all toppings added for $11.99`,
+      variant: "default",
+    });
+    
+    // Navigate to cart to show the added item
+    setLocation('/cart');
   };
 
   const pizzas = [
