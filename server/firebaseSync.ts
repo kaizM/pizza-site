@@ -16,7 +16,7 @@ class FirebaseSync {
         status: order.status,
         orderType: order.orderType,
         specialInstructions: order.specialInstructions || "",
-        estimatedTime: order.estimatedTime || 15,
+        estimatedTime: typeof order.estimatedTime === 'number' ? order.estimatedTime : 15,
         paymentId: order.paymentId || "",
         createdAt: order.createdAt ? new Date(order.createdAt) : serverTimestamp(),
         updatedAt: serverTimestamp()
@@ -38,8 +38,19 @@ class FirebaseSync {
   async updateOrderStatusInFirebase(orderId: number, updates: any) {
     try {
       const orderRef = doc(this.ordersCollection, `order_${orderId}`);
+      
+      // Clean up undefined values that Firebase doesn't accept
+      const cleanUpdates = Object.fromEntries(
+        Object.entries(updates).filter(([_, value]) => value !== undefined)
+      );
+      
+      // Ensure estimatedTime is a valid number
+      if ('estimatedTime' in cleanUpdates && typeof cleanUpdates.estimatedTime !== 'number') {
+        cleanUpdates.estimatedTime = 15;
+      }
+      
       await updateDoc(orderRef, {
-        ...updates,
+        ...cleanUpdates,
         updatedAt: serverTimestamp()
       });
       
