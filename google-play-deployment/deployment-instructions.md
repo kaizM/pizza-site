@@ -104,10 +104,13 @@
 
 ### Files Included in This Package
 
-- `build-android-app.sh` - Build script for creating the app
-- `app-store-listing.md` - Complete store listing content
+- `build-android-app.sh` - Build script with employee features included
+- `app-store-listing.md` - Complete store listing with employee portal features
 - `privacy-policy.html` - Required privacy policy
 - `deployment-instructions.md` - This instruction file
+- `employee-features-documentation.md` - Complete employee dashboard feature list
+- `mobile-app-configuration.json` - App configuration with all features enabled
+- `capacitor-config-android.ts` - Android-specific mobile settings
 
 ### Quick Start Checklist
 

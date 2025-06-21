@@ -12,12 +12,22 @@ Order fresh pizzas from Lemur Express 11 - Fast delivery & easy ordering
 
 Order delicious, fresh pizzas directly from your phone with our easy-to-use mobile app. Whether you're craving a classic Margherita or our signature Loaded pizza, we've got you covered!
 
-**🚀 Key Features:**
+**🚀 Customer Features:**
 • **Quick Ordering** - Browse our full menu and customize your perfect pizza
 • **Real-Time Tracking** - Watch your order progress from kitchen to pickup
 • **Easy Customization** - Choose your size, crust, and favorite toppings
 • **Pickup Only** - Fast and convenient pickup service
 • **Secure Payment** - Safe and reliable payment processing
+
+**👨‍🍳 Employee Management Portal:**
+• **Order Management** - Receive, confirm, and track all incoming orders
+• **Status Updates** - Change order status (confirmed → preparing → ready → completed)
+• **Time Control** - Set custom estimated preparation times for each order
+• **Order Modifications** - Handle substitutions and special requests
+• **Payment Processing** - Charge customer payments after order confirmation
+• **Cancellation Handling** - Cancel orders with reason tracking
+• **Real-Time Dashboard** - Live order monitoring with auto-refresh
+• **Customer Communication** - Send notifications for delays or changes
 
 **🍕 Our Signature Pizzas:**
 • **Lotsa Meat** - Loaded with pepperoni, sausage, ham, and bacon
