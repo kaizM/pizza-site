@@ -2,12 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
+// Use the configuration from firebase-config.json
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: `${import.meta.env.VITE_FIREBASE_PROJECT_ID}.firebaseapp.com`,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: `${import.meta.env.VITE_FIREBASE_PROJECT_ID}.firebasestorage.app`,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey: "AIzaSyABpaitDVPmbY_2exQ54fwJotnlGKHBRrw",
+  authDomain: "668057053914.firebaseapp.com",
+  projectId: "668057053914",
+  storageBucket: "668057053914.firebasestorage.app",
+  appId: "pizza-8ef42",
 };
 
 // Initialize Firebase
