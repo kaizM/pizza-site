@@ -4,9 +4,5 @@ plugins {
     id("org.jetbrains.kotlin.android") version "1.9.0" apply false
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
+// Repositories are now managed in settings.gradle.kts
+// This prevents the "prefer settings repositories" error

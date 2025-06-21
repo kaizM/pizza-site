@@ -117,6 +117,15 @@ The project includes Android build configuration:
 - Android build scripts in `/android` directory
 - PWA capabilities for web app installation
 
+### Android Build Commands
+```bash
+cd android
+./gradlew build          # Build the app
+./gradlew assembleDebug  # Build debug APK
+```
+
+**Note**: Android build configuration has been fixed to resolve Gradle repository conflicts.
+
 ## 🔄 Data Flow
 
 1. **Frontend**: React components handle user interactions
