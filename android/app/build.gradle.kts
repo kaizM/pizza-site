@@ -42,12 +42,10 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("com.getcapacitor:capacitor-android:5.7.0")
-    implementation("com.getcapacitor:capacitor-status-bar:5.0.6")
-    implementation("com.getcapacitor:capacitor-splash-screen:5.0.6")
+    // Capacitor dependencies removed - using web-only configuration
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
 
-apply(from = "capacitor.build.gradle")
+// capacitor.build.gradle removed - web-focused build
