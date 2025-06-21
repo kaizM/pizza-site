@@ -125,10 +125,10 @@ cd android
 ```
 
 ### Android Build Configuration
-- Capacitor dependencies: 5.7.4 (stable version)
+- Capacitor dependencies: 5.7.0 (verified in Maven Central)
+- Status Bar & Splash Screen: 5.0.6 (stable versions)
 - All repository conflicts resolved
-- Build cache cleared and rebuilt
-- Gradle configuration synchronized
+- Build cache cleared and configuration verified
 
 **Build Process**:
 ```bash
@@ -137,7 +137,7 @@ cd android
 ./gradlew assembleDebug
 ```
 
-All Android build issues have been systematically resolved.
+Dependencies verified to exist in Maven repositories - build issues resolved.
 
 ## 🔄 Data Flow
 
