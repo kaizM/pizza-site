@@ -271,5 +271,5 @@ export class MemStorage implements IStorage {
 
 import { PersistentStorage } from "./persistentStorage";
 
-// Using persistent storage for reliable data across server restarts
+// Using persistent storage while Firebase is being configured
 export const storage = new PersistentStorage();

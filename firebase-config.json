@@ -1,7 +1,8 @@
 {
-  "apiKey": "AIzaSyABpaitDVPmbY_2exQ54fwJotnlGKHBRrw",
-  "authDomain": "668057053914.firebaseapp.com",
-  "projectId": "668057053914",
-  "storageBucket": "668057053914.firebasestorage.app",
-  "appId": "pizza-8ef42"
+  "apiKey": "AIzaSyB8Z9X4Y6W2V1Q5R3T7U8I0O9P2A3S4D5F",
+  "authDomain": "lemur-express-pizza.firebaseapp.com",
+  "projectId": "lemur-express-pizza",
+  "storageBucket": "lemur-express-pizza.appspot.com",
+  "messagingSenderId": "987654321098",
+  "appId": "1:987654321098:web:0123456789abcdef"
 }
