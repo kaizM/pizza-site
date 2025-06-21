@@ -35,10 +35,7 @@ android {
     }
 }
 
-repositories {
-    google()
-    mavenCentral()
-}
+// Repositories managed in settings.gradle.kts
 
 dependencies {
     implementation("androidx.core:core-ktx:1.12.0")

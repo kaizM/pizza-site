@@ -124,7 +124,12 @@ cd android
 ./gradlew assembleDebug  # Build debug APK
 ```
 
-**Note**: Android build configuration has been fixed to resolve Gradle repository conflicts.
+**Note**: Android build configuration has been fixed to resolve all Gradle repository conflicts.
+
+### Android Build Fix Applied
+- Removed duplicate repository declarations from all Gradle files
+- Repository management centralized in settings.gradle.kts only
+- Resolves "prefer settings repositories" error
 
 ## 🔄 Data Flow
 
