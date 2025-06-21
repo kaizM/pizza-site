@@ -4,20 +4,22 @@ const config: CapacitorConfig = {
   appId: 'com.lemurexpress11.employee',
   appName: 'Lemur Express 11 Employee',
   webDir: 'dist',
+  server: {
+    url: 'http://localhost:5000',
+    cleartext: true
+  },
   plugins: {
     SplashScreen: {
-      launchShowDuration: 3000,
+      launchShowDuration: 2000,
       launchAutoHide: true,
-      backgroundColor: "#ffffffff",
+      backgroundColor: "#667eea",
       androidSplashResourceName: "splash",
       androidScaleType: "CENTER_CROP",
       showSpinner: true,
       androidSpinnerStyle: "large",
-      spinnerColor: "#999999",
+      spinnerColor: "#ffffff",
       splashFullScreen: true,
       splashImmersive: true,
-      layoutName: "launch_screen",
-      useDialog: true,
     },
   },
   android: {
