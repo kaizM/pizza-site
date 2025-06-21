@@ -3,14 +3,27 @@ import { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.lemurexpress11.employee',
   appName: 'Lemur Express 11 Employee',
-  webDir: 'dist/public',
-  server: {
-    url: 'http://localhost:5000',
-    cleartext: true
+  webDir: 'dist',
+  plugins: {
+    SplashScreen: {
+      launchShowDuration: 3000,
+      launchAutoHide: true,
+      backgroundColor: "#ffffffff",
+      androidSplashResourceName: "splash",
+      androidScaleType: "CENTER_CROP",
+      showSpinner: true,
+      androidSpinnerStyle: "large",
+      spinnerColor: "#999999",
+      splashFullScreen: true,
+      splashImmersive: true,
+      layoutName: "launch_screen",
+      useDialog: true,
+    },
   },
   android: {
     allowMixedContent: true,
-    captureInput: true
+    captureInput: true,
+    webContentsDebuggingEnabled: true
   }
 };
 

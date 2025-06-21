@@ -1,3 +1,24 @@
+#!/bin/bash
+
+echo "Building Lemur Express 11 Employee Android App..."
+
+# Step 1: Clean previous builds
+echo "🧹 Cleaning previous builds..."
+rm -rf dist
+rm -rf android/app/src/main/assets/public
+
+# Step 2: Create minimal build directory
+echo "📦 Creating build assets..."
+mkdir -p dist
+
+# Step 3: Copy essential files to dist
+echo "📋 Copying web assets..."
+cp -r client/public/* dist/ 2>/dev/null || true
+cp client/index.html dist/
+
+# Step 4: Create a simple index.html for the app
+echo "🎨 Creating app HTML..."
+cat > dist/index.html << 'EOF'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -100,3 +121,74 @@
     </script>
 </body>
 </html>
+EOF
+
+# Step 5: Sync with Capacitor
+echo "🔄 Syncing with Capacitor..."
+npx cap sync android
+
+# Step 6: Update Android build files
+echo "🔧 Updating Android configuration..."
+
+# Update build.gradle for proper compilation
+cat > android/app/build.gradle.kts << 'EOF'
+android {
+    namespace = "com.lemurexpress11.employee"
+    compileSdk = 34
+
+    defaultConfig {
+        applicationId = "com.lemurexpress11.employee"
+        minSdk = 24
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0"
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+dependencies {
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("com.getcapacitor:capacitor-android:6.0.0")
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+}
+
+apply from: "capacitor.build.gradle"
+EOF
+
+echo "✅ Android build configuration complete!"
+echo ""
+echo "📱 Your Android app is now ready. To build and install:"
+echo "   1. Open Android Studio"
+echo "   2. File → Open → Select the 'android' folder"
+echo "   3. Click 'Run app' or use Ctrl+R"
+echo ""
+echo "🔧 Or build from command line:"
+echo "   cd android && ./gradlew assembleDebug"
+echo ""
+echo "📦 The APK will be created in: android/app/build/outputs/apk/debug/"
+EOF
+
+chmod +x build-android.sh
