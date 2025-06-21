@@ -3,7 +3,7 @@
 	"appName": "Lemur Express 11 Employee",
 	"webDir": "dist",
 	"server": {
-		"url": "http://localhost:5000",
+		"url": "http://10.0.2.2:5000/employee",
 		"cleartext": true
 	},
 	"plugins": {

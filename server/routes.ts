@@ -25,6 +25,114 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.use('/api', generalLimiter);
   
+  // Employee dashboard route for Android app
+  app.get("/employee", (req, res) => {
+    const dashboardHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lemur Express 11 Employee Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; }
+        .header { background: rgba(0, 0, 0, 0.2); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); }
+        .logo { font-size: 1.5em; font-weight: bold; }
+        .status { background: #4CAF50; padding: 5px 12px; border-radius: 20px; font-size: 0.8em; }
+        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+        .dashboard-card { background: rgba(255, 255, 255, 0.15); border-radius: 15px; padding: 20px; margin-bottom: 20px; backdrop-filter: blur(10px); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .stat-item { text-align: center; background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px; }
+        .stat-number { font-size: 2em; font-weight: bold; color: #FFD700; }
+        .stat-label { font-size: 0.9em; opacity: 0.9; }
+        .order-list { max-height: 400px; overflow-y: auto; }
+        .order-item { background: rgba(255, 255, 255, 0.1); padding: 15px; margin-bottom: 10px; border-radius: 10px; border-left: 4px solid #FFD700; }
+        .order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .order-id { font-weight: bold; }
+        .order-status { padding: 4px 8px; border-radius: 12px; font-size: 0.8em; }
+        .status-confirmed { background: #4CAF50; }
+        .status-completed { background: #2196F3; }
+        .status-cancelled { background: #f44336; }
+        .customer-info { font-size: 0.9em; margin-bottom: 5px; }
+        .order-total { font-weight: bold; color: #FFD700; }
+        .refresh-btn { background: #ff6b6b; color: white; border: none; padding: 12px 24px; border-radius: 25px; font-size: 1em; cursor: pointer; width: 100%; margin-top: 15px; }
+        .loading { text-align: center; padding: 40px; opacity: 0.7; }
+        .error { background: rgba(244, 67, 54, 0.2); border: 1px solid #f44336; color: #ffebee; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">🍕 Lemur Express 11</div>
+        <div class="status" id="connectionStatus">Connected</div>
+    </div>
+    <div class="container">
+        <div class="dashboard-card">
+            <h2>Employee Dashboard</h2>
+            <div class="stats-grid">
+                <div class="stat-item"><div class="stat-number" id="totalOrders">-</div><div class="stat-label">Total Orders</div></div>
+                <div class="stat-item"><div class="stat-number" id="activeOrders">-</div><div class="stat-label">Active Orders</div></div>
+                <div class="stat-item"><div class="stat-number" id="todayRevenue">-</div><div class="stat-label">Today Revenue</div></div>
+                <div class="stat-item"><div class="stat-number" id="availablePizzas">-</div><div class="stat-label">Pizza Types</div></div>
+            </div>
+        </div>
+        <div class="dashboard-card">
+            <h3>Recent Orders</h3>
+            <div id="ordersList" class="order-list"><div class="loading">Loading orders from Firebase...</div></div>
+            <button class="refresh-btn" onclick="loadData()">Refresh Data</button>
+        </div>
+    </div>
+    <script>
+        async function loadData() {
+            try {
+                document.getElementById('connectionStatus').textContent = 'Loading...';
+                document.getElementById('connectionStatus').style.background = '#ff9800';
+                const ordersResponse = await fetch('/api/orders');
+                const orders = await ordersResponse.json();
+                const pizzasResponse = await fetch('/api/pizzas');
+                const pizzas = await pizzasResponse.json();
+                document.getElementById('totalOrders').textContent = orders.length;
+                document.getElementById('activeOrders').textContent = orders.filter(o => o.status === 'confirmed').length;
+                document.getElementById('availablePizzas').textContent = pizzas.length;
+                const today = new Date().toDateString();
+                const todayOrders = orders.filter(o => new Date(o.createdAt).toDateString() === today);
+                const revenue = todayOrders.reduce((sum, o) => sum + parseFloat(o.total), 0);
+                document.getElementById('todayRevenue').textContent = '$' + revenue.toFixed(2);
+                displayOrders(orders.slice(0, 10));
+                document.getElementById('connectionStatus').textContent = 'Connected';
+                document.getElementById('connectionStatus').style.background = '#4CAF50';
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('connectionStatus').textContent = 'Error';
+                document.getElementById('connectionStatus').style.background = '#f44336';
+                document.getElementById('ordersList').innerHTML = '<div class="error">Failed to connect to Firebase database.</div>';
+            }
+        }
+        function displayOrders(orders) {
+            const ordersList = document.getElementById('ordersList');
+            if (orders.length === 0) {
+                ordersList.innerHTML = '<div class="loading">No orders found</div>';
+                return;
+            }
+            ordersList.innerHTML = orders.map(order => 
+                '<div class="order-item">' +
+                '<div class="order-header">' +
+                '<span class="order-id">Order #' + order.id + '</span>' +
+                '<span class="order-status status-' + order.status + '">' + order.status + '</span>' +
+                '</div>' +
+                '<div class="customer-info">' + order.customerInfo.firstName + ' ' + order.customerInfo.lastName + '</div>' +
+                '<div class="customer-info">📞 ' + order.customerInfo.phone + '</div>' +
+                '<div class="order-total">Total: $' + order.total + '</div>' +
+                '</div>'
+            ).join('');
+        }
+        window.addEventListener('load', loadData);
+        setInterval(loadData, 30000);
+    </script>
+</body>
+</html>`;
+    res.send(dashboardHTML);
+  });
+  
   // Health check endpoint
   app.get("/api/health", (req, res) => {
     res.json({ status: "ok", timestamp: new Date().toISOString() });
