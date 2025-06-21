@@ -125,12 +125,12 @@ cd android
 ```
 
 ### Android Issues Resolved
-- Fixed Capacitor dependency version mismatches (6.0.0 → 7.4.0)
+- Fixed Capacitor dependency versions to use available packages (6.1.2)
 - Removed duplicate repository declarations from all Gradle files
 - Repository management centralized in settings.gradle.kts
 - Resolves build configuration and dependency resolution errors
 
-**Note**: If Android build still fails locally, run `./gradlew clean` first, then check JDK configuration in Android Studio.
+**Note**: Android build now uses stable Capacitor versions available in Maven Central. If build still fails, run `./gradlew clean` first.
 
 ## 🔄 Data Flow
 
