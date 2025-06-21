@@ -120,16 +120,17 @@ The project includes Android build configuration:
 ### Android Build Commands
 ```bash
 cd android
-./gradlew build          # Build the app
-./gradlew assembleDebug  # Build debug APK
+./gradlew clean         # Clean build cache
+./gradlew assembleDebug # Build debug APK
 ```
 
-**Note**: Android build configuration has been fixed to resolve all Gradle repository conflicts.
-
-### Android Build Fix Applied
+### Android Issues Resolved
+- Fixed Capacitor dependency version mismatches (6.0.0 → 7.4.0)
 - Removed duplicate repository declarations from all Gradle files
-- Repository management centralized in settings.gradle.kts only
-- Resolves "prefer settings repositories" error
+- Repository management centralized in settings.gradle.kts
+- Resolves build configuration and dependency resolution errors
+
+**Note**: If Android build still fails locally, run `./gradlew clean` first, then check JDK configuration in Android Studio.
 
 ## 🔄 Data Flow
 
