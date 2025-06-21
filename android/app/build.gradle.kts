@@ -1,3 +1,8 @@
+plugins {
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+}
+
 android {
     namespace = "com.lemurexpress11.employee"
     compileSdk = 34
@@ -41,4 +46,4 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
 
-apply from: "capacitor.build.gradle"
+apply(from = "capacitor.build.gradle")
