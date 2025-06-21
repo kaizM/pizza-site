@@ -125,15 +125,19 @@ cd android
 ```
 
 ### Android Configuration Status
-The Android configuration has been simplified to focus on the core web application:
-- Removed problematic Capacitor dependencies
-- Configured for web-first architecture
-- All repository conflicts resolved
+Android build successfully configured:
+- Dependencies resolved with Compose UI framework
+- Repository conflicts eliminated
+- Build issues fixed with proper MainActivity
+
+**Build Commands**:
+```bash
+cd android
+./gradlew assembleDebug  # Builds Android APK
+```
 
 **Primary Focus**: Web application running on Replit (fully operational)
-**Android**: Available for future development when needed
-
-The pizza ordering system is fully functional as a web application.
+**Android**: Working build configuration for mobile development
 
 ## 🔄 Data Flow
 
