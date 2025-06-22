@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Test</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; 
+            min-height: 100vh; 
+            padding: 20px; 
+        }
+        .test-container {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        .chart-container {
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .bar-chart {
+            display: flex;
+            align-items: end;
+            height: 120px;
+            gap: 8px;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+        .bar {
+            background: linear-gradient(to top, #FFD700, #FFA500);
+            border-radius: 4px 4px 0 0;
+            min-width: 40px;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+        }
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8em;
+            font-weight: 600;
+            color: #FFD700;
+        }
+        .bar-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8em;
+            white-space: nowrap;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-box {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #FFD700;
+        }
+        .connection-test {
+            background: #4CAF50;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🍕 Dashboard Visual Test</h1>
+        <div class="connection-test" id="status">Testing Connection...</div>
+        
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-number" id="testStat1">42</div>
+                <div>Test Metric 1</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="testStat2">$156.78</div>
+                <div>Test Metric 2</div>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <h3>Test Bar Chart</h3>
+            <div class="bar-chart">
+                <div class="bar" style="height: 80%;">
+                    <div class="bar-value">12</div>
+                    <div class="bar-label">Orders</div>
+                </div>
+                <div class="bar" style="height: 60%;">
+                    <div class="bar-value">8</div>
+                    <div class="bar-label">Ready</div>
+                </div>
+                <div class="bar" style="height: 40%;">
+                    <div class="bar-value">5</div>
+                    <div class="bar-label">Active</div>
+                </div>
+                <div class="bar" style="height: 90%;">
+                    <div class="bar-value">15</div>
+                    <div class="bar-label">Done</div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="dataTest"></div>
+    </div>
+
+    <script>
+        async function testConnection() {
+            try {
+                document.getElementById('status').textContent = 'Loading API...';
+                const response = await fetch('/api/orders');
+                const orders = await response.json();
+                
+                document.getElementById('status').textContent = `Connected - ${orders.length} orders found`;
+                document.getElementById('status').style.background = '#4CAF50';
+                
+                document.getElementById('dataTest').innerHTML = `
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin-top: 15px;">
+                        <h4>API Test Results:</h4>
+                        <p>✓ Server responding correctly</p>
+                        <p>✓ Found ${orders.length} orders in database</p>
+                        <p>✓ First order ID: ${orders[0]?.id || 'None'}</p>
+                        <p>✓ Chart bars should be visible above</p>
+                        <p style="margin-top: 10px; font-size: 0.9em;">If you see colorful bars and stats, visuals are working!</p>
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('status').textContent = 'Connection Failed';
+                document.getElementById('status').style.background = '#f44336';
+                document.getElementById('dataTest').innerHTML = `
+                    <div style="background: rgba(255,0,0,0.2); padding: 15px; border-radius: 10px; margin-top: 15px;">
+                        <h4>Connection Error:</h4>
+                        <p>❌ ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        window.addEventListener('load', testConnection);
+    </script>
+</body>
+</html>

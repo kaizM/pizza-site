@@ -140,9 +140,11 @@ app.get("/mobile-employee", (req, res) => {
         .chart-container {
             background: rgba(255,255,255,0.15);
             border-radius: 12px;
-            padding: 15px;
+            padding: 20px;
             margin-bottom: 20px;
             position: relative;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
         }
         .chart-title {
             font-size: 1.1em;
@@ -160,10 +162,12 @@ app.get("/mobile-employee", (req, res) => {
         .bar {
             background: linear-gradient(to top, #FFD700, #FFA500);
             border-radius: 4px 4px 0 0;
-            min-width: 30px;
+            min-width: 35px;
+            width: 35px;
             position: relative;
             transition: all 0.3s ease;
             box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+            border: 2px solid rgba(255,255,255,0.2);
         }
         .bar:hover { transform: scaleY(1.05); }
         .bar-label {
@@ -291,24 +295,30 @@ app.get("/mobile-employee", (req, res) => {
         </div>
         
         <div class="chart-container">
-            <div class="chart-title">Orders by Status</div>
+            <div class="chart-title">📊 Live Order Status Chart</div>
+            <div style="text-align: center; margin-bottom: 15px; color: #FFD700; font-weight: 600;">
+                Visual Dashboard - Real-time Data
+            </div>
             <div class="bar-chart" id="statusChart">
-                <div class="bar" style="height: 20%;">
+                <div class="bar" style="height: 50%; background: linear-gradient(to top, #4CAF50, #66BB6A); box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);">
                     <div class="bar-value">0</div>
                     <div class="bar-label">Confirmed</div>
                 </div>
-                <div class="bar" style="height: 20%;">
+                <div class="bar" style="height: 40%; background: linear-gradient(to top, #FF9800, #FFB74D); box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);">
                     <div class="bar-value">0</div>
                     <div class="bar-label">Preparing</div>
                 </div>
-                <div class="bar" style="height: 20%;">
+                <div class="bar" style="height: 30%; background: linear-gradient(to top, #2196F3, #64B5F6); box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);">
                     <div class="bar-value">0</div>
                     <div class="bar-label">Ready</div>
                 </div>
-                <div class="bar" style="height: 20%;">
+                <div class="bar" style="height: 70%; background: linear-gradient(to top, #9C27B0, #BA68C8); box-shadow: 0 4px 15px rgba(156, 39, 176, 0.4);">
                     <div class="bar-value">0</div>
                     <div class="bar-label">Completed</div>
                 </div>
+            </div>
+            <div id="chartDebug" style="font-size: 0.8em; margin-top: 15px; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 6px; text-align: center;">
+                Chart Status: Loading...
             </div>
         </div>
         
@@ -338,7 +348,7 @@ app.get("/mobile-employee", (req, res) => {
                 document.getElementById('todayRevenue').textContent = '$' + todayRevenue.toFixed(2);
                 document.getElementById('avgOrderValue').textContent = '$' + avgOrderValue.toFixed(2);
                 
-                // Update status chart
+                // Update status chart with enhanced visuals
                 const statusCounts = {
                     confirmed: orders.filter(o => o.status === 'confirmed').length,
                     preparing: orders.filter(o => o.status === 'preparing').length,
@@ -346,17 +356,36 @@ app.get("/mobile-employee", (req, res) => {
                     completed: orders.filter(o => o.status === 'completed').length
                 };
                 
+                console.log('Status counts:', statusCounts);
+                
                 const maxCount = Math.max(...Object.values(statusCounts), 1);
                 const chartBars = document.querySelectorAll('#statusChart .bar');
                 const statuses = ['confirmed', 'preparing', 'ready', 'completed'];
+                const colors = ['#4CAF50', '#FF9800', '#2196F3', '#9C27B0'];
                 
                 chartBars.forEach((bar, index) => {
                     const status = statuses[index];
                     const count = statusCounts[status];
-                    const height = Math.max((count / maxCount) * 100, 10);
+                    const height = Math.max((count / maxCount) * 80 + 15, 20);
+                    
                     bar.style.height = height + '%';
+                    bar.style.background = \`linear-gradient(to top, \${colors[index]}, \${colors[index]}dd)\`;
                     bar.querySelector('.bar-value').textContent = count;
+                    bar.querySelector('.bar-value').style.color = colors[index];
+                    
+                    // Add visual feedback
+                    bar.style.transform = 'scale(1)';
+                    setTimeout(() => {
+                        bar.style.transform = 'scale(1.02)';
+                        setTimeout(() => bar.style.transform = 'scale(1)', 100);
+                    }, index * 100);
                 });
+                
+                // Update chart debug info
+                document.getElementById('chartDebug').innerHTML = \`
+                    Chart updated: \${new Date().toLocaleTimeString()} | 
+                    Max: \${maxCount} | Data: \${JSON.stringify(statusCounts)}
+                \`;
                 
                 // Update orders list
                 const ordersList = document.getElementById('ordersList');
