@@ -270,7 +270,6 @@ export class MemStorage implements IStorage {
 }
 
 import { PersistentStorage } from "./persistentStorage";
-import { FirebaseStorage } from "./firebaseStorage";
 
-// Using Firebase storage as configured in your project
-export const storage = new FirebaseStorage();
+// Using your existing persistent storage with all data intact
+export const storage = new PersistentStorage();
