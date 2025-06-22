@@ -388,6 +388,95 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Cancel order with reason
+  app.post("/api/orders/:id/cancel", async (req, res) => {
+    try {
+      const orderId = parseInt(req.params.id);
+      const { reason, cancelledBy } = req.body;
+      
+      const order = await storage.updateOrder(orderId, {
+        status: 'cancelled',
+        cancellationReason: reason,
+        cancelledBy: cancelledBy || 'employee',
+        cancelledAt: new Date().toISOString()
+      });
+      
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+
+      // Record cancellation for analytics
+      await storage.recordCancellation({
+        orderId,
+        reason,
+        cancelledBy: cancelledBy || 'employee',
+        cancelledAt: new Date()
+      });
+
+      await firebaseSync.updateOrderStatusInFirebase(orderId, { status: 'cancelled' });
+      
+      res.json({ message: "Order cancelled successfully", order });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to cancel order" });
+    }
+  });
+
+  // Request substitution for order items
+  app.post("/api/orders/:id/substitution", async (req, res) => {
+    try {
+      const orderId = parseInt(req.params.id);
+      const { substitutionReason, substitutionSuggestion, requestedBy } = req.body;
+      
+      const order = await storage.updateOrder(orderId, {
+        substitutionReason,
+        substitutionSuggestion,
+        substitutionRequestedBy: requestedBy || 'employee',
+        substitutionRequestedAt: new Date().toISOString()
+      });
+      
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+      
+      res.json({ message: "Substitution request recorded", order });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to record substitution" });
+    }
+  });
+
+  // Update estimated time for order
+  app.post("/api/orders/:id/time", async (req, res) => {
+    try {
+      const orderId = parseInt(req.params.id);
+      const { estimatedTime } = req.body;
+      
+      const order = await storage.updateOrder(orderId, {
+        estimatedTime: parseInt(estimatedTime),
+        updatedAt: new Date().toISOString()
+      });
+      
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+
+      await firebaseSync.updateOrderStatusInFirebase(orderId, { estimatedTime: parseInt(estimatedTime) });
+      
+      res.json({ message: "Estimated time updated", order });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update time" });
+    }
+  });
+
+  // Get cancellation analytics
+  app.get("/api/cancellations", async (req, res) => {
+    try {
+      const cancellations = await storage.getAllCancellations();
+      res.json(cancellations);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch cancellations" });
+    }
+  });
+
   // Charge customer payment after supplies confirmed
   app.post("/api/orders/:id/charge", async (req, res) => {
     try {

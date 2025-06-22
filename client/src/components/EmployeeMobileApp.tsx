@@ -88,6 +88,88 @@ export default function EmployeeMobileApp() {
     },
   });
 
+  // Cancel order mutation
+  const cancelOrderMutation = useMutation({
+    mutationFn: async ({ orderId, reason }: { orderId: number; reason: string }) => {
+      return await apiRequest('POST', `/api/orders/${orderId}/cancel`, {
+        reason,
+        cancelledBy: 'employee'
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/orders'] });
+      mediumImpact(); // Haptic feedback
+      toast({
+        title: "Order cancelled",
+        description: "Order has been cancelled successfully",
+      });
+      setSelectedOrder(null);
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to cancel order",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Request substitution mutation
+  const substitutionMutation = useMutation({
+    mutationFn: async ({ orderId, reason, suggestion }: { 
+      orderId: number; 
+      reason: string; 
+      suggestion: string 
+    }) => {
+      return await apiRequest('POST', `/api/orders/${orderId}/substitution`, {
+        substitutionReason: reason,
+        substitutionSuggestion: suggestion,
+        requestedBy: 'employee'
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/orders'] });
+      success(); // Haptic feedback
+      toast({
+        title: "Substitution requested",
+        description: "Customer will be notified about the substitution",
+      });
+      setSelectedOrder(null);
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to request substitution",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Update time mutation
+  const updateTimeMutation = useMutation({
+    mutationFn: async ({ orderId, estimatedTime }: { orderId: number; estimatedTime: number }) => {
+      return await apiRequest('POST', `/api/orders/${orderId}/time`, {
+        estimatedTime
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/orders'] });
+      success(); // Haptic feedback
+      toast({
+        title: "Time updated",
+        description: "Estimated preparation time has been updated",
+      });
+      setSelectedOrder(null);
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to update time",
+        variant: "destructive",
+      });
+    },
+  });
+
   // Filter orders by status
   const newOrders = orders.filter(order => order.status === "confirmed");
   const preparingOrders = orders.filter(order => order.status === "preparing");
@@ -263,8 +345,162 @@ export default function EmployeeMobileApp() {
               </div>
             </div>
 
-            {/* Status Update Controls */}
-            {order.status !== "completed" && (
+            {/* Action Buttons */}
+            <div className="space-y-3">
+              {order.status === "confirmed" && (
+                <Button 
+                  className="w-full"
+                  onClick={() => updateStatusMutation.mutate({ 
+                    orderId: order.id, 
+                    status: "preparing" 
+                  })}
+                  disabled={updateStatusMutation.isPending}
+                >
+                  Start Preparing
+                </Button>
+              )}
+              
+              {order.status === "preparing" && (
+                <Button 
+                  className="w-full"
+                  onClick={() => updateStatusMutation.mutate({ 
+                    orderId: order.id, 
+                    status: "ready" 
+                  })}
+                  disabled={updateStatusMutation.isPending}
+                >
+                  Mark as Ready
+                </Button>
+              )}
+              
+              {order.status === "ready" && (
+                <Button 
+                  className="w-full"
+                  onClick={() => updateStatusMutation.mutate({ 
+                    orderId: order.id, 
+                    status: "completed" 
+                  })}
+                  disabled={updateStatusMutation.isPending}
+                >
+                  Complete Order
+                </Button>
+              )}
+
+              {/* Custom Time Input */}
+              {order.status !== "completed" && order.status !== "cancelled" && (
+                <div className="space-y-2">
+                  <Label htmlFor="custom-time">Update Estimated Time (minutes)</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="custom-time"
+                      type="number"
+                      placeholder="15"
+                      value={customTime}
+                      onChange={(e) => setCustomTime(e.target.value)}
+                      min="5"
+                      max="60"
+                    />
+                    <Button 
+                      variant="outline"
+                      onClick={() => {
+                        const time = parseInt(customTime);
+                        if (time >= 5 && time <= 60) {
+                          updateTimeMutation.mutate({ 
+                            orderId: order.id, 
+                            estimatedTime: time
+                          });
+                          setCustomTime("");
+                        }
+                      }}
+                      disabled={!customTime || updateTimeMutation.isPending}
+                    >
+                      Update
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Quick Time Buttons */}
+              {order.status !== "completed" && order.status !== "cancelled" && (
+                <div className="grid grid-cols-3 gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => updateTimeMutation.mutate({ orderId: order.id, estimatedTime: 10 })}
+                    disabled={updateTimeMutation.isPending}
+                  >
+                    10 min
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => updateTimeMutation.mutate({ orderId: order.id, estimatedTime: 15 })}
+                    disabled={updateTimeMutation.isPending}
+                  >
+                    15 min
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => updateTimeMutation.mutate({ orderId: order.id, estimatedTime: 20 })}
+                    disabled={updateTimeMutation.isPending}
+                  >
+                    20 min
+                  </Button>
+                </div>
+              )}
+
+              {/* Substitution Request */}
+              {order.status !== "completed" && order.status !== "cancelled" && (
+                <div className="space-y-2">
+                  <Label>Request Substitution</Label>
+                  <Select onValueChange={(value) => {
+                    const [reason, suggestion] = value.split('|');
+                    substitutionMutation.mutate({
+                      orderId: order.id,
+                      reason,
+                      suggestion
+                    });
+                  }}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select substitution..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pepperoni|ham">Out of Pepperoni → Ham</SelectItem>
+                      <SelectItem value="italian_sausage|chicken">Out of Italian Sausage → Chicken</SelectItem>
+                      <SelectItem value="mushrooms|bell_peppers">Out of Mushrooms → Bell Peppers</SelectItem>
+                      <SelectItem value="thin_crust|original">Out of Thin Crust → Original</SelectItem>
+                      <SelectItem value="large_size|medium">Out of Large → Medium Size</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              {/* Cancel Order */}
+              {order.status !== "completed" && order.status !== "cancelled" && (
+                <div className="space-y-2">
+                  <Label>Cancel Order</Label>
+                  <Select onValueChange={(reason) => {
+                    cancelOrderMutation.mutate({
+                      orderId: order.id,
+                      reason
+                    });
+                  }}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select cancel reason..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="out_of_ingredients">Out of Ingredients</SelectItem>
+                      <SelectItem value="equipment_failure">Equipment Failure</SelectItem>
+                      <SelectItem value="staffing_issue">Staffing Issue</SelectItem>
+                      <SelectItem value="customer_request">Customer Request</SelectItem>
+                      <SelectItem value="special_request">Unable to Fulfill Special Request</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </div>
+            {order.status !== "completed" && order.status !== "cancelled" && (
               <>
                 <Separator />
                 <div className="space-y-3">

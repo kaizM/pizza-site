@@ -340,9 +340,11 @@
       "specialInstructions": "Please make sure the stuffed crust is golden brown. Extra marinara sauce on the side.",
       "paymentId": "pay_persistent_456789",
       "paymentStatus": "authorized",
-      "status": "completed",
+      "status": "cancelled",
       "createdAt": "2025-06-15T04:37:49.503Z",
-      "updatedAt": "2025-06-15T04:42:57.971Z"
+      "updatedAt": "2025-06-22T00:30:43.378Z",
+      "cancellationReason": "out_of_ingredients",
+      "cancelledBy": "employee"
     },
     {
       "id": 9,
