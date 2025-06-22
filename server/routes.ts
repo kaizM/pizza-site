@@ -45,6 +45,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.use('/api', generalLimiter);
 
+  // Kitchen status management
+  let kitchenStatus = "open"; // Global kitchen status
+  
+  app.get('/api/kitchen-status', (req, res) => {
+    res.json({ status: kitchenStatus });
+  });
+
+  app.post('/api/kitchen-status', (req, res) => {
+    const { status } = req.body;
+    if (['open', 'busy', 'closed'].includes(status)) {
+      kitchenStatus = status;
+      console.log(`🏪 Kitchen status changed to: ${status.toUpperCase()}`);
+      res.json({ success: true, status });
+    } else {
+      res.status(400).json({ error: 'Invalid status' });
+    }
+  });
+
   // CORS for customer website on Vercel
   app.use((req, res, next) => {
     const allowedOrigins = [
