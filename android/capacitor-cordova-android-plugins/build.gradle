@@ -4,8 +4,12 @@ ext {
 }
 
 buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.0'
+        classpath 'com.android.tools.build:gradle:8.7.2'
     }
 }
 
@@ -30,6 +34,8 @@ android {
 }
 
 repositories {
+    google()
+    mavenCentral()
     flatDir{
         dirs 'src/main/libs', 'libs'
     }
