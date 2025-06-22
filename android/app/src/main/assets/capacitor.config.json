@@ -3,7 +3,7 @@
 	"appName": "Lemur Express 11 Employee",
 	"webDir": "dist",
 	"server": {
-		"url": "https://15e8b74e-5e82-4bd4-8115-c38ee1ec49de-00-jywt9f6oi31b.kirk.replit.dev/employee",
+		"url": "https://b5466a18-5c2c-4a10-9583-b9c4d86c4b73-00-1mnqf72b2m33c.riker.replit.dev/mobile-employee",
 		"cleartext": true,
 		"androidScheme": "https"
 	},
