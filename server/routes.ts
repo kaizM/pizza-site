@@ -45,6 +45,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.use('/api', generalLimiter);
 
+  // CORS for customer website on Vercel
+  app.use((req, res, next) => {
+    const allowedOrigins = [
+      'https://pizza-ordering-system-bgmxhgcr7-kaizms-projects.vercel.app',
+      'https://*.vercel.app',
+      'http://localhost:3000',
+      'http://localhost:5173'
+    ];
+    
+    const origin = req.headers.origin;
+    if (allowedOrigins.some(allowed => origin?.match(allowed.replace('*', '.*')))) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    next();
+  });
+
   const server = createServer(app);
 
   // Health check endpoint for connection testing

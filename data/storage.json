@@ -509,6 +509,31 @@
       "uniqueOrderId": "LE643747HRQE2X",
       "createdAt": "2025-06-22T13:07:24.127Z",
       "updatedAt": "2025-06-22T13:07:24.127Z"
+    },
+    {
+      "id": 14,
+      "customerInfo": {
+        "firstName": "Test",
+        "lastName": "Customer",
+        "phone": "555-0123",
+        "email": "test@example.com"
+      },
+      "items": [
+        {
+          "id": "test-pizza",
+          "name": "Test Margherita",
+          "size": "Large",
+          "quantity": 1,
+          "toppings": [],
+          "price": 12.99
+        }
+      ],
+      "total": 12.99,
+      "orderType": "pickup",
+      "specialInstructions": "",
+      "status": "confirmed",
+      "createdAt": "2025-06-22T13:31:35.797Z",
+      "updatedAt": "2025-06-22T13:31:35.797Z"
     }
   ],
   "pizzas": [
@@ -560,7 +585,7 @@
   ],
   "counters": {
     "userId": 1,
-    "orderId": 14,
+    "orderId": 15,
     "pizzaId": 6,
     "notificationId": 5,
     "customerProfileId": 2
