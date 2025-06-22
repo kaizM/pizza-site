@@ -82,6 +82,7 @@ export default function AdvancedEmployeeDashboard() {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [customTime, setCustomTime] = useState("");
   const [kitchenStatus, setKitchenStatus] = useState<"open" | "busy" | "closed">("open");
+  const [showSettings, setShowSettings] = useState(false);
   const [autoAccept, setAutoAccept] = useState(false);
   const [maxOrders, setMaxOrders] = useState(10);
   const [preparationNotes, setPreparationNotes] = useState("");
@@ -204,6 +205,24 @@ export default function AdvancedEmployeeDashboard() {
     }
   };
 
+  const getKitchenStatusColor = (status: string) => {
+    switch (status) {
+      case 'open': return 'bg-green-500';
+      case 'busy': return 'bg-orange-500';
+      case 'closed': return 'bg-red-500';
+      default: return 'bg-gray-400';
+    }
+  };
+
+  const getKitchenStatusText = (status: string) => {
+    switch (status) {
+      case 'open': return 'OPEN';
+      case 'busy': return 'BUSY';
+      case 'closed': return 'CLOSED';
+      default: return 'UNKNOWN';
+    }
+  };
+
   const getPriorityColor = (priority: Order['priority'] = 'normal') => {
     switch (priority) {
       case 'urgent': return 'border-l-red-500 bg-red-50';
@@ -252,10 +271,14 @@ export default function AdvancedEmployeeDashboard() {
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <Badge className={`${getStatusColor(kitchenStatus as any)} text-white`}>
-                {kitchenStatus.toUpperCase()}
+              <Badge className={`${getKitchenStatusColor(kitchenStatus)} text-white`}>
+                {getKitchenStatusText(kitchenStatus)}
               </Badge>
-              <Button variant="ghost" size="sm">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => setShowSettings(true)}
+              >
                 <Settings className="h-4 w-4" />
               </Button>
             </div>
@@ -475,71 +498,71 @@ export default function AdvancedEmployeeDashboard() {
             <div className="space-y-4 text-left">
               {/* Customer Info */}
               <div>
-                    <h4 className="font-medium text-gray-900 mb-2">Customer Details</h4>
-                    <div className="space-y-1 text-sm">
-                      <div>{selectedOrder.customerInfo.firstName} {selectedOrder.customerInfo.lastName}</div>
-                      <div className="flex items-center space-x-2">
-                        <Phone className="h-4 w-4" />
-                        <span>{selectedOrder.customerInfo.phone}</span>
-                      </div>
-                      {selectedOrder.orderType === 'delivery' && selectedOrder.customerInfo.address && (
-                        <div className="flex items-start space-x-2">
-                          <MapPin className="h-4 w-4 mt-0.5" />
-                          <span>{selectedOrder.customerInfo.address}</span>
-                        </div>
-                      )}
-                    </div>
+                <h4 className="font-medium text-gray-900 mb-2">Customer Details</h4>
+                <div className="space-y-1 text-sm">
+                  <div>{selectedOrder.customerInfo.firstName} {selectedOrder.customerInfo.lastName}</div>
+                  <div className="flex items-center space-x-2">
+                    <Phone className="h-4 w-4" />
+                    <span>{selectedOrder.customerInfo.phone}</span>
                   </div>
+                  {selectedOrder.orderType === 'delivery' && selectedOrder.customerInfo.address && (
+                    <div className="flex items-start space-x-2">
+                      <MapPin className="h-4 w-4 mt-0.5" />
+                      <span>{selectedOrder.customerInfo.address}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
 
               {/* Order Items */}
               <div>
-                    <h4 className="font-medium text-gray-900 mb-2">Order Items</h4>
-                    <div className="space-y-2">
-                      {selectedOrder.items.map((item, index) => (
-                        <div key={index} className="bg-gray-50 p-3 rounded-md">
-                          <div className="font-medium">{item.quantity}x {item.name}</div>
-                          {item.size && <div className="text-sm text-gray-600">Size: {item.size}</div>}
-                          {item.crust && <div className="text-sm text-gray-600">Crust: {item.crust}</div>}
-                          {item.toppings.length > 0 && (
-                            <div className="text-sm text-gray-600">Toppings: {item.toppings.join(', ')}</div>
-                          )}
-                          {item.specialInstructions && (
-                            <div className="text-sm text-yellow-700 bg-yellow-50 p-1 rounded mt-1">
-                              Note: {item.specialInstructions}
-                            </div>
-                          )}
-                          <div className="text-sm font-medium text-green-600">${item.price.toFixed(2)}</div>
+                <h4 className="font-medium text-gray-900 mb-2">Order Items</h4>
+                <div className="space-y-2">
+                  {selectedOrder.items.map((item, index) => (
+                    <div key={index} className="bg-gray-50 p-3 rounded-md">
+                      <div className="font-medium">{item.quantity}x {item.name}</div>
+                      {item.size && <div className="text-sm text-gray-600">Size: {item.size}</div>}
+                      {item.crust && <div className="text-sm text-gray-600">Crust: {item.crust}</div>}
+                      {item.toppings.length > 0 && (
+                        <div className="text-sm text-gray-600">Toppings: {item.toppings.join(', ')}</div>
+                      )}
+                      {item.specialInstructions && (
+                        <div className="text-sm text-yellow-700 bg-yellow-50 p-1 rounded mt-1">
+                          Note: {item.specialInstructions}
                         </div>
-                      ))}
+                      )}
+                      <div className="text-sm font-medium text-green-600">${item.price.toFixed(2)}</div>
                     </div>
-                  </div>
+                  ))}
+                </div>
+              </div>
 
               {/* Preparation Notes */}
               <div>
-                    <Label htmlFor="prep-notes">Preparation Notes</Label>
-                    <Textarea
-                      id="prep-notes"
-                      placeholder="Add notes about preparation, delays, or special handling..."
-                      value={preparationNotes}
-                      onChange={(e) => setPreparationNotes(e.target.value)}
-                      className="mt-1"
-                    />
-                  </div>
+                <Label htmlFor="prep-notes">Preparation Notes</Label>
+                <Textarea
+                  id="prep-notes"
+                  placeholder="Add notes about preparation, delays, or special handling..."
+                  value={preparationNotes}
+                  onChange={(e) => setPreparationNotes(e.target.value)}
+                  className="mt-1"
+                />
+              </div>
 
               {/* Custom Time */}
               {(['confirmed', 'preparing'].includes(selectedOrder.status)) && (
                 <div>
-                      <Label htmlFor="custom-time">Estimated Prep Time (minutes)</Label>
-                      <Input
-                        id="custom-time"
-                        type="number"
-                        placeholder="Enter minutes"
-                        value={customTime}
-                        onChange={(e) => setCustomTime(e.target.value)}
-                        className="mt-1"
-                      />
-                    </div>
-                  )}
+                  <Label htmlFor="custom-time">Estimated Prep Time (minutes)</Label>
+                  <Input
+                    id="custom-time"
+                    type="number"
+                    placeholder="Enter minutes"
+                    value={customTime}
+                    onChange={(e) => setCustomTime(e.target.value)}
+                    className="mt-1"
+                  />
+                </div>
+              )}
             </div>
             <DialogFooter className="flex-col space-y-2">
               {selectedOrder.status === 'confirmed' && (
@@ -593,6 +616,102 @@ export default function AdvancedEmployeeDashboard() {
                   </Button>
                 )}
               </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Settings Modal */}
+      {showSettings && (
+        <Dialog open={showSettings} onOpenChange={setShowSettings}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Kitchen Settings</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-6">
+              {/* Kitchen Status */}
+              <div>
+                <Label className="text-base font-medium">Kitchen Status</Label>
+                <div className="mt-2 space-y-2">
+                  {[
+                    { value: 'open', label: 'Open - Accepting Orders', color: 'bg-green-500' },
+                    { value: 'busy', label: 'Busy - Limited Capacity', color: 'bg-orange-500' },
+                    { value: 'closed', label: 'Closed - No New Orders', color: 'bg-red-500' }
+                  ].map((status) => (
+                    <div key={status.value} className="flex items-center space-x-3">
+                      <Button
+                        variant={kitchenStatus === status.value ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setKitchenStatus(status.value as any)}
+                        className={kitchenStatus === status.value ? `${status.color} text-white` : ''}
+                      >
+                        {status.label}
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Auto Accept Orders */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-base font-medium">Auto-Accept Orders</Label>
+                  <p className="text-sm text-gray-500">Automatically accept new orders during busy periods</p>
+                </div>
+                <Switch
+                  checked={autoAccept}
+                  onCheckedChange={setAutoAccept}
+                />
+              </div>
+
+              {/* Max Orders */}
+              <div>
+                <Label htmlFor="maxOrders" className="text-base font-medium">Maximum Active Orders</Label>
+                <p className="text-sm text-gray-500 mb-2">Limit concurrent orders to manage kitchen capacity</p>
+                <Input
+                  id="maxOrders"
+                  type="number"
+                  min="1"
+                  max="50"
+                  value={maxOrders}
+                  onChange={(e) => setMaxOrders(parseInt(e.target.value) || 10)}
+                  className="w-24"
+                />
+              </div>
+
+              {/* Sound Notifications */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-base font-medium">Sound Notifications</Label>
+                  <p className="text-sm text-gray-500">Play sound alerts for new orders</p>
+                </div>
+                <Switch defaultChecked />
+              </div>
+
+              {/* Push Notifications */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-base font-medium">Push Notifications</Label>
+                  <p className="text-sm text-gray-500">Receive mobile notifications for urgent orders</p>
+                </div>
+                <Switch defaultChecked />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowSettings(false)}>
+                Cancel
+              </Button>
+              <Button 
+                onClick={() => {
+                  setShowSettings(false);
+                  toast({
+                    title: "Settings Updated",
+                    description: "Kitchen settings have been saved successfully",
+                  });
+                }}
+              >
+                Save Settings
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
