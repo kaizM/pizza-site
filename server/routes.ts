@@ -71,8 +71,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Employee dashboard route for Android app
-  app.get("/employee", (req, res) => {
+  // Android connectivity test endpoint
+  app.get("/employee/status", (req, res) => {
+    res.json({ 
+      status: "connected", 
+      timestamp: new Date().toISOString(),
+      server: "Lemur Express 11 Employee Dashboard" 
+    });
+  });
+
+  // Employee dashboard route for Android app - bypass Vite
+  app.get("/mobile-employee", (req, res) => {
+    res.setHeader('Content-Type', 'text/html');
+    res.setHeader('Cache-Control', 'no-cache');
     const dashboardHTML = `<!DOCTYPE html>
 <html lang="en">
 <head>

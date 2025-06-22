@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'Lemur Express 11 Employee',
   webDir: 'dist',
   server: {
-    url: 'http://10.0.2.2:5000/employee',
+    url: 'http://10.0.2.2:5000/mobile-employee',
     cleartext: true,
     androidScheme: 'https'
   },
