@@ -57,20 +57,211 @@ app.get("/mobile-employee", (req, res) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lemur Express 11 Employee</title>
+    <title>🍕 Lemur Express 11 Employee</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; padding: 20px; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .logo { font-size: 2em; font-weight: bold; margin-bottom: 10px; }
-        .status { background: #4CAF50; padding: 8px 16px; border-radius: 20px; display: inline-block; }
-        .dashboard { background: rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; backdrop-filter: blur(10px); }
-        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .stat { text-align: center; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; }
-        .stat-number { font-size: 1.8em; font-weight: bold; color: #FFD700; }
-        .orders { max-height: 300px; overflow-y: auto; }
-        .order { background: rgba(255,255,255,0.1); padding: 15px; margin-bottom: 10px; border-radius: 8px; border-left: 4px solid #FFD700; }
-        .refresh { background: #ff6b6b; color: white; border: none; padding: 12px 24px; border-radius: 25px; width: 100%; margin-top: 15px; cursor: pointer; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; 
+            min-height: 100vh; 
+            padding: 15px; 
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 25px; 
+            background: rgba(255,255,255,0.15); 
+            padding: 20px; 
+            border-radius: 15px; 
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        .logo { 
+            font-size: 2.2em; 
+            font-weight: bold; 
+            margin-bottom: 10px; 
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .status { 
+            background: #4CAF50; 
+            padding: 10px 20px; 
+            border-radius: 25px; 
+            display: inline-block; 
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3); }
+            50% { box-shadow: 0 6px 20px rgba(76, 175, 80, 0.5); }
+            100% { box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3); }
+        }
+        .dashboard { 
+            background: rgba(255,255,255,0.1); 
+            border-radius: 15px; 
+            padding: 20px; 
+            backdrop-filter: blur(10px); 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        .stats { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            margin-bottom: 25px; 
+        }
+        @media (min-width: 768px) {
+            .stats { 
+                grid-template-columns: repeat(4, 1fr); 
+            }
+        }
+        .stat { 
+            text-align: center; 
+            background: rgba(255,255,255,0.15); 
+            padding: 20px; 
+            border-radius: 12px; 
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        .stat:hover { transform: translateY(-2px); }
+        .stat-number { 
+            font-size: 2.2em; 
+            font-weight: bold; 
+            color: #FFD700; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .stat-label { 
+            font-size: 0.9em; 
+            margin-top: 5px; 
+            opacity: 0.9; 
+        }
+        .chart-container {
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .chart-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .bar-chart {
+            display: flex;
+            align-items: end;
+            height: 120px;
+            gap: 8px;
+            justify-content: space-around;
+        }
+        .bar {
+            background: linear-gradient(to top, #FFD700, #FFA500);
+            border-radius: 4px 4px 0 0;
+            min-width: 30px;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+        }
+        .bar:hover { transform: scaleY(1.05); }
+        .bar-label {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8em;
+            white-space: nowrap;
+        }
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8em;
+            font-weight: 600;
+            color: #FFD700;
+        }
+        .orders { 
+            max-height: 350px; 
+            overflow-y: auto; 
+            padding-right: 5px;
+        }
+        .orders::-webkit-scrollbar {
+            width: 6px;
+        }
+        .orders::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+        }
+        .orders::-webkit-scrollbar-thumb {
+            background: rgba(255,215,0,0.6);
+            border-radius: 3px;
+        }
+        .order { 
+            background: rgba(255,255,255,0.15); 
+            padding: 15px; 
+            margin-bottom: 12px; 
+            border-radius: 10px; 
+            border-left: 4px solid #FFD700; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        .order:hover { transform: translateX(5px); }
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .order-id {
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+        .order-status {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-confirmed { background: #4CAF50; }
+        .status-preparing { background: #FF9800; }
+        .status-ready { background: #2196F3; }
+        .status-completed { background: #9C27B0; }
+        .refresh { 
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52); 
+            color: white; 
+            border: none; 
+            padding: 15px 24px; 
+            border-radius: 25px; 
+            width: 100%; 
+            margin-top: 20px; 
+            cursor: pointer; 
+            font-weight: 600;
+            font-size: 1em;
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
+            transition: all 0.2s ease;
+        }
+        .refresh:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+        .refresh:active { transform: translateY(0); }
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            opacity: 0.8;
+        }
+        .empty-state-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
@@ -81,46 +272,133 @@ app.get("/mobile-employee", (req, res) => {
     <div class="dashboard">
         <h2>Employee Dashboard</h2>
         <div class="stats">
-            <div class="stat"><div class="stat-number" id="totalOrders">-</div><div>Total Orders</div></div>
-            <div class="stat"><div class="stat-number" id="activeOrders">-</div><div>Active Orders</div></div>
+            <div class="stat">
+                <div class="stat-number" id="totalOrders">-</div>
+                <div class="stat-label">Total Orders</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="activeOrders">-</div>
+                <div class="stat-label">Active Orders</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="todayRevenue">-</div>
+                <div class="stat-label">Today's Revenue</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="avgOrderValue">-</div>
+                <div class="stat-label">Avg Order</div>
+            </div>
         </div>
+        
+        <div class="chart-container">
+            <div class="chart-title">Orders by Status</div>
+            <div class="bar-chart" id="statusChart">
+                <div class="bar" style="height: 20%;">
+                    <div class="bar-value">0</div>
+                    <div class="bar-label">Confirmed</div>
+                </div>
+                <div class="bar" style="height: 20%;">
+                    <div class="bar-value">0</div>
+                    <div class="bar-label">Preparing</div>
+                </div>
+                <div class="bar" style="height: 20%;">
+                    <div class="bar-value">0</div>
+                    <div class="bar-label">Ready</div>
+                </div>
+                <div class="bar" style="height: 20%;">
+                    <div class="bar-value">0</div>
+                    <div class="bar-label">Completed</div>
+                </div>
+            </div>
+        </div>
+        
+        <h3 style="margin-bottom: 15px; color: #FFD700;">Recent Orders</h3>
         <div id="ordersList" class="orders">Loading orders...</div>
-        <button class="refresh" onclick="loadData()">Refresh Data</button>
+        <button class="refresh" onclick="loadData()">🔄 Refresh Dashboard</button>
     </div>
     <script>
         async function loadData() {
             try {
                 document.getElementById('status').textContent = 'Loading...';
                 document.getElementById('status').style.background = '#ff9800';
+                document.body.classList.add('loading');
                 
                 const response = await fetch('/api/orders');
                 const orders = await response.json();
                 
-                document.getElementById('totalOrders').textContent = orders.length;
-                document.getElementById('activeOrders').textContent = orders.filter(o => o.status === 'confirmed').length;
+                // Calculate statistics
+                const totalOrders = orders.length;
+                const activeOrders = orders.filter(o => ['confirmed', 'preparing', 'ready'].includes(o.status)).length;
+                const todayRevenue = orders.reduce((sum, order) => sum + (parseFloat(order.total) || 0), 0);
+                const avgOrderValue = totalOrders > 0 ? (todayRevenue / totalOrders) : 0;
                 
+                // Update stats
+                document.getElementById('totalOrders').textContent = totalOrders;
+                document.getElementById('activeOrders').textContent = activeOrders;
+                document.getElementById('todayRevenue').textContent = '$' + todayRevenue.toFixed(2);
+                document.getElementById('avgOrderValue').textContent = '$' + avgOrderValue.toFixed(2);
+                
+                // Update status chart
+                const statusCounts = {
+                    confirmed: orders.filter(o => o.status === 'confirmed').length,
+                    preparing: orders.filter(o => o.status === 'preparing').length,
+                    ready: orders.filter(o => o.status === 'ready').length,
+                    completed: orders.filter(o => o.status === 'completed').length
+                };
+                
+                const maxCount = Math.max(...Object.values(statusCounts), 1);
+                const chartBars = document.querySelectorAll('#statusChart .bar');
+                const statuses = ['confirmed', 'preparing', 'ready', 'completed'];
+                
+                chartBars.forEach((bar, index) => {
+                    const status = statuses[index];
+                    const count = statusCounts[status];
+                    const height = Math.max((count / maxCount) * 100, 10);
+                    bar.style.height = height + '%';
+                    bar.querySelector('.bar-value').textContent = count;
+                });
+                
+                // Update orders list
                 const ordersList = document.getElementById('ordersList');
                 if (orders.length === 0) {
-                    ordersList.innerHTML = 'No orders found';
+                    ordersList.innerHTML = \`
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🍕</div>
+                            <div>No orders yet today</div>
+                        </div>
+                    \`;
                 } else {
-                    ordersList.innerHTML = orders.slice(0, 8).map(order => {
+                    ordersList.innerHTML = orders.slice(0, 10).map(order => {
                         const customerInfo = order.customerInfo || {};
+                        const statusClass = 'status-' + (order.status || 'unknown').toLowerCase();
+                        
                         return \`<div class="order">
-                            <strong>Order #\${order.id}</strong> - \${order.status}
-                            <br>\${customerInfo.firstName || 'N/A'} \${customerInfo.lastName || ''}
-                            <br>📞 \${customerInfo.phone || 'N/A'}
-                            <br><strong>$\${order.total}</strong>
+                            <div class="order-header">
+                                <div class="order-id">Order #\${order.id}</div>
+                                <div class="order-status \${statusClass}">\${order.status || 'Unknown'}</div>
+                            </div>
+                            <div><strong>\${customerInfo.firstName || 'N/A'} \${customerInfo.lastName || ''}</strong></div>
+                            <div>📞 \${customerInfo.phone || 'N/A'}</div>
+                            <div style="margin-top: 8px; font-size: 1.1em; font-weight: 600;">💰 $\${parseFloat(order.total || 0).toFixed(2)}</div>
                         </div>\`;
                     }).join('');
                 }
                 
                 document.getElementById('status').textContent = 'Connected';
                 document.getElementById('status').style.background = '#4CAF50';
+                document.body.classList.remove('loading');
             } catch (error) {
                 console.error('Error:', error);
-                document.getElementById('status').textContent = 'Error';
+                document.getElementById('status').textContent = 'Connection Error';
                 document.getElementById('status').style.background = '#f44336';
-                document.getElementById('ordersList').innerHTML = 'Failed to load orders';
+                document.getElementById('ordersList').innerHTML = \`
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⚠️</div>
+                        <div>Failed to load orders</div>
+                        <div style="font-size: 0.9em; margin-top: 10px;">Check your connection</div>
+                    </div>
+                \`;
+                document.body.classList.remove('loading');
             }
         }
         
