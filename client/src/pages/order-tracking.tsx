@@ -56,6 +56,7 @@ export default function OrderTracking() {
   };
 
   const getStatusIcon = (status: string) => {
+    if (!status) return <Clock className="h-5 w-5 text-gray-500" />;
     switch (status.toLowerCase()) {
       case 'confirmed':
       case 'pending':
@@ -72,6 +73,7 @@ export default function OrderTracking() {
   };
 
   const getStatusColor = (status: string) => {
+    if (!status) return 'bg-gray-100 text-gray-800';
     switch (status.toLowerCase()) {
       case 'confirmed':
       case 'pending':

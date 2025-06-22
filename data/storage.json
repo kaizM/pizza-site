@@ -469,6 +469,46 @@
       "uniqueOrderId": "LE5005132DV7DZ",
       "createdAt": "2025-06-22T01:41:40.766Z",
       "updatedAt": "2025-06-22T01:41:40.766Z"
+    },
+    {
+      "id": 13,
+      "customerInfo": {
+        "firstName": "fdsfdf",
+        "lastName": "dsf",
+        "phone": "32123432432",
+        "email": "K3@gmail.com"
+      },
+      "items": [
+        {
+          "id": "PZ-MC7OM1ZS-BCW",
+          "name": "Lotsa Meat",
+          "size": "Large",
+          "crust": "Original",
+          "toppings": [
+            "Pepperoni",
+            "Italian Sausage",
+            "Bacon",
+            "Beef"
+          ],
+          "price": 11.99,
+          "quantity": 1,
+          "imageUrl": "/lotsa-meat-pizza.png"
+        }
+      ],
+      "subtotal": 11.99,
+      "tax": 0.99,
+      "tip": 0,
+      "total": 12.98,
+      "orderType": "pickup",
+      "specialInstructions": "",
+      "paymentStatus": "authorized",
+      "userId": null,
+      "status": "confirmed",
+      "paymentId": "test_pay_1750597643745_0huxv4y79",
+      "estimatedTime": 10,
+      "uniqueOrderId": "LE643747HRQE2X",
+      "createdAt": "2025-06-22T13:07:24.127Z",
+      "updatedAt": "2025-06-22T13:07:24.127Z"
     }
   ],
   "pizzas": [
@@ -520,10 +560,10 @@
   ],
   "counters": {
     "userId": 1,
-    "orderId": 13,
+    "orderId": 14,
     "pizzaId": 6,
     "notificationId": 5,
-    "customerProfileId": 1
+    "customerProfileId": 2
   },
   "notifications": [
     {
@@ -605,6 +645,23 @@
       "notes": null,
       "createdAt": "2025-06-20T01:09:06.134Z",
       "updatedAt": "2025-06-20T01:09:06.134Z"
+    },
+    {
+      "id": 1,
+      "phone": "32123432432",
+      "firstName": "fdsfdf",
+      "lastName": "dsf",
+      "email": "K3@gmail.com",
+      "totalOrders": 1,
+      "completedOrders": 0,
+      "cancelledOrders": 0,
+      "noShowOrders": 0,
+      "trustScore": 50,
+      "cashPaymentAllowed": false,
+      "lastOrderDate": "2025-06-22T13:07:24.137Z",
+      "notes": null,
+      "createdAt": "2025-06-22T13:07:24.137Z",
+      "updatedAt": "2025-06-22T13:07:24.137Z"
     }
   ]
 }

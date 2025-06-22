@@ -191,13 +191,23 @@ export default function SimpleAuth({ isOpen, onClose, onLogin }: SimpleAuthProps
 export function useSimpleAuth() {
   const [user, setUser] = useState<User | null>(() => {
     // Check localStorage on initialization
-    const stored = localStorage.getItem("currentUser");
-    return stored ? JSON.parse(stored) : null;
+    try {
+      const stored = localStorage.getItem("currentUser");
+      return stored ? JSON.parse(stored) : null;
+    } catch (error) {
+      console.warn("Failed to parse user data from localStorage:", error);
+      localStorage.removeItem("currentUser");
+      return null;
+    }
   });
 
   const login = (userData: User) => {
     setUser(userData);
-    localStorage.setItem("currentUser", JSON.stringify(userData));
+    try {
+      localStorage.setItem("currentUser", JSON.stringify(userData));
+    } catch (error) {
+      console.warn("Failed to save user data to localStorage:", error);
+    }
   };
 
   const logout = () => {
