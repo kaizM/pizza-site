@@ -5,11 +5,16 @@ import { storage } from './storage';
 class FirebaseSync {
   private ordersCollection = collection(db, 'orders');
 
-  // Sync order to Firebase when created/updated (disabled for Replit migration)
+  // Sync order to Firebase when created/updated
   async syncOrderToFirebase(order: any) {
     try {
-      // Firebase sync temporarily disabled during migration - using local storage only
-      console.log(`📝 Order ${order.id} saved to local storage (Firebase sync disabled)`);
+      const orderRef = doc(this.ordersCollection, `order_${order.id}`);
+      await setDoc(orderRef, {
+        ...order,
+        updatedAt: serverTimestamp(),
+        syncedAt: serverTimestamp()
+      });
+      console.log(`✓ Order ${order.id} synced to Firebase`);
       return true;
     } catch (error) {
       console.error(`✗ Failed to sync order ${order.id} to Firebase:`, error);
@@ -17,11 +22,15 @@ class FirebaseSync {
     }
   }
 
-  // Update order status in Firebase (disabled for Replit migration)
+  // Update order status in Firebase
   async updateOrderStatusInFirebase(orderId: number, updates: any) {
     try {
-      // Firebase sync temporarily disabled during migration - using local storage only
-      console.log(`📝 Order ${orderId} status updated in local storage (Firebase sync disabled)`);
+      const orderRef = doc(this.ordersCollection, `order_${orderId}`);
+      await updateDoc(orderRef, {
+        ...updates,
+        updatedAt: serverTimestamp()
+      });
+      console.log(`✓ Order ${orderId} status updated in Firebase`);
       return true;
     } catch (error) {
       console.error(`✗ Failed to update order ${orderId} in Firebase:`, error);
@@ -29,23 +38,30 @@ class FirebaseSync {
     }
   }
 
-  // Sync all existing orders to Firebase (disabled for Replit migration)
+  // Sync all existing orders to Firebase
   async syncAllOrdersToFirebase() {
     try {
       const orders = await storage.getAllOrders();
-      console.log(`📦 ${orders.length} orders available in local storage (Firebase sync disabled during migration)`);
-      return { total: orders.length, synced: orders.length };
+      let syncedCount = 0;
+      
+      for (const order of orders) {
+        const success = await this.syncOrderToFirebase(order);
+        if (success) syncedCount++;
+      }
+      
+      console.log(`✓ Synced ${syncedCount}/${orders.length} orders to Firebase`);
+      return { total: orders.length, synced: syncedCount };
     } catch (error) {
-      console.error('❌ Failed to access local orders:', error);
+      console.error('❌ Failed to sync orders to Firebase:', error);
       return { total: 0, synced: 0 };
     }
   }
 
   // Initialize Firebase sync - call this on server startup (disabled for migration)
   async initialize() {
-    console.log('🔄 Initializing local storage (Firebase sync disabled during Replit migration)...');
+    console.log('🔄 Initializing Firebase sync...');
     
-    // Check existing orders in local storage
+    // Sync existing orders to Firebase
     await this.syncAllOrdersToFirebase();
     
     console.log('✅ Local storage initialized - migration complete');

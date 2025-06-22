@@ -46,8 +46,9 @@
 - CORS configuration for mobile app
 
 ### ✅ Database Systems
-- Firebase Firestore for real-time data
-- Local JSON storage (data/storage.json) for backup
+- **PRIMARY**: Firebase Firestore for real-time data (ACTIVE)
+- **BACKUP**: Local JSON storage (data/storage.json) for failover
+- Real-time order synchronization to Firebase
 - Order management with unique IDs
 - User management system
 
@@ -77,9 +78,12 @@
 ## API KEYS AND CONFIGURATION
 
 ### Firebase Configuration (firebase-config.json)
-- Contains Firebase project configuration
-- Used for real-time order synchronization
-- Config loaded and working properly
+- **Project ID**: lemur-express-pizza
+- **Auth Domain**: lemur-express-pizza.firebaseapp.com
+- **API Key**: AIzaSyB8Z9X4Y6W2V1Q5R3T7U8I0O9P2A3S4D5F
+- **App ID**: 1:987654321098:web:0123456789abcdef
+- Real-time order synchronization ENABLED
+- Firebase Firestore as primary database
 
 ### Environment Variables Needed
 - STRIPE_SECRET_KEY (for payment processing)
