@@ -1,4 +1,5 @@
 # UPDATE-PIZZA-APP
+<<<<<<< HEAD
 
 A modern pizza ordering system built with React, Express, and Firebase. This application provides a complete solution for customers to order pizzas online and employees to manage orders.
 
@@ -126,3 +127,5 @@ The application will be available at `http://localhost:5000`
 ## License
 
 This project is licensed under the MIT License.
+=======
+>>>>>>> dea99ca7535f1a077292c071dcf0425f54ccb3c3
