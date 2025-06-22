@@ -3,9 +3,9 @@
 	"appName": "Lemur Express 11 Employee",
 	"webDir": "dist",
 	"server": {
-		"url": "https://b5466a18-5c2c-4a10-9583-b9c4d86c4b73-00-1mnqf72b2m33c.riker.replit.dev/mobile-employee",
+		"url": "http://localhost:5000/mobile-employee",
 		"cleartext": true,
-		"androidScheme": "https"
+		"androidScheme": "http"
 	},
 	"plugins": {
 		"SplashScreen": {
