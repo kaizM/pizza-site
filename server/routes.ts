@@ -5,6 +5,26 @@ import { storage } from "./storage";
 import { firebaseSync } from "./firebaseSync";
 import { loadFirebaseConfig } from "./config-loader.js";
 
+// Push notification service
+class NotificationService {
+  private deviceTokens = new Set<string>();
+
+  registerToken(token: string) {
+    this.deviceTokens.add(token);
+    console.log(`Device registered for notifications: ${token.substring(0, 20)}...`);
+  }
+
+  async sendToAllDevices(title: string, body: string, data?: any) {
+    console.log(`📱 Sending notification to ${this.deviceTokens.size} devices: ${title}`);
+    // In production, integrate with Firebase Cloud Messaging or similar
+    for (const token of this.deviceTokens) {
+      console.log(`Would notify device: ${token.substring(0, 15)}...`);
+    }
+  }
+}
+
+const notificationService = new NotificationService();
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Rate limiting
   const generalLimiter = rateLimit({
@@ -24,6 +44,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.use('/api', generalLimiter);
+
+  const server = createServer(app);
+
+  // Health check endpoint for connection testing
+  app.get("/api/health", (req, res) => {
+    res.json({ 
+      status: "ok", 
+      timestamp: new Date().toISOString(),
+      server: "Lemur Express 11" 
+    });
+  });
+
+  // Register device for push notifications
+  app.post("/api/register-device", (req, res) => {
+    try {
+      const { token } = req.body;
+      if (token) {
+        notificationService.registerToken(token);
+        res.json({ success: true });
+      } else {
+        res.status(400).json({ error: "Token required" });
+      }
+    } catch (error) {
+      res.status(500).json({ error: "Failed to register device" });
+    }
+  });
   
   // Employee dashboard route for Android app
   app.get("/employee", (req, res) => {

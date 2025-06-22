@@ -5,14 +5,15 @@ const config: CapacitorConfig = {
   appName: 'Lemur Express 11 Employee',
   webDir: 'dist',
   server: {
-    url: 'http://10.0.2.2:5000/employee',
-    cleartext: true
+    url: 'http://localhost:5000/employee',
+    cleartext: true,
+    androidScheme: 'https'
   },
   plugins: {
     SplashScreen: {
       launchShowDuration: 2000,
       launchAutoHide: true,
-      backgroundColor: "#667eea",
+      backgroundColor: "#f97316",
       androidSplashResourceName: "splash",
       androidScaleType: "CENTER_CROP",
       showSpinner: true,
@@ -21,6 +22,15 @@ const config: CapacitorConfig = {
       splashFullScreen: true,
       splashImmersive: true,
     },
+    PushNotifications: {
+      presentationOptions: ["badge", "sound", "alert"]
+    },
+    LocalNotifications: {
+      smallIcon: "ic_stat_icon_config_sample",
+      iconColor: "#f97316",
+      sound: "beep.wav",
+    },
+
   },
   android: {
     allowMixedContent: true,
