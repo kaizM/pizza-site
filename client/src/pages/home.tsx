@@ -18,30 +18,7 @@ export default function Home() {
   const { addToCart, getTotalItems } = useCart();
   const { toast } = useToast();
 
-  const { data: kitchenStatus } = useQuery<{status: string}>({
-    queryKey: ['/api/kitchen-status'],
-    refetchInterval: 3000,
-  });
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'open': return 'bg-green-500';
-      case 'busy': return 'bg-orange-500';
-      case 'closed': return 'bg-red-500';
-      default: return 'bg-gray-400';
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'open': return 'OPEN FOR ORDERS';
-      case 'busy': return 'BUSY - LONGER WAIT';
-      case 'closed': return 'CLOSED';
-      default: return 'CHECKING STATUS...';
-    }
-  };
-
-  const isOrderingAvailable = kitchenStatus?.status !== 'closed';
 
   const orderPremadePizza = (pizza: typeof pizzas[0]) => {
     const cartItem: CartItem = {

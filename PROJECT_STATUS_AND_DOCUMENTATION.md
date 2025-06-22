@@ -11,6 +11,7 @@
 - **Database**: Firebase Firestore (primary) + Local JSON backup
 - **Integration**: Customer orders → Replit API → Firebase → Employee/Admin dashboards
 **Note**: Pickup only - no delivery service
+**Employee System**: Simple order management without kitchen status controls
 
 ## CURRENT REPLIT CONFIGURATION
 - **Server URL**: https://15e8b74e-5e82-4bd4-8115-c38ee1ec49de-00-jywt9f6oi31b.kirk.replit.dev

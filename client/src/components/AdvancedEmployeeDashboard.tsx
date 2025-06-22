@@ -80,11 +80,7 @@ export default function AdvancedEmployeeDashboard() {
   const [selectedTab, setSelectedTab] = useState("active");
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [customTime, setCustomTime] = useState("");
-  const [kitchenStatus, setKitchenStatus] = useState<"open" | "busy" | "closed">("open");
   const [showSettings, setShowSettings] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [authCode, setAuthCode] = useState("");
-  const [pendingStatus, setPendingStatus] = useState<"open" | "busy" | "closed" | null>(null);
   const [autoAccept, setAutoAccept] = useState(false);
   const [maxOrders, setMaxOrders] = useState(10);
   const [preparationNotes, setPreparationNotes] = useState("");
@@ -204,78 +200,7 @@ export default function AdvancedEmployeeDashboard() {
     }
   };
 
-  const getKitchenStatusColor = (status: string) => {
-    switch (status) {
-      case 'open': return 'bg-green-500';
-      case 'busy': return 'bg-orange-500';
-      case 'closed': return 'bg-red-500';
-      default: return 'bg-gray-400';
-    }
-  };
 
-  const getKitchenStatusText = (status: string) => {
-    switch (status) {
-      case 'open': return 'OPEN';
-      case 'busy': return 'BUSY';
-      case 'closed': return 'CLOSED';
-      default: return 'UNKNOWN';
-    }
-  };
-
-  // Business hours enforcement (9 PM - 11 PM)
-  const isBusinessHours = () => {
-    const now = new Date();
-    const hour = now.getHours();
-    return hour >= 21 || hour <= 23; // 9 PM to 11 PM
-  };
-
-  const requiresAuthorization = (newStatus: "open" | "busy" | "closed") => {
-    if (!isBusinessHours()) return false;
-    return newStatus === 'closed'; // Only closing during business hours requires auth
-  };
-
-  const handleStatusChange = (newStatus: "open" | "busy" | "closed") => {
-    if (requiresAuthorization(newStatus)) {
-      setPendingStatus(newStatus);
-      setShowAuthModal(true);
-    } else {
-      setKitchenStatus(newStatus);
-      updateKitchenStatusOnServer(newStatus);
-    }
-  };
-
-  const verifyAuthCode = () => {
-    const MANAGER_CODE = "PIZZA2025"; // You can change this secret code
-    if (authCode === MANAGER_CODE && pendingStatus) {
-      setKitchenStatus(pendingStatus);
-      updateKitchenStatusOnServer(pendingStatus);
-      setShowAuthModal(false);
-      setAuthCode("");
-      setPendingStatus(null);
-      toast({
-        title: "Status Updated",
-        description: `Kitchen status changed to ${pendingStatus.toUpperCase()}`,
-      });
-    } else {
-      toast({
-        title: "Access Denied",
-        description: "Invalid authorization code",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const updateKitchenStatusOnServer = async (status: string) => {
-    try {
-      await fetch('/api/kitchen-status', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status })
-      });
-    } catch (error) {
-      console.error('Failed to update kitchen status:', error);
-    }
-  };
 
   const getPriorityColor = (priority: Order['priority'] = 'normal') => {
     switch (priority) {
@@ -323,8 +248,8 @@ export default function AdvancedEmployeeDashboard() {
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <Badge className={`${getKitchenStatusColor(kitchenStatus)} text-white`}>
-                {getKitchenStatusText(kitchenStatus)}
+              <Badge className="bg-blue-500 text-white">
+                EMPLOYEE DASHBOARD
               </Badge>
               <Button 
                 variant="ghost" 
@@ -684,30 +609,10 @@ export default function AdvancedEmployeeDashboard() {
               <DialogTitle>Kitchen Settings</DialogTitle>
             </DialogHeader>
             <div className="space-y-6">
-              {/* Kitchen Status */}
+              {/* Employee Info */}
               <div>
-                <Label className="text-base font-medium">Kitchen Status</Label>
-                <div className="mt-2 space-y-2">
-                  {[
-                    { value: 'open', label: 'Open - Accepting Orders', color: 'bg-green-500' },
-                    { value: 'busy', label: 'Busy - Limited Capacity', color: 'bg-orange-500' },
-                    { value: 'closed', label: 'Closed - No New Orders', color: 'bg-red-500' }
-                  ].map((status) => (
-                    <div key={status.value} className="flex items-center space-x-3">
-                      <Button
-                        variant={kitchenStatus === status.value ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => handleStatusChange(status.value as any)}
-                        className={kitchenStatus === status.value ? `${status.color} text-white` : ''}
-                      >
-                        {status.label}
-                        {requiresAuthorization(status.value as any) && (
-                          <span className="ml-1 text-xs">🔒</span>
-                        )}
-                      </Button>
-                    </div>
-                  ))}
-                </div>
+                <Label className="text-base font-medium">Employee Dashboard</Label>
+                <p className="text-sm text-gray-500 mt-1">Manage orders and kitchen operations</p>
               </div>
 
               {/* Auto Accept Orders */}
@@ -775,48 +680,7 @@ export default function AdvancedEmployeeDashboard() {
         </Dialog>
       )}
 
-      {/* Authorization Modal */}
-      {showAuthModal && (
-        <Dialog open={showAuthModal} onOpenChange={setShowAuthModal}>
-          <DialogContent className="max-w-sm">
-            <DialogHeader>
-              <DialogTitle>🔒 Manager Authorization Required</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3">
-                <p className="text-sm text-yellow-800">
-                  <strong>Business Hours Protection:</strong><br/>
-                  Closing the kitchen during business hours (9-11 PM) requires manager authorization to prevent revenue loss.
-                </p>
-              </div>
-              <div>
-                <Label htmlFor="auth-code">Enter Manager Authorization Code</Label>
-                <Input
-                  id="auth-code"
-                  type="password"
-                  placeholder="Enter code..."
-                  value={authCode}
-                  onChange={(e) => setAuthCode(e.target.value)}
-                  className="mt-1"
-                  onKeyPress={(e) => e.key === 'Enter' && verifyAuthCode()}
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => {
-                setShowAuthModal(false);
-                setAuthCode("");
-                setPendingStatus(null);
-              }}>
-                Cancel
-              </Button>
-              <Button onClick={verifyAuthCode}>
-                Authorize Change
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      )}
+
     </div>
   );
 }
