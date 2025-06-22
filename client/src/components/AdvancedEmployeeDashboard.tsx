@@ -56,8 +56,8 @@ interface Order {
     specialInstructions?: string;
   }>;
   total: number;
-  status: "confirmed" | "preparing" | "ready" | "out_for_delivery" | "completed" | "cancelled";
-  orderType: "pickup" | "delivery";
+  status: "confirmed" | "preparing" | "ready" | "completed" | "cancelled";
+  orderType: "pickup";
   specialInstructions?: string;
   estimatedTime?: number;
   paymentId?: string;
@@ -73,7 +73,6 @@ interface KitchenStats {
   activeOrders: number;
   avgPrepTime: number;
   completedToday: number;
-  revenue: number;
   efficiency: number;
 }
 
@@ -99,16 +98,13 @@ export default function AdvancedEmployeeDashboard() {
     refetchInterval: 3000, // More frequent updates like Uber Eats
   });
 
-  // Kitchen statistics
+  // Kitchen statistics (employee view - no revenue)
   const kitchenStats: KitchenStats = {
     activeOrders: orders.filter(o => ['confirmed', 'preparing', 'ready'].includes(o.status)).length,
-    avgPrepTime: 18, // minutes
+    avgPrepTime: 12, // minutes
     completedToday: orders.filter(o => o.status === 'completed' && 
       new Date(o.updatedAt).toDateString() === new Date().toDateString()).length,
-    revenue: orders.filter(o => o.status === 'completed' && 
-      new Date(o.updatedAt).toDateString() === new Date().toDateString())
-      .reduce((sum, o) => sum + o.total, 0),
-    efficiency: 85
+    efficiency: 92
   };
 
   // Update order status mutation
@@ -198,7 +194,7 @@ export default function AdvancedEmployeeDashboard() {
       case 'confirmed': return 'bg-blue-500';
       case 'preparing': return 'bg-orange-500';
       case 'ready': return 'bg-green-500';
-      case 'out_for_delivery': return 'bg-purple-500';
+
       case 'completed': return 'bg-gray-500';
       case 'cancelled': return 'bg-red-500';
       default: return 'bg-gray-400';
@@ -234,13 +230,11 @@ export default function AdvancedEmployeeDashboard() {
   const filteredOrders = orders.filter(order => {
     switch (selectedTab) {
       case 'active':
-        return ['confirmed', 'preparing', 'ready'].includes(order.status);
+        return ['confirmed', 'preparing'].includes(order.status);
       case 'ready':
         return order.status === 'ready';
       case 'completed':
         return ['completed', 'cancelled'].includes(order.status);
-      case 'delivery':
-        return order.orderType === 'delivery' && !['completed', 'cancelled'].includes(order.status);
       default:
         return true;
     }
@@ -288,7 +282,7 @@ export default function AdvancedEmployeeDashboard() {
 
       {/* Kitchen Stats */}
       <div className="px-4 py-4 bg-white border-b">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           <div className="text-center">
             <div className="text-2xl font-bold text-orange-600">{kitchenStats.activeOrders}</div>
             <div className="text-xs text-gray-500">Active Orders</div>
@@ -301,10 +295,6 @@ export default function AdvancedEmployeeDashboard() {
             <div className="text-2xl font-bold text-green-600">{kitchenStats.completedToday}</div>
             <div className="text-xs text-gray-500">Completed Today</div>
           </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-purple-600">${kitchenStats.revenue.toFixed(0)}</div>
-            <div className="text-xs text-gray-500">Today's Revenue</div>
-          </div>
         </div>
       </div>
 
@@ -312,10 +302,9 @@ export default function AdvancedEmployeeDashboard() {
       <div className="bg-white border-b">
         <div className="flex">
           {[
-            { key: 'active', label: 'Active', count: orders.filter(o => ['confirmed', 'preparing', 'ready'].includes(o.status)).length },
+            { key: 'active', label: 'Active', count: orders.filter(o => ['confirmed', 'preparing'].includes(o.status)).length },
             { key: 'ready', label: 'Ready', count: orders.filter(o => o.status === 'ready').length },
-            { key: 'delivery', label: 'Delivery', count: orders.filter(o => o.orderType === 'delivery' && !['completed', 'cancelled'].includes(o.status)).length },
-            { key: 'completed', label: 'History', count: orders.filter(o => ['completed', 'cancelled'].includes(o.status)).length }
+            { key: 'completed', label: 'Completed', count: orders.filter(o => ['completed', 'cancelled'].includes(o.status)).length }
           ].map(tab => (
             <button
               key={tab.key}
@@ -377,7 +366,7 @@ export default function AdvancedEmployeeDashboard() {
                       <span className="font-medium text-gray-900">
                         {order.customerInfo.firstName} {order.customerInfo.lastName}
                       </span>
-                      {order.orderType === 'delivery' && <Truck className="h-4 w-4 text-blue-500" />}
+
                     </div>
                     {order.estimatedTime && (
                       <div className="flex items-center space-x-1 text-orange-600">
@@ -505,12 +494,6 @@ export default function AdvancedEmployeeDashboard() {
                     <Phone className="h-4 w-4" />
                     <span>{selectedOrder.customerInfo.phone}</span>
                   </div>
-                  {selectedOrder.orderType === 'delivery' && selectedOrder.customerInfo.address && (
-                    <div className="flex items-start space-x-2">
-                      <MapPin className="h-4 w-4 mt-0.5" />
-                      <span>{selectedOrder.customerInfo.address}</span>
-                    </div>
-                  )}
                 </div>
               </div>
 
@@ -549,17 +532,31 @@ export default function AdvancedEmployeeDashboard() {
                 />
               </div>
 
-              {/* Custom Time */}
+              {/* Quick Prep Time Selection */}
               {(['confirmed', 'preparing'].includes(selectedOrder.status)) && (
                 <div>
-                  <Label htmlFor="custom-time">Estimated Prep Time (minutes)</Label>
+                  <Label className="text-base font-medium">Prep Time (minutes)</Label>
+                  <div className="grid grid-cols-4 gap-2 mt-2">
+                    {[5, 10, 15, 20].map((minutes) => (
+                      <Button
+                        key={minutes}
+                        variant={customTime === minutes.toString() ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setCustomTime(minutes.toString())}
+                        className="h-12"
+                      >
+                        {minutes}m
+                      </Button>
+                    ))}
+                  </div>
                   <Input
-                    id="custom-time"
                     type="number"
-                    placeholder="Enter minutes"
+                    placeholder="Custom time"
                     value={customTime}
                     onChange={(e) => setCustomTime(e.target.value)}
-                    className="mt-1"
+                    className="mt-2"
+                    min="1"
+                    max="60"
                   />
                 </div>
               )}

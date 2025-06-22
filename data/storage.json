@@ -535,6 +535,62 @@
       "createdAt": "2025-06-22T13:31:35.797Z",
       "updatedAt": "2025-06-22T13:38:55.016Z",
       "cancelReason": "Issue with order"
+    },
+    {
+      "id": 15,
+      "customerInfo": {
+        "firstName": "John",
+        "lastName": "Doe",
+        "phone": "555-0123",
+        "email": "john@example.com"
+      },
+      "items": [
+        {
+          "id": "margherita-large",
+          "name": "Margherita Pizza",
+          "size": "Large",
+          "quantity": 1,
+          "toppings": [
+            "Fresh Basil",
+            "Mozzarella"
+          ],
+          "price": 14.99
+        }
+      ],
+      "total": 14.99,
+      "orderType": "pickup",
+      "specialInstructions": "Extra crispy crust please",
+      "status": "confirmed",
+      "createdAt": "2025-06-22T13:44:12.474Z",
+      "updatedAt": "2025-06-22T13:44:12.474Z"
+    },
+    {
+      "id": 16,
+      "customerInfo": {
+        "firstName": "Jane",
+        "lastName": "Smith",
+        "phone": "555-9876",
+        "email": "jane@test.com"
+      },
+      "items": [
+        {
+          "id": "pepperoni-large",
+          "name": "Pepperoni Pizza",
+          "size": "Large",
+          "quantity": 1,
+          "toppings": [
+            "Pepperoni",
+            "Extra Cheese"
+          ],
+          "price": 16.99
+        }
+      ],
+      "total": 16.99,
+      "orderType": "pickup",
+      "specialInstructions": "",
+      "status": "confirmed",
+      "createdAt": "2025-06-22T13:44:39.009Z",
+      "updatedAt": "2025-06-22T13:44:39.009Z"
     }
   ],
   "pizzas": [
@@ -586,7 +642,7 @@
   ],
   "counters": {
     "userId": 1,
-    "orderId": 15,
+    "orderId": 17,
     "pizzaId": 6,
     "notificationId": 5,
     "customerProfileId": 2
