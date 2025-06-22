@@ -434,6 +434,41 @@
       "status": "confirmed",
       "createdAt": "2025-06-22T00:29:27.017Z",
       "updatedAt": "2025-06-22T00:29:27.017Z"
+    },
+    {
+      "id": 12,
+      "customerInfo": {
+        "firstName": "jshks",
+        "lastName": "saih",
+        "phone": "41414515151",
+        "email": "kisakjnsjxk@gmail.com"
+      },
+      "items": [
+        {
+          "id": "pizza-1750556453971",
+          "name": "Cheese",
+          "size": "Standard",
+          "crust": "Original",
+          "toppings": [],
+          "price": 11.99,
+          "quantity": 1,
+          "imageUrl": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300"
+        }
+      ],
+      "subtotal": 11.99,
+      "tax": 0.99,
+      "tip": 1.95,
+      "total": 14.93,
+      "orderType": "pickup",
+      "specialInstructions": "",
+      "paymentStatus": "authorized",
+      "userId": null,
+      "status": "confirmed",
+      "paymentId": "test_pay_1750556500511_63lgg5siy",
+      "estimatedTime": 10,
+      "uniqueOrderId": "LE5005132DV7DZ",
+      "createdAt": "2025-06-22T01:41:40.766Z",
+      "updatedAt": "2025-06-22T01:41:40.766Z"
     }
   ],
   "pizzas": [
@@ -485,7 +520,7 @@
   ],
   "counters": {
     "userId": 1,
-    "orderId": 12,
+    "orderId": 13,
     "pizzaId": 6,
     "notificationId": 5,
     "customerProfileId": 1

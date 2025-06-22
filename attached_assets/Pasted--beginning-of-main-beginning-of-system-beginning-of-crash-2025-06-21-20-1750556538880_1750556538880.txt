@@ -1,0 +1,426 @@
+--------- beginning of main
+--------- beginning of system
+--------- beginning of crash
+2025-06-21 20:38:41.780  6631-6631  ress11.employee         com.lemurexpress11.employee          I  Late-enabling -Xcheck:jni
+2025-06-21 20:38:42.018  6631-6631  ress11.employee         com.lemurexpress11.employee          I  Using CollectorTypeCMC GC.
+2025-06-21 20:38:42.135  6631-6631  nativeloader            com.lemurexpress11.employee          D  Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+2025-06-21 20:38:42.320  6631-6631  re-initialized>         com.lemurexpress11.employee          W  type=1400 audit(0.0:1584): avc:  granted  { execute } for  path="/data/data/com.lemurexpress11.employee/code_cache/startup_agents/1553d31e-agent.so" dev="dm-54" ino=49458 scontext=u:r:untrusted_app:s0:c213,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c213,c256,c512,c768 tclass=file app=com.lemurexpress11.employee
+2025-06-21 20:38:42.330  6631-6631  nativeloader            com.lemurexpress11.employee          D  Load /data/user/0/com.lemurexpress11.employee/code_cache/startup_agents/1553d31e-agent.so using system ns (caller=<unknown>): ok
+2025-06-21 20:38:42.369  6631-6631  ress11.employee         com.lemurexpress11.employee          W  hiddenapi: DexFile /data/data/com.lemurexpress11.employee/code_cache/.studio/instruments-c8049923.jar is in boot class path but is not in a known location
+2025-06-21 20:38:42.596  6631-6631  ress11.employee         com.lemurexpress11.employee          W  Redefining intrinsic method java.lang.Thread java.lang.Thread.currentThread(). This may cause the unexpected use of the original definition of java.lang.Thread java.lang.Thread.currentThread()in methods that have already been compiled.
+2025-06-21 20:38:42.596  6631-6631  ress11.employee         com.lemurexpress11.employee          W  Redefining intrinsic method boolean java.lang.Thread.interrupted(). This may cause the unexpected use of the original definition of boolean java.lang.Thread.interrupted()in methods that have already been compiled.
+2025-06-21 20:38:42.601  6631-6631  CompatChangeReporter    com.lemurexpress11.employee          D  Compat change id reported: 242716250; UID 10213; state: ENABLED
+2025-06-21 20:38:42.921  6631-6631  nativeloader            com.lemurexpress11.employee          D  Configuring clns-7 for other apk /data/app/~~avno1WcUbp_FFnHo9hLj1w==/com.lemurexpress11.employee--u7TRKAWRXAVQ87VNaGRpQ==/base.apk. target_sdk_version=34, uses_libraries=, library_path=/data/app/~~avno1WcUbp_FFnHo9hLj1w==/com.lemurexpress11.employee--u7TRKAWRXAVQ87VNaGRpQ==/lib/arm64, permitted_path=/data:/mnt/expand:/data/user/0/com.lemurexpress11.employee
+2025-06-21 20:38:42.934  6631-6631  ress11.employee         com.lemurexpress11.employee          I  AssetManager2(0xb4000075ab7983f8) locale list changing from [] to [en-US]
+2025-06-21 20:38:42.936  6631-6631  ress11.employee         com.lemurexpress11.employee          I  AssetManager2(0xb4000075ab795838) locale list changing from [] to [en-US]
+2025-06-21 20:38:42.941  6631-6631  GraphicsEnvironment     com.lemurexpress11.employee          V  Currently set values for:
+2025-06-21 20:38:42.941  6631-6631  GraphicsEnvironment     com.lemurexpress11.employee          V    angle_gl_driver_selection_pkgs=[]
+2025-06-21 20:38:42.942  6631-6631  GraphicsEnvironment     com.lemurexpress11.employee          V    angle_gl_driver_selection_values=[]
+2025-06-21 20:38:42.942  6631-6631  GraphicsEnvironment     com.lemurexpress11.employee          V  com.lemurexpress11.employee is not listed in per-application setting
+2025-06-21 20:38:42.942  6631-6631  GraphicsEnvironment     com.lemurexpress11.employee          V  ANGLE allowlist from config: 
+2025-06-21 20:38:42.942  6631-6631  GraphicsEnvironment     com.lemurexpress11.employee          V  com.lemurexpress11.employee is not listed in ANGLE allowlist or settings, returning default
+2025-06-21 20:38:42.942  6631-6631  GraphicsEnvironment     com.lemurexpress11.employee          V  Neither updatable production driver nor prerelease driver is supported.
+2025-06-21 20:38:43.003  6631-6631  ress11.employee         com.lemurexpress11.employee          I  AssetManager2(0xb4000075ab797a98) locale list changing from [] to [en-US]
+2025-06-21 20:38:43.188  6631-6631  DesktopModeFlags        com.lemurexpress11.employee          D  Toggle override initialized to: OVERRIDE_UNSET
+2025-06-21 20:38:43.266  6631-6631  HWUI                    com.lemurexpress11.employee          W  Unknown dataspace 0
+2025-06-21 20:38:43.455  6631-6631  ress11.employee         com.lemurexpress11.employee          W  Method java.lang.Object androidx.compose.runtime.snapshots.SnapshotStateMap.mutate(kotlin.jvm.functions.Function1) failed lock verification and will run slower.
+Common causes for lock verification issues are non-optimized dex code
+and incorrect proguard optimizations.
+2025-06-21 20:38:43.455  6631-6631  ress11.employee         com.lemurexpress11.employee          W  Method void androidx.compose.runtime.snapshots.SnapshotStateMap.update(kotlin.jvm.functions.Function1) failed lock verification and will run slower.
+2025-06-21 20:38:43.455  6631-6631  ress11.employee         com.lemurexpress11.employee          W  Method boolean androidx.compose.runtime.snapshots.SnapshotStateMap.removeIf$runtime_release(kotlin.jvm.functions.Function1) failed lock verification and will run slower.
+2025-06-21 20:38:43.713  6631-6647  EGL_emulation           com.lemurexpress11.employee          I  Opening libGLESv1_CM_emulation.so
+2025-06-21 20:38:43.713  6631-6647  EGL_emulation           com.lemurexpress11.employee          I  Opening libGLESv2_emulation.so
+2025-06-21 20:38:43.778  6631-6647  HWUI                    com.lemurexpress11.employee          W  Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+2025-06-21 20:38:43.778  6631-6647  HWUI                    com.lemurexpress11.employee          W  Failed to initialize 101010-2 format, error = EGL_SUCCESS
+2025-06-21 20:38:44.039  6631-6643  HWUI                    com.lemurexpress11.employee          I  Davey! duration=747ms; Flags=1, FrameTimelineVsyncId=33607, IntendedVsync=2354853686702, Vsync=2354870353368, InputEventId=0, HandleInputStart=2354870655997, AnimationStart=2354870657456, PerformTraversalsStart=2354870658081, DrawStart=2355451678581, FrameDeadline=2354870353368, FrameStartTime=2354870635872, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=2355536358206, SyncStart=2355537157956, IssueDrawCommandsStart=2355538202414, SwapBuffers=2355580745498, FrameCompleted=2355602131123, DequeueBufferDuration=6083, QueueBufferDuration=450291, GpuCompleted=2355602018956, SwapBuffersCompleted=2355602131123, DisplayPresentTime=0, CommandSubmissionCompleted=2355580745498, 
+2025-06-21 20:38:44.096  6631-6631  Choreographer           com.lemurexpress11.employee          I  Skipped 42 frames!  The application may be doing too much work on its main thread.
+2025-06-21 20:38:44.441  6631-6631  InsetsController        com.lemurexpress11.employee          D  hide(ime(), fromIme=false)
+2025-06-21 20:38:44.445  6631-6631  ImeTracker              com.lemurexpress11.employee          I  com.lemurexpress11.employee:cd0e029b: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+2025-06-21 20:38:44.613  6631-6636  ress11.employee         com.lemurexpress11.employee          I  Compiler allocated 5175KB to compile void android.view.ViewRootImpl.performTraversals()
+2025-06-21 20:38:48.423  6631-6658  ProfileInstaller        com.lemurexpress11.employee          D  Installing profile for com.lemurexpress11.employee
+2025-06-21 20:39:38.454  6699-6699  ress11.employee         com.lemurexpress11.employee          I  Late-enabling -Xcheck:jni
+2025-06-21 20:39:38.496  6699-6699  ress11.employee         com.lemurexpress11.employee          I  Using CollectorTypeCMC GC.
+2025-06-21 20:39:38.516  6699-6699  nativeloader            com.lemurexpress11.employee          D  Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+2025-06-21 20:39:38.548  6699-6699  re-initialized>         com.lemurexpress11.employee          W  type=1400 audit(0.0:1671): avc:  granted  { execute } for  path="/data/data/com.lemurexpress11.employee/code_cache/startup_agents/1553d31e-agent.so" dev="dm-54" ino=49458 scontext=u:r:untrusted_app:s0:c213,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c213,c256,c512,c768 tclass=file app=com.lemurexpress11.employee
+2025-06-21 20:39:38.552  6699-6699  nativeloader            com.lemurexpress11.employee          D  Load /data/user/0/com.lemurexpress11.employee/code_cache/startup_agents/1553d31e-agent.so using system ns (caller=<unknown>): ok
+2025-06-21 20:39:38.566  6699-6699  ress11.employee         com.lemurexpress11.employee          W  hiddenapi: DexFile /data/data/com.lemurexpress11.employee/code_cache/.studio/instruments-c8049923.jar is in boot class path but is not in a known location
+2025-06-21 20:39:38.650  6699-6699  ress11.employee         com.lemurexpress11.employee          W  Redefining intrinsic method java.lang.Thread java.lang.Thread.currentThread(). This may cause the unexpected use of the original definition of java.lang.Thread java.lang.Thread.currentThread()in methods that have already been compiled.
+2025-06-21 20:39:38.650  6699-6699  ress11.employee         com.lemurexpress11.employee          W  Redefining intrinsic method boolean java.lang.Thread.interrupted(). This may cause the unexpected use of the original definition of boolean java.lang.Thread.interrupted()in methods that have already been compiled.
+2025-06-21 20:39:38.654  6699-6699  CompatChangeReporter    com.lemurexpress11.employee          D  Compat change id reported: 242716250; UID 10213; state: ENABLED
+2025-06-21 20:39:38.941  6699-6699  nativeloader            com.lemurexpress11.employee          D  Configuring clns-7 for other apk /data/app/~~avno1WcUbp_FFnHo9hLj1w==/com.lemurexpress11.employee--u7TRKAWRXAVQ87VNaGRpQ==/base.apk. target_sdk_version=34, uses_libraries=, library_path=/data/app/~~avno1WcUbp_FFnHo9hLj1w==/com.lemurexpress11.employee--u7TRKAWRXAVQ87VNaGRpQ==/lib/arm64, permitted_path=/data:/mnt/expand:/data/user/0/com.lemurexpress11.employee
+2025-06-21 20:39:38.946  6699-6699  ress11.employee         com.lemurexpress11.employee          I  AssetManager2(0xb4000075ab7983f8) locale list changing from [] to [en-US]
+2025-06-21 20:39:38.947  6699-6699  ress11.employee         com.lemurexpress11.employee          I  AssetManager2(0xb4000075ab795838) locale list changing from [] to [en-US]
+2025-06-21 20:39:38.951  6699-6699  GraphicsEnvironment     com.lemurexpress11.employee          V  Currently set values for:
+2025-06-21 20:39:38.952  6699-6699  GraphicsEnvironment     com.lemurexpress11.employee          V    angle_gl_driver_selection_pkgs=[]
+2025-06-21 20:39:38.952  6699-6699  GraphicsEnvironment     com.lemurexpress11.employee          V    angle_gl_driver_selection_values=[]
+2025-06-21 20:39:38.952  6699-6699  GraphicsEnvironment     com.lemurexpress11.employee          V  com.lemurexpress11.employee is not listed in per-application setting
+2025-06-21 20:39:38.952  6699-6699  GraphicsEnvironment     com.lemurexpress11.employee          V  ANGLE allowlist from config: 
+2025-06-21 20:39:38.952  6699-6699  GraphicsEnvironment     com.lemurexpress11.employee          V  com.lemurexpress11.employee is not listed in ANGLE allowlist or settings, returning default
+2025-06-21 20:39:38.952  6699-6699  GraphicsEnvironment     com.lemurexpress11.employee          V  Neither updatable production driver nor prerelease driver is supported.
+2025-06-21 20:39:38.954  6699-6699  ActivityThread          com.lemurexpress11.employee          W  Application com.lemurexpress11.employee is suspending. Debugger needs to resume to continue.
+2025-06-21 20:39:38.954  6699-6699  System.out              com.lemurexpress11.employee          I  Sending WAIT chunk
+2025-06-21 20:39:38.955  6699-6699  System.out              com.lemurexpress11.employee          I  Waiting for debugger first packet
+2025-06-21 20:39:38.981  6699-6703  nativeloader            com.lemurexpress11.employee          D  Load libjdwp.so using system ns (caller=<unknown>): ok
+2025-06-21 20:39:39.365  6699-6699  System.out              com.lemurexpress11.employee          I  Debug.suspendAllAndSentVmStart
+2025-06-21 20:39:39.665  6699-6699  System.out              com.lemurexpress11.employee          I  Debug.suspendAllAndSendVmStart, resumed
+2025-06-21 20:39:39.758  6699-6699  ress11.employee         com.lemurexpress11.employee          I  AssetManager2(0xb4000075ab791058) locale list changing from [] to [en-US]
+2025-06-21 20:39:39.932  6699-6699  DesktopModeFlags        com.lemurexpress11.employee          D  Toggle override initialized to: OVERRIDE_UNSET
+2025-06-21 20:39:40.065  6699-6699  HWUI                    com.lemurexpress11.employee          W  Unknown dataspace 0
+2025-06-21 20:39:40.223  6699-6699  ress11.employee         com.lemurexpress11.employee          W  Method java.lang.Object androidx.compose.runtime.snapshots.SnapshotStateMap.mutate(kotlin.jvm.functions.Function1) failed lock verification and will run slower.
+Common causes for lock verification issues are non-optimized dex code
+and incorrect proguard optimizations.
+2025-06-21 20:39:40.223  6699-6699  ress11.employee         com.lemurexpress11.employee          W  Method void androidx.compose.runtime.snapshots.SnapshotStateMap.update(kotlin.jvm.functions.Function1) failed lock verification and will run slower.
+2025-06-21 20:39:40.224  6699-6699  ress11.employee         com.lemurexpress11.employee          W  Method boolean androidx.compose.runtime.snapshots.SnapshotStateMap.removeIf$runtime_release(kotlin.jvm.functions.Function1) failed lock verification and will run slower.
+2025-06-21 20:39:40.399  6699-6718  EGL_emulation           com.lemurexpress11.employee          I  Opening libGLESv1_CM_emulation.so
+2025-06-21 20:39:40.399  6699-6718  EGL_emulation           com.lemurexpress11.employee          I  Opening libGLESv2_emulation.so
+2025-06-21 20:39:40.422  6699-6718  HWUI                    com.lemurexpress11.employee          W  Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+2025-06-21 20:39:40.424  6699-6718  HWUI                    com.lemurexpress11.employee          W  Failed to initialize 101010-2 format, error = EGL_SUCCESS
+2025-06-21 20:39:40.567  6699-6699  InsetsController        com.lemurexpress11.employee          D  hide(ime(), fromIme=false)
+2025-06-21 20:39:40.567  6699-6699  ImeTracker              com.lemurexpress11.employee          I  com.lemurexpress11.employee:aae1efd4: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+2025-06-21 20:39:40.902  6699-6704  ress11.employee         com.lemurexpress11.employee          I  Compiler allocated 5175KB to compile void android.view.ViewRootImpl.performTraversals()
+2025-06-21 20:39:44.819  6699-6735  ProfileInstaller        com.lemurexpress11.employee          D  Installing profile for com.lemurexpress11.employee
+2025-06-21 20:39:47.723  6699-6724  libc                    com.lemurexpress11.employee          A  FORTIFY: pthread_mutex_lock called on a destroyed mutex (0x7845a02cc8)
+2025-06-21 20:39:47.723  6699-6724  libc                    com.lemurexpress11.employee          A  Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 6724 (hwuiTask0), pid 6699 (ress11.employee)
+2025-06-21 20:39:47.725  6699-6725  libc                    com.lemurexpress11.employee          A  FORTIFY: pthread_mutex_lock called on a destroyed mutex (0x7845a02cc8)
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.784  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.785  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.786  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.786  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.786  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.786  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.786  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.786  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.786  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.786  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.786  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.786  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.786  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.786  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.786  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.786  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.786  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.786  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.786  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.786  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.786  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.786  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.786  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.787  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:47.788  6699-6703  ress11.employee         com.lemurexpress11.employee          E  Unknown message received from debugger! ''
+2025-06-21 20:39:49.433  6773-6773  ress11.employee         com.lemurexpress11.employee          I  Late-enabling -Xcheck:jni
+2025-06-21 20:39:49.509  6773-6773  ress11.employee         com.lemurexpress11.employee          I  Using CollectorTypeCMC GC.
+2025-06-21 20:39:49.540  6773-6773  nativeloader            com.lemurexpress11.employee          D  Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+2025-06-21 20:39:49.572  6773-6773  re-initialized>         com.lemurexpress11.employee          W  type=1400 audit(0.0:1757): avc:  granted  { execute } for  path="/data/data/com.lemurexpress11.employee/code_cache/startup_agents/1553d31e-agent.so" dev="dm-54" ino=49458 scontext=u:r:untrusted_app:s0:c213,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c213,c256,c512,c768 tclass=file app=com.lemurexpress11.employee
+2025-06-21 20:39:49.575  6773-6773  nativeloader            com.lemurexpress11.employee          D  Load /data/user/0/com.lemurexpress11.employee/code_cache/startup_agents/1553d31e-agent.so using system ns (caller=<unknown>): ok
+2025-06-21 20:39:49.598  6773-6773  ress11.employee         com.lemurexpress11.employee          W  hiddenapi: DexFile /data/data/com.lemurexpress11.employee/code_cache/.studio/instruments-c8049923.jar is in boot class path but is not in a known location
+2025-06-21 20:39:49.916  6773-6773  ress11.employee         com.lemurexpress11.employee          W  Redefining intrinsic method java.lang.Thread java.lang.Thread.currentThread(). This may cause the unexpected use of the original definition of java.lang.Thread java.lang.Thread.currentThread()in methods that have already been compiled.
+2025-06-21 20:39:49.916  6773-6773  ress11.employee         com.lemurexpress11.employee          W  Redefining intrinsic method boolean java.lang.Thread.interrupted(). This may cause the unexpected use of the original definition of boolean java.lang.Thread.interrupted()in methods that have already been compiled.
+2025-06-21 20:39:49.928  6773-6773  CompatChangeReporter    com.lemurexpress11.employee          D  Compat change id reported: 242716250; UID 10213; state: ENABLED
+2025-06-21 20:39:50.241  6773-6773  nativeloader            com.lemurexpress11.employee          D  Configuring clns-7 for other apk /data/app/~~avno1WcUbp_FFnHo9hLj1w==/com.lemurexpress11.employee--u7TRKAWRXAVQ87VNaGRpQ==/base.apk. target_sdk_version=34, uses_libraries=, library_path=/data/app/~~avno1WcUbp_FFnHo9hLj1w==/com.lemurexpress11.employee--u7TRKAWRXAVQ87VNaGRpQ==/lib/arm64, permitted_path=/data:/mnt/expand:/data/user/0/com.lemurexpress11.employee
+2025-06-21 20:39:50.246  6773-6773  ress11.employee         com.lemurexpress11.employee          I  AssetManager2(0xb4000075ab791058) locale list changing from [] to [en-US]
+2025-06-21 20:39:50.247  6773-6773  ress11.employee         com.lemurexpress11.employee          I  AssetManager2(0xb4000075ab7932b8) locale list changing from [] to [en-US]
+2025-06-21 20:39:50.252  6773-6773  GraphicsEnvironment     com.lemurexpress11.employee          V  Currently set values for:
+2025-06-21 20:39:50.252  6773-6773  GraphicsEnvironment     com.lemurexpress11.employee          V    angle_gl_driver_selection_pkgs=[]
+2025-06-21 20:39:50.252  6773-6773  GraphicsEnvironment     com.lemurexpress11.employee          V    angle_gl_driver_selection_values=[]
+2025-06-21 20:39:50.252  6773-6773  GraphicsEnvironment     com.lemurexpress11.employee          V  com.lemurexpress11.employee is not listed in per-application setting
+2025-06-21 20:39:50.253  6773-6773  GraphicsEnvironment     com.lemurexpress11.employee          V  ANGLE allowlist from config: 
+2025-06-21 20:39:50.253  6773-6773  GraphicsEnvironment     com.lemurexpress11.employee          V  com.lemurexpress11.employee is not listed in ANGLE allowlist or settings, returning default
+2025-06-21 20:39:50.253  6773-6773  GraphicsEnvironment     com.lemurexpress11.employee          V  Neither updatable production driver nor prerelease driver is supported.
+2025-06-21 20:39:50.262  6773-6773  ActivityThread          com.lemurexpress11.employee          W  Application com.lemurexpress11.employee is suspending. Debugger needs to resume to continue.
+2025-06-21 20:39:50.264  6773-6773  System.out              com.lemurexpress11.employee          I  Sending WAIT chunk
+2025-06-21 20:39:50.265  6773-6773  System.out              com.lemurexpress11.employee          I  Waiting for debugger first packet
+2025-06-21 20:39:50.294  6773-6777  nativeloader            com.lemurexpress11.employee          D  Load libjdwp.so using system ns (caller=<unknown>): ok
+2025-06-21 20:39:50.466  6773-6773  System.out              com.lemurexpress11.employee          I  Debug.suspendAllAndSentVmStart
+2025-06-21 20:39:50.573  6773-6773  System.out              com.lemurexpress11.employee          I  Debug.suspendAllAndSendVmStart, resumed
+2025-06-21 20:39:50.645  6773-6773  ress11.employee         com.lemurexpress11.employee          I  AssetManager2(0xb4000075ab78bbf8) locale list changing from [] to [en-US]
+2025-06-21 20:39:50.781  6773-6773  DesktopModeFlags        com.lemurexpress11.employee          D  Toggle override initialized to: OVERRIDE_UNSET
+2025-06-21 20:39:50.945  6773-6773  HWUI                    com.lemurexpress11.employee          W  Unknown dataspace 0
+2025-06-21 20:39:51.219  6773-6773  ress11.employee         com.lemurexpress11.employee          W  Method java.lang.Object androidx.compose.runtime.snapshots.SnapshotStateMap.mutate(kotlin.jvm.functions.Function1) failed lock verification and will run slower.
+Common causes for lock verification issues are non-optimized dex code
+and incorrect proguard optimizations.
+2025-06-21 20:39:51.219  6773-6773  ress11.employee         com.lemurexpress11.employee          W  Method void androidx.compose.runtime.snapshots.SnapshotStateMap.update(kotlin.jvm.functions.Function1) failed lock verification and will run slower.
+2025-06-21 20:39:51.220  6773-6773  ress11.employee         com.lemurexpress11.employee          W  Method boolean androidx.compose.runtime.snapshots.SnapshotStateMap.removeIf$runtime_release(kotlin.jvm.functions.Function1) failed lock verification and will run slower.
+2025-06-21 20:39:51.464  6773-6792  EGL_emulation           com.lemurexpress11.employee          I  Opening libGLESv1_CM_emulation.so
+2025-06-21 20:39:51.464  6773-6792  EGL_emulation           com.lemurexpress11.employee          I  Opening libGLESv2_emulation.so
+2025-06-21 20:39:51.465  6773-6778  ress11.employee         com.lemurexpress11.employee          I  Compiler allocated 5175KB to compile void android.view.ViewRootImpl.performTraversals()
+2025-06-21 20:39:51.478  6773-6792  HWUI                    com.lemurexpress11.employee          W  Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+2025-06-21 20:39:51.479  6773-6792  HWUI                    com.lemurexpress11.employee          W  Failed to initialize 101010-2 format, error = EGL_SUCCESS
+2025-06-21 20:39:51.581  6773-6773  InsetsController        com.lemurexpress11.employee          D  hide(ime(), fromIme=false)
+2025-06-21 20:39:51.582  6773-6773  ImeTracker              com.lemurexpress11.employee          I  com.lemurexpress11.employee:45b74428: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+2025-06-21 20:39:56.190  6773-6802  ProfileInstaller        com.lemurexpress11.employee          D  Installing profile for com.lemurexpress11.employee
+2025-06-21 20:40:11.299  6773-6779  ress11.employee         com.lemurexpress11.employee          I  Background concurrent mark compact GC freed 2415KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 3726KB/7452KB, paused 406us,9.940ms total 63.156ms
