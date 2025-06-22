@@ -1,0 +1,10 @@
+Go to GitHub and upload these 2 files to fix deployment:
+
+1. vercel.json - Replace with:
+{
+  "version": 2
+}
+
+2. index.js - Upload the complete Express server file
+
+This will resolve the "api/*.ts" pattern error and deploy successfully.
