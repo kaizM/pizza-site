@@ -52,6 +52,11 @@ app.use((req, res, next) => {
 
 // Add employee dashboard route BEFORE Vite middleware
 app.get("/mobile-employee", (req, res) => {
+  // Serve the employee dashboard directly for Android app
+  res.redirect('/employee');
+});
+
+app.get("/employee-mobile-direct", (req, res) => {
   res.setHeader('Content-Type', 'text/html');
   res.setHeader('Cache-Control', 'no-cache');
   const dashboardHTML = `<!DOCTYPE html>
