@@ -403,6 +403,35 @@
       "status": "confirmed",
       "createdAt": "2025-06-20T01:09:31.357Z",
       "updatedAt": "2025-06-20T01:09:31.357Z"
+    },
+    {
+      "id": 11,
+      "customerInfo": {
+        "firstName": "Test",
+        "lastName": "User",
+        "phone": "555-0123",
+        "email": "test@example.com"
+      },
+      "items": [
+        {
+          "id": "test-1",
+          "name": "Test Pizza",
+          "size": "Medium",
+          "crust": "Original",
+          "toppings": [],
+          "price": 12.99,
+          "quantity": 1
+        }
+      ],
+      "subtotal": 12.99,
+      "tax": 1.04,
+      "tip": 2,
+      "total": 15.03,
+      "orderType": "pickup",
+      "specialInstructions": "Test order",
+      "status": "confirmed",
+      "createdAt": "2025-06-22T00:29:27.017Z",
+      "updatedAt": "2025-06-22T00:29:27.017Z"
     }
   ],
   "pizzas": [
@@ -454,7 +483,7 @@
   ],
   "counters": {
     "userId": 1,
-    "orderId": 11,
+    "orderId": 12,
     "pizzaId": 6,
     "notificationId": 5,
     "customerProfileId": 1
