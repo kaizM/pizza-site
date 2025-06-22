@@ -1,0 +1,74 @@
+--------- beginning of main
+--------- beginning of system
+--------- beginning of crash
+2025-06-21 20:06:51.656  5494-5494  ress11.employee         com.lemurexpress11.employee          I  Late-enabling -Xcheck:jni
+2025-06-21 20:06:51.762  5494-5494  ress11.employee         com.lemurexpress11.employee          I  Using CollectorTypeCMC GC.
+2025-06-21 20:06:51.888  5494-5494  nativeloader            com.lemurexpress11.employee          D  Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+2025-06-21 20:06:52.127  5494-5494  CompatChangeReporter    com.lemurexpress11.employee          D  Compat change id reported: 242716250; UID 10213; state: ENABLED
+2025-06-21 20:06:52.694  5494-5494  nativeloader            com.lemurexpress11.employee          D  Configuring clns-7 for other apk /data/app/~~cb8QZ-IAAYh3ru7sB0LCZQ==/com.lemurexpress11.employee-zVoOPQKejGUsS1zdhwFyLw==/base.apk. target_sdk_version=34, uses_libraries=, library_path=/data/app/~~cb8QZ-IAAYh3ru7sB0LCZQ==/com.lemurexpress11.employee-zVoOPQKejGUsS1zdhwFyLw==/lib/arm64, permitted_path=/data:/mnt/expand:/data/user/0/com.lemurexpress11.employee
+2025-06-21 20:06:52.701  5494-5494  ress11.employee         com.lemurexpress11.employee          I  AssetManager2(0xb4000075ab7983f8) locale list changing from [] to [en-US]
+2025-06-21 20:06:52.704  5494-5494  GraphicsEnvironment     com.lemurexpress11.employee          V  Currently set values for:
+2025-06-21 20:06:52.704  5494-5494  GraphicsEnvironment     com.lemurexpress11.employee          V    angle_gl_driver_selection_pkgs=[]
+2025-06-21 20:06:52.704  5494-5494  GraphicsEnvironment     com.lemurexpress11.employee          V    angle_gl_driver_selection_values=[]
+2025-06-21 20:06:52.704  5494-5494  GraphicsEnvironment     com.lemurexpress11.employee          V  com.lemurexpress11.employee is not listed in per-application setting
+2025-06-21 20:06:52.704  5494-5494  GraphicsEnvironment     com.lemurexpress11.employee          V  ANGLE allowlist from config: 
+2025-06-21 20:06:52.704  5494-5494  GraphicsEnvironment     com.lemurexpress11.employee          V  com.lemurexpress11.employee is not listed in ANGLE allowlist or settings, returning default
+2025-06-21 20:06:52.705  5494-5494  GraphicsEnvironment     com.lemurexpress11.employee          V  Neither updatable production driver nor prerelease driver is supported.
+2025-06-21 20:06:52.735  5494-5494  ress11.employee         com.lemurexpress11.employee          I  AssetManager2(0xb4000075ab791058) locale list changing from [] to [en-US]
+2025-06-21 20:06:52.768  5494-5494  DesktopModeFlags        com.lemurexpress11.employee          D  Toggle override initialized to: OVERRIDE_UNSET
+2025-06-21 20:06:52.814  5494-5494  HWUI                    com.lemurexpress11.employee          W  Unknown dataspace 0
+2025-06-21 20:06:52.913  5494-5494  ress11.employee         com.lemurexpress11.employee          W  Method java.lang.Object androidx.compose.runtime.snapshots.SnapshotStateMap.mutate(kotlin.jvm.functions.Function1) failed lock verification and will run slower.
+                                                                                                    Common causes for lock verification issues are non-optimized dex code
+                                                                                                    and incorrect proguard optimizations.
+2025-06-21 20:06:52.913  5494-5494  ress11.employee         com.lemurexpress11.employee          W  Method void androidx.compose.runtime.snapshots.SnapshotStateMap.update(kotlin.jvm.functions.Function1) failed lock verification and will run slower.
+2025-06-21 20:06:52.913  5494-5494  ress11.employee         com.lemurexpress11.employee          W  Method boolean androidx.compose.runtime.snapshots.SnapshotStateMap.removeIf$runtime_release(kotlin.jvm.functions.Function1) failed lock verification and will run slower.
+2025-06-21 20:06:53.038  5494-5512  EGL_emulation           com.lemurexpress11.employee          I  Opening libGLESv1_CM_emulation.so
+2025-06-21 20:06:53.039  5494-5512  EGL_emulation           com.lemurexpress11.employee          I  Opening libGLESv2_emulation.so
+2025-06-21 20:06:53.048  5494-5512  HWUI                    com.lemurexpress11.employee          W  Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+2025-06-21 20:06:53.048  5494-5512  HWUI                    com.lemurexpress11.employee          W  Failed to initialize 101010-2 format, error = EGL_SUCCESS
+2025-06-21 20:06:53.155  5494-5503  ress11.employee         com.lemurexpress11.employee          I  Compiler allocated 5175KB to compile void android.view.ViewRootImpl.performTraversals()
+2025-06-21 20:06:53.168  5494-5494  InsetsController        com.lemurexpress11.employee          D  hide(ime(), fromIme=false)
+2025-06-21 20:06:53.168  5494-5494  ImeTracker              com.lemurexpress11.employee          I  com.lemurexpress11.employee:a5c71e8c: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+2025-06-21 20:06:57.819  5494-5530  ProfileInstaller        com.lemurexpress11.employee          D  Installing profile for com.lemurexpress11.employee
+2025-06-21 20:07:05.828  5581-5581  ress11.employee         com.lemurexpress11.employee          I  Late-enabling -Xcheck:jni
+2025-06-21 20:07:05.919  5581-5581  ress11.employee         com.lemurexpress11.employee          I  Using CollectorTypeCMC GC.
+2025-06-21 20:07:05.939  5581-5581  nativeloader            com.lemurexpress11.employee          D  Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+2025-06-21 20:07:05.976  5581-5581  re-initialized>         com.lemurexpress11.employee          W  type=1400 audit(0.0:1145): avc:  granted  { execute } for  path="/data/data/com.lemurexpress11.employee/code_cache/startup_agents/1553d31e-agent.so" dev="dm-54" ino=49455 scontext=u:r:untrusted_app:s0:c213,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c213,c256,c512,c768 tclass=file app=com.lemurexpress11.employee
+2025-06-21 20:07:05.978  5581-5581  nativeloader            com.lemurexpress11.employee          D  Load /data/user/0/com.lemurexpress11.employee/code_cache/startup_agents/1553d31e-agent.so using system ns (caller=<unknown>): ok
+2025-06-21 20:07:05.988  5581-5581  ress11.employee         com.lemurexpress11.employee          W  hiddenapi: DexFile /data/data/com.lemurexpress11.employee/code_cache/.studio/instruments-c8049923.jar is in boot class path but is not in a known location
+2025-06-21 20:07:06.115  5581-5581  ress11.employee         com.lemurexpress11.employee          W  Redefining intrinsic method java.lang.Thread java.lang.Thread.currentThread(). This may cause the unexpected use of the original definition of java.lang.Thread java.lang.Thread.currentThread()in methods that have already been compiled.
+2025-06-21 20:07:06.115  5581-5581  ress11.employee         com.lemurexpress11.employee          W  Redefining intrinsic method boolean java.lang.Thread.interrupted(). This may cause the unexpected use of the original definition of boolean java.lang.Thread.interrupted()in methods that have already been compiled.
+2025-06-21 20:07:06.129  5581-5581  CompatChangeReporter    com.lemurexpress11.employee          D  Compat change id reported: 242716250; UID 10213; state: ENABLED
+2025-06-21 20:07:06.443  5581-5581  nativeloader            com.lemurexpress11.employee          D  Configuring clns-7 for other apk /data/app/~~cb8QZ-IAAYh3ru7sB0LCZQ==/com.lemurexpress11.employee-zVoOPQKejGUsS1zdhwFyLw==/base.apk. target_sdk_version=34, uses_libraries=, library_path=/data/app/~~cb8QZ-IAAYh3ru7sB0LCZQ==/com.lemurexpress11.employee-zVoOPQKejGUsS1zdhwFyLw==/lib/arm64, permitted_path=/data:/mnt/expand:/data/user/0/com.lemurexpress11.employee
+2025-06-21 20:07:06.449  5581-5581  ress11.employee         com.lemurexpress11.employee          I  AssetManager2(0xb4000075ab7983f8) locale list changing from [] to [en-US]
+2025-06-21 20:07:06.450  5581-5581  ress11.employee         com.lemurexpress11.employee          I  AssetManager2(0xb4000075ab795838) locale list changing from [] to [en-US]
+2025-06-21 20:07:06.453  5581-5581  GraphicsEnvironment     com.lemurexpress11.employee          V  Currently set values for:
+2025-06-21 20:07:06.453  5581-5581  GraphicsEnvironment     com.lemurexpress11.employee          V    angle_gl_driver_selection_pkgs=[]
+2025-06-21 20:07:06.453  5581-5581  GraphicsEnvironment     com.lemurexpress11.employee          V    angle_gl_driver_selection_values=[]
+2025-06-21 20:07:06.453  5581-5581  GraphicsEnvironment     com.lemurexpress11.employee          V  com.lemurexpress11.employee is not listed in per-application setting
+2025-06-21 20:07:06.454  5581-5581  GraphicsEnvironment     com.lemurexpress11.employee          V  ANGLE allowlist from config: 
+2025-06-21 20:07:06.454  5581-5581  GraphicsEnvironment     com.lemurexpress11.employee          V  com.lemurexpress11.employee is not listed in ANGLE allowlist or settings, returning default
+2025-06-21 20:07:06.454  5581-5581  GraphicsEnvironment     com.lemurexpress11.employee          V  Neither updatable production driver nor prerelease driver is supported.
+2025-06-21 20:07:06.455  5581-5581  ActivityThread          com.lemurexpress11.employee          W  Application com.lemurexpress11.employee is suspending. Debugger needs to resume to continue.
+2025-06-21 20:07:06.456  5581-5581  System.out              com.lemurexpress11.employee          I  Sending WAIT chunk
+2025-06-21 20:07:06.456  5581-5581  System.out              com.lemurexpress11.employee          I  Waiting for debugger first packet
+2025-06-21 20:07:06.506  5581-5584  nativeloader            com.lemurexpress11.employee          D  Load libjdwp.so using system ns (caller=<unknown>): ok
+2025-06-21 20:07:06.657  5581-5581  System.out              com.lemurexpress11.employee          I  Debug.suspendAllAndSentVmStart
+2025-06-21 20:07:07.067  5581-5581  System.out              com.lemurexpress11.employee          I  Debug.suspendAllAndSendVmStart, resumed
+2025-06-21 20:07:07.122  5581-5581  ress11.employee         com.lemurexpress11.employee          I  AssetManager2(0xb4000075ab791ff8) locale list changing from [] to [en-US]
+2025-06-21 20:07:07.208  5581-5581  DesktopModeFlags        com.lemurexpress11.employee          D  Toggle override initialized to: OVERRIDE_UNSET
+2025-06-21 20:07:07.308  5581-5581  HWUI                    com.lemurexpress11.employee          W  Unknown dataspace 0
+2025-06-21 20:07:07.581  5581-5581  ress11.employee         com.lemurexpress11.employee          W  Method java.lang.Object androidx.compose.runtime.snapshots.SnapshotStateMap.mutate(kotlin.jvm.functions.Function1) failed lock verification and will run slower.
+                                                                                                    Common causes for lock verification issues are non-optimized dex code
+                                                                                                    and incorrect proguard optimizations.
+2025-06-21 20:07:07.582  5581-5581  ress11.employee         com.lemurexpress11.employee          W  Method void androidx.compose.runtime.snapshots.SnapshotStateMap.update(kotlin.jvm.functions.Function1) failed lock verification and will run slower.
+2025-06-21 20:07:07.583  5581-5581  ress11.employee         com.lemurexpress11.employee          W  Method boolean androidx.compose.runtime.snapshots.SnapshotStateMap.removeIf$runtime_release(kotlin.jvm.functions.Function1) failed lock verification and will run slower.
+2025-06-21 20:07:07.790  5581-5602  EGL_emulation           com.lemurexpress11.employee          I  Opening libGLESv1_CM_emulation.so
+2025-06-21 20:07:07.790  5581-5602  EGL_emulation           com.lemurexpress11.employee          I  Opening libGLESv2_emulation.so
+2025-06-21 20:07:07.803  5581-5602  HWUI                    com.lemurexpress11.employee          W  Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+2025-06-21 20:07:07.803  5581-5602  HWUI                    com.lemurexpress11.employee          W  Failed to initialize 101010-2 format, error = EGL_SUCCESS
+2025-06-21 20:07:07.837  5581-5585  ress11.employee         com.lemurexpress11.employee          I  Compiler allocated 5175KB to compile void android.view.ViewRootImpl.performTraversals()
+2025-06-21 20:07:07.862  5581-5591  HWUI                    com.lemurexpress11.employee          I  Davey! duration=719ms; Flags=1, FrameTimelineVsyncId=25044, IntendedVsync=458703762548, Vsync=458887095874, InputEventId=0, HandleInputStart=458902273802, AnimationStart=458902279302, PerformTraversalsStart=458902503427, DrawStart=459401092844, FrameDeadline=458720429214, FrameStartTime=458901975552, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=459403886802, SyncStart=459405757677, IssueDrawCommandsStart=459406336552, SwapBuffers=459418740760, FrameCompleted=459425149260, DequeueBufferDuration=3083, QueueBufferDuration=549625, GpuCompleted=459425079927, SwapBuffersCompleted=459425149260, DisplayPresentTime=0, CommandSubmissionCompleted=459418740760, 
+2025-06-21 20:07:07.890  5581-5581  InsetsController        com.lemurexpress11.employee          D  hide(ime(), fromIme=false)
+2025-06-21 20:07:07.890  5581-5581  ImeTracker              com.lemurexpress11.employee          I  com.lemurexpress11.employee:ef6b1b01: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+2025-06-21 20:07:12.683  5581-5616  ProfileInstaller        com.lemurexpress11.employee          D  Installing profile for com.lemurexpress11.employee
