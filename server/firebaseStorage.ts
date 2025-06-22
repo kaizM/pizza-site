@@ -12,12 +12,22 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { IStorage } from "./storage";
-import { User, InsertUser, Order, InsertOrder, PizzaItem, InsertPizzaItem } from "@shared/schema";
+import { 
+  User, InsertUser, 
+  Order, InsertOrder, 
+  PizzaItem, InsertPizzaItem,
+  OrderCancellation, InsertOrderCancellation,
+  CustomerNotification, InsertCustomerNotification,
+  CustomerProfile, InsertCustomerProfile
+} from "@shared/schema";
 
 export class FirebaseStorage implements IStorage {
   private usersCollection = collection(db, "users");
   private ordersCollection = collection(db, "orders");
   private pizzasCollection = collection(db, "pizzas");
+  private cancellationsCollection = collection(db, "cancellations");
+  private notificationsCollection = collection(db, "notifications");
+  private customerProfilesCollection = collection(db, "customerProfiles");
 
   constructor() {
     this.initializeDefaultPizzas();
@@ -199,20 +209,24 @@ export class FirebaseStorage implements IStorage {
       const docRef = await addDoc(this.ordersCollection, orderData);
       const order: Order = {
         id: parseInt(docRef.id),
+        createdAt: new Date(),
         status: insertOrder.status || "confirmed",
         firebaseOrderId: insertOrder.firebaseOrderId,
+        uniqueOrderId: insertOrder.uniqueOrderId || null,
         userId: insertOrder.userId || null,
         customerInfo: insertOrder.customerInfo,
         items: insertOrder.items,
         subtotal: insertOrder.subtotal,
         tax: insertOrder.tax,
-
+        tip: insertOrder.tip || "0",
         total: insertOrder.total,
         orderType: insertOrder.orderType || "pickup",
         specialInstructions: insertOrder.specialInstructions || null,
         estimatedTime: insertOrder.estimatedTime || null,
-        createdAt: orderData.createdAt.toDate(),
-        updatedAt: orderData.updatedAt.toDate()
+        paymentId: insertOrder.paymentId || null,
+        paymentStatus: insertOrder.paymentStatus || "authorized",
+        createdAt: new Date(),
+        updatedAt: new Date()
       };
       return order;
     } catch (error) {
@@ -361,6 +375,212 @@ export class FirebaseStorage implements IStorage {
         avgPrepTime: 25,
         recentOrders: []
       };
+    }
+  }
+
+  // Cancellation methods
+  async recordCancellation(cancellation: InsertOrderCancellation): Promise<OrderCancellation> {
+    try {
+      const docRef = await addDoc(this.cancellationsCollection, {
+        ...cancellation,
+        createdAt: Timestamp.now()
+      });
+      
+      const newCancellation: OrderCancellation = {
+        id: parseInt(docRef.id),
+        ...cancellation,
+        createdAt: new Date()
+      };
+      
+      return newCancellation;
+    } catch (error) {
+      console.error("Error recording cancellation:", error);
+      throw error;
+    }
+  }
+
+  async getAllCancellations(): Promise<OrderCancellation[]> {
+    try {
+      const snapshot = await getDocs(this.cancellationsCollection);
+      return snapshot.docs.map(doc => ({
+        id: parseInt(doc.id),
+        ...doc.data(),
+        createdAt: doc.data().createdAt?.toDate() || new Date()
+      })) as OrderCancellation[];
+    } catch (error) {
+      console.error("Error getting cancellations:", error);
+      return [];
+    }
+  }
+
+  async getCancellationsByEmployee(employeeName: string): Promise<OrderCancellation[]> {
+    try {
+      const q = query(this.cancellationsCollection, where("employeeName", "==", employeeName));
+      const snapshot = await getDocs(q);
+      return snapshot.docs.map(doc => ({
+        id: parseInt(doc.id),
+        ...doc.data(),
+        createdAt: doc.data().createdAt?.toDate() || new Date()
+      })) as OrderCancellation[];
+    } catch (error) {
+      console.error("Error getting employee cancellations:", error);
+      return [];
+    }
+  }
+
+  // Notification methods
+  async createNotification(notification: InsertCustomerNotification): Promise<CustomerNotification> {
+    try {
+      const docRef = await addDoc(this.notificationsCollection, {
+        ...notification,
+        createdAt: Timestamp.now()
+      });
+      
+      const newNotification: CustomerNotification = {
+        id: parseInt(docRef.id),
+        ...notification,
+        createdAt: new Date()
+      };
+      
+      return newNotification;
+    } catch (error) {
+      console.error("Error creating notification:", error);
+      throw error;
+    }
+  }
+
+  async getNotificationsByOrder(orderId: number): Promise<CustomerNotification[]> {
+    try {
+      const q = query(this.notificationsCollection, where("orderId", "==", orderId));
+      const snapshot = await getDocs(q);
+      return snapshot.docs.map(doc => ({
+        id: parseInt(doc.id),
+        ...doc.data(),
+        createdAt: doc.data().createdAt?.toDate() || new Date()
+      })) as CustomerNotification[];
+    } catch (error) {
+      console.error("Error getting notifications:", error);
+      return [];
+    }
+  }
+
+  async updateNotificationResponse(notificationId: number, response: string, status: string): Promise<CustomerNotification | undefined> {
+    try {
+      const docRef = doc(this.notificationsCollection, notificationId.toString());
+      await updateDoc(docRef, { response, status });
+      
+      const updatedDoc = await getDoc(docRef);
+      if (updatedDoc.exists()) {
+        return {
+          id: notificationId,
+          ...updatedDoc.data(),
+          createdAt: updatedDoc.data().createdAt?.toDate() || new Date()
+        } as CustomerNotification;
+      }
+      return undefined;
+    } catch (error) {
+      console.error("Error updating notification:", error);
+      return undefined;
+    }
+  }
+
+  // Customer profile methods
+  async getCustomerProfile(phone: string): Promise<CustomerProfile | undefined> {
+    try {
+      const q = query(this.customerProfilesCollection, where("phone", "==", phone));
+      const snapshot = await getDocs(q);
+      if (!snapshot.empty) {
+        const doc = snapshot.docs[0];
+        return {
+          id: parseInt(doc.id),
+          ...doc.data(),
+          createdAt: doc.data().createdAt?.toDate() || new Date(),
+          lastOrderDate: doc.data().lastOrderDate?.toDate() || null
+        } as CustomerProfile;
+      }
+      return undefined;
+    } catch (error) {
+      console.error("Error getting customer profile:", error);
+      return undefined;
+    }
+  }
+
+  async createCustomerProfile(insertProfile: InsertCustomerProfile): Promise<CustomerProfile> {
+    try {
+      const docRef = await addDoc(this.customerProfilesCollection, {
+        ...insertProfile,
+        createdAt: Timestamp.now(),
+        lastOrderDate: insertProfile.lastOrderDate ? Timestamp.fromDate(insertProfile.lastOrderDate) : null
+      });
+      
+      const profile: CustomerProfile = {
+        id: parseInt(docRef.id),
+        ...insertProfile,
+        createdAt: new Date()
+      };
+      
+      return profile;
+    } catch (error) {
+      console.error("Error creating customer profile:", error);
+      throw error;
+    }
+  }
+
+  async updateCustomerProfile(phone: string, updates: Partial<CustomerProfile>): Promise<CustomerProfile | undefined> {
+    try {
+      const q = query(this.customerProfilesCollection, where("phone", "==", phone));
+      const snapshot = await getDocs(q);
+      
+      if (!snapshot.empty) {
+        const docRef = snapshot.docs[0].ref;
+        const updateData = { ...updates };
+        if (updateData.lastOrderDate) {
+          updateData.lastOrderDate = Timestamp.fromDate(updateData.lastOrderDate as any);
+        }
+        
+        await updateDoc(docRef, updateData);
+        
+        const updatedDoc = await getDoc(docRef);
+        if (updatedDoc.exists()) {
+          return {
+            id: parseInt(updatedDoc.id),
+            ...updatedDoc.data(),
+            createdAt: updatedDoc.data().createdAt?.toDate() || new Date(),
+            lastOrderDate: updatedDoc.data().lastOrderDate?.toDate() || null
+          } as CustomerProfile;
+        }
+      }
+      return undefined;
+    } catch (error) {
+      console.error("Error updating customer profile:", error);
+      return undefined;
+    }
+  }
+
+  async calculateTrustScore(phone: string): Promise<number> {
+    try {
+      const profile = await this.getCustomerProfile(phone);
+      if (!profile) return 50; // Default neutral score
+      
+      // Simple trust score calculation
+      let score = 50;
+      score += Math.min(profile.totalOrders * 2, 30); // Max 30 points for order history
+      score += Math.min(profile.totalSpent / 100, 20); // Max 20 points for spending
+      
+      return Math.min(score, 100);
+    } catch (error) {
+      console.error("Error calculating trust score:", error);
+      return 50;
+    }
+  }
+
+  async checkCashPaymentEligibility(phone: string): Promise<boolean> {
+    try {
+      const trustScore = await this.calculateTrustScore(phone);
+      return trustScore >= 70; // Require high trust score for cash payments
+    } catch (error) {
+      console.error("Error checking cash payment eligibility:", error);
+      return false;
     }
   }
 }
