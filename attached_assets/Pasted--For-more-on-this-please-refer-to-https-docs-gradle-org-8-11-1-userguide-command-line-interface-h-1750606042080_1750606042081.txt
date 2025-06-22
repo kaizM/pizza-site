@@ -1,0 +1,54 @@
+
+For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 1m 33s
+15 actionable tasks: 1 executed, 14 up-to-date
+kaizmaredia@kaizs-MacBook-Air android % cd /Users/kaizmaredia/Desktop/PizzaOrderPro/android
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home
+./gradlew assembleDebug
+
+ERROR: JAVA_HOME is set to an invalid directory: /Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home
+
+Please set the JAVA_HOME variable in your environment to match the
+location of your Java installation.
+
+kaizmaredia@kaizs-MacBook-Air android % compileSdk 34
+targetSdk 34
+zsh: command not found: compileSdk
+zsh: command not found: targetSdk
+kaizmaredia@kaizs-MacBook-Air android % export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jbr/Contents/Home
+./gradlew assembleDebug
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Warning: SDK processing. This version only understands SDK XML versions up to 3 but an SDK XML file of version 4 was encountered. This can happen if you use versions of Android Studio and the command-line tools that were released at different times.
+> Task :app:compileDebugJavaWithJavac FAILED
+[Incubating] Problems report is available at: file:///Users/kaizmaredia/Desktop/PizzaOrderPro/android/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileDebugJavaWithJavac'.
+> Could not resolve all files for configuration ':app:androidJdkImage'.
+   > Failed to transform core-for-system-modules.jar to match attributes {artifactType=_internal_android_jdk_image, org.gradle.libraryelements=jar, org.gradle.usage=java-runtime}.
+      > Execution failed for JdkImageTransform: /Users/kaizmaredia/Library/Android/sdk/platforms/android-34/core-for-system-modules.jar.
+         > Error while executing process /Applications/Android Studio.app/Contents/jbr/Contents/Home/bin/jlink with arguments {--module-path /Users/kaizmaredia/.gradle/caches/8.11.1/transforms/2ee5d0b420fc0ac00ae50b037943c2e4-de5e38ac-cabc-4551-88ab-0a7b7202ab6b/transformed/output/temp/jmod --add-modules java.base --output /Users/kaizmaredia/.gradle/caches/8.11.1/transforms/2ee5d0b420fc0ac00ae50b037943c2e4-de5e38ac-cabc-4551-88ab-0a7b7202ab6b/transformed/output/jdkImage --disable-plugin system-modules}
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 9s
+15 actionable tasks: 1 executed, 14 up-to-date
+kaizmaredia@kaizs-MacBook-Air android % /usr/libexec/java_home -V
+The operation couldn’t be completed. Unable to locate a Java Runtime.
+Please visit http://www.java.com for information on installing Java.
+
+kaizmaredia@kaizs-MacBook-Air android % 
