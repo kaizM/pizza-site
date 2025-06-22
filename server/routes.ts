@@ -306,6 +306,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // PATCH endpoint for updating orders (like Uber Eats)
+  app.patch("/api/orders/:id", async (req, res) => {
+    try {
+      const orderId = parseInt(req.params.id);
+      if (isNaN(orderId)) {
+        return res.status(400).json({ message: "Invalid order ID" });
+      }
+
+      const updates = req.body;
+      const updatedOrder = await storage.updateOrder(orderId, updates);
+      
+      if (!updatedOrder) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+
+      // Sync to Firebase
+      await firebaseSync.updateOrderStatusInFirebase(orderId, updates);
+
+      res.json(updatedOrder);
+    } catch (error) {
+      console.error('Order update error:', error);
+      res.status(500).json({ message: "Failed to update order" });
+    }
+  });
+
   app.post("/api/orders", orderLimiter, async (req, res) => {
     try {
       // Input validation

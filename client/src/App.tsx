@@ -15,6 +15,7 @@ import OrderTrackingPage from "@/pages/order-tracking";
 import CustomerResponse from "@/pages/CustomerResponse";
 import EmployeeMobileApp from "@/components/EmployeeMobileApp";
 import FirebaseEmployeeMobileApp from "@/components/FirebaseEmployeeMobileApp";
+import AdvancedEmployeeDashboard from "@/components/AdvancedEmployeeDashboard";
 
 function Router() {
   return (
@@ -27,7 +28,8 @@ function Router() {
       <Route path="/order-tracking" component={OrderTrackingPage} />
       <Route path="/customer-response/:id" component={CustomerResponse} />
       <Route path="/kitchen-display-system" component={EmployeePage} />
-      <Route path="/employee" component={FirebaseEmployeeMobileApp} />
+      <Route path="/employee" component={AdvancedEmployeeDashboard} />
+      <Route path="/employee-firebase" component={FirebaseEmployeeMobileApp} />
       <Route path="/employee-rest" component={EmployeeMobileApp} />
       <Route path="/management-portal" component={AdminPage} />
       <Route component={NotFound} />
